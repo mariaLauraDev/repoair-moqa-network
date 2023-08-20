@@ -68,7 +68,7 @@ export default {
     async fetchDataFromFirestore() {
       this.message = 'Carregando dados...'
       const firestore = getFirestore()
-      const pollutantsCollection = collection(firestore, process.env.VUE_APP_FIRESTORE_COLLECTION_PATH)
+      const pollutantsCollection = collection(firestore, 'system-1')
 
       let documentsQuery = null
       const firebaseTimeStamps = this.getFirebaseTimeStamps()
