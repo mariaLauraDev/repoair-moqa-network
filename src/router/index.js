@@ -68,7 +68,7 @@ router.beforeEach( async (to, from, next) => {
       next()
     } else {
       alert('You must be signed in to see this page')
-      next('/')
+      next('/log-in')
     }
   } else {
     next()
