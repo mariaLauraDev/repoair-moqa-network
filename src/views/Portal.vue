@@ -75,7 +75,7 @@ export default {
         where("Timestamp", ">=", firebaseTimeStamps.startTimestamp),
         where("Timestamp", "<=", firebaseTimeStamps.endTimestamp),
         orderBy('Timestamp', 'desc'),
-        limit(2)
+        limit(50000)
       )
       const querySnapshot = await getDocs(documentsQuery);
 

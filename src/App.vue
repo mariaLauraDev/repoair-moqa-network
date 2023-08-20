@@ -1,9 +1,11 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/portal"> Portal </router-link>
+    <router-link to="/portal"> Portal </router-link> |
+    <router-link to="/log-in" v-if="!isLoggedIn"> LogIn </router-link>
+
     <!-- <router-link to="/register">Register</router-link> | -->
-    <button @click="handleSignOut" v-if="isLoggedIn"> Sign out</button>
+    <button @click="handleSignOut" v-else> Sign out</button>
   </nav>
   <router-view/>
 </template>
@@ -19,7 +21,6 @@ export default {
     }
   },
   mounted() {
-    console.log('VUE_APP_FIRESTORE_COLLECTION_PATH', process.env.VUE_APP_FIRESTORE_COLLECTION_PATH)
     this.auth = getAuth()
     onAuthStateChanged(this.auth, (currentUser) => {
       if (currentUser) {

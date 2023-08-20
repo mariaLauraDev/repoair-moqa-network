@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Portal from '../views/Portal.vue'
+import LogIn from '../views/LogIn.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const router = createRouter({
@@ -30,6 +31,14 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         title: 'MoQa | Portal'
+      }
+    },
+    {
+      path:'/log-in',
+      name: 'log-in',
+      component: LogIn,
+      meta: {
+        title: 'MoQa | LogIn'
       }
     },
   ]

@@ -3,7 +3,7 @@
   <p><input type="text" placeholder="E-mail" v-model="email"></p>
   <p><input type="password" placeholder="Password" v-model="password"></p>
   <p v-if="errorMessage"> {{ errorMessage }}</p>
-  <p><button @click="signIn">Submit</button></p>
+  <p><button @click="signIn" :disabled="logInLoading" >Submit</button></p>
   <!-- <p><button @click="signInWithGoogle">Sign In With Google</button></p> -->
 </template>
 
@@ -16,8 +16,14 @@ import {
 } from 'firebase/auth'
 
 export default {
+  data() {
+    return {
+      logInLoading: false,
+    }
+  },
   methods: {
     signIn() {
+      this.logInLoading = true
       signInWithEmailAndPassword(getAuth(), this.email, this.password)
         .then((userCredential) => {
           // console.log("Successfully signed in!")
