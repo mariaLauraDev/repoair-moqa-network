@@ -7,6 +7,7 @@
     <input type="date" id="endDate" v-model="selectedEndDate" />
     <button @click="fetchData" :disabled="!isValidDateRange"> Download </button>
 
+    <p v-if="numberOfDocuments > 0"> {{numberOfDocuments}} documents found</p>
     <summary-data :documents="documents" :message="message" />
   </div>
 </template>
@@ -34,7 +35,8 @@ export default {
       selectedStartDate: null,
       selectedEndDate: null,
       documents: [],
-      message: 'Sem dados para exibir'
+      message: 'Sem dados para exibir',
+      numberOfDocuments: 0,
     };
   },
   computed: {
@@ -75,7 +77,7 @@ export default {
         where("Timestamp", ">=", firebaseTimeStamps.startTimestamp),
         where("Timestamp", "<=", firebaseTimeStamps.endTimestamp),
         orderBy('Timestamp', 'desc'),
-        limit(50000)
+        limit(10000)
       )
       const querySnapshot = await getDocs(documentsQuery);
 
@@ -83,7 +85,7 @@ export default {
       querySnapshot.forEach((doc) => {
         docs.push(doc.data())
       });
-
+      this.numberOfDocuments = querySnapshot.size
       this.documents = docs
       
       if(!!this.documents && this.documents.length > 0) {
