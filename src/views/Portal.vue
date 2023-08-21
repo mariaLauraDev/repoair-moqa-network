@@ -98,7 +98,8 @@ export default {
           pollutantsCollection,
           where("Timestamp", ">=", firebaseTimeStamps.startTimestamp),
           where("Timestamp", "<=", firebaseTimeStamps.endTimestamp),
-          orderBy('Timestamp', 'desc')
+          orderBy('Timestamp', 'desc'),
+          limit(10000)
         )
         const querySnapshot = await getDocs(documentsQuery);
 
