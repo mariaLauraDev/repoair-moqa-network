@@ -1,11 +1,11 @@
 <template>
 	<div class="container">
-			<template v-if="documents.length > 0">
-					<Table :rows="documents" />
-			</template>
-			<template v-else>
-					<p> {{ message }}</p>
-			</template>
+    <template v-if="documents.length > 0">
+      <Table :rows="documents" />
+    </template>
+    <template v-else>
+      <p> {{ message }}</p>
+    </template>
 	</div>
 </template>
 
@@ -39,7 +39,7 @@ export default{
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 11px;
   font-weight: bold;
   margin-bottom: 2rem;
   text-align: center;

@@ -1,10 +1,16 @@
 <template>
-  <h1>Log in to an Account</h1>
-  <p><input type="text" placeholder="E-mail" v-model="email"></p>
-  <p><input type="password" placeholder="Password" v-model="password"></p>
-  <p v-if="errorMessage"> {{ errorMessage }}</p>
-  <p><button @click="signIn" :disabled="logInLoading" >Submit</button></p>
-  <!-- <p><button @click="signInWithGoogle">Sign In With Google</button></p> -->
+  <div>
+    <h1>Acesse sua Conta</h1>
+    <form @submit.prevent="signIn">
+      <label for="email">E-mail</label>
+      <input type="text" id="email" v-model="email" placeholder="E-mail" required>
+      <label for="password">Senha</label>
+      <input type="password" id="password" v-model="password" placeholder="Senha" required>
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <button type="submit" :disabled="logInLoading">Entrar</button>
+      <!-- <button @click="signInWithGoogle">Entrar com o Google</button> -->
+    </form>
+  </div>
 </template>
 
 <script>

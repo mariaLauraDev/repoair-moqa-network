@@ -1,9 +1,15 @@
 <template>
-  <h1>Create an Account</h1>
-  <p><input type="text" placeholder="E-mail" v-model="email"></p>
-  <p><input type="password" placeholder="Password" v-model="password"></p>
-  <p><button @click="register">Submit</button></p>
-  <p><button @click="signInWithGoogle">Sign In With Google</button></p>
+  <div>
+    <h1>Crie uma Conta</h1>
+    <form @submit.prevent="register">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" v-model="email" placeholder="E-mail" required>
+      <label for="password">Senha</label>
+      <input type="password" id="password" v-model="password" placeholder="Senha" required>
+      <button type="submit">Enviar</button>
+    </form>
+    <button @click="signInWithGoogle">Entrar com o Google</button>
+  </div>
 </template>
 
 <script>

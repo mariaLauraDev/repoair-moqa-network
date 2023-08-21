@@ -2,7 +2,7 @@
   <tr class="table__row">
     <Cell :content="index" />
     <Cell :content="rowContent.moqaID" />
-    <Cell :content="rowContent.Timestamp.seconds" />
+    <Cell :content="formatedDate" />
     <Cell :content="rowContent.Pres" />
     <Cell :content="rowContent.co2" />
     <Cell :content="rowContent.pm25" />
@@ -22,10 +22,9 @@ export default {
   components: {
     Cell
   },
-  methods: {
-    formatDate () {
-      const date = new Date(this.rowContent.Timestamp.seconds * 1000)
-      return date.toLocaleDateString('pt-BR')
+  computed: {
+    formatedDate () {
+        return new Date(this.rowContent.Timestamp.seconds * 1000).toISOString()
     }
   }
 }

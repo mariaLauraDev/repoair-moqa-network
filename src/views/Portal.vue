@@ -1,28 +1,32 @@
 <template>
   <div>
-    <p>Selecione um período para visualizar os dados.</p>
-    <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" v-model="selectedStartDate" />
-    <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" v-model="selectedEndDate" />
-    <button @click="fetchData" :disabled="!isValidDateRange"> Download </button>
+    <p id="instructions"> Selecione um período para visualizar os dados. </p>
+    <label for="startDate">Data de Início:</label>
+    <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" />
+    <label for="endDate">Data de Término:</label>
+    <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" />
+    <button @click="fetchData"> Download </button>
 
-    <p v-if="numberOfDocuments > 0"> {{numberOfDocuments}} documents found</p>
+    <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
     <summary-data :documents="documents" :message="message" />
   </div>
 </template>
 
 <script>
 import { getFirestore } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+
 import {
   collection,
   getDocs,
+  addDoc,
   limit,
   query,
   where,
   orderBy,
   Timestamp
 } from 'firebase/firestore'
+
 import download from 'downloadjs';
 import SummaryData from '../components/SummaryData.vue';
 
@@ -37,7 +41,9 @@ export default {
       documents: [],
       message: 'Sem dados para exibir',
       numberOfDocuments: 0,
-    };
+      downloading: false,
+      user: null,
+    }
   },
   computed: {
     isValidDateRange() {
@@ -46,10 +52,24 @@ export default {
       }
       return this.selectedStartDate <= this.selectedEndDate
     },
+  }, 
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.user = {
+          email: user.email,
+          uid: user.uid,
+        }
+      }
+    })
   },
   methods: {
     fetchData() {
-      if (!this.isValidDateRange) return
+      if (!this.isValidDateRange) {
+        this.message = 'Período de datas inválido. \n A data de início deve ser anterior à data de término.'
+        return
+      }
 
       return this.fetchDataFromFirestore()
     },
@@ -66,34 +86,51 @@ export default {
       }
     },
     async fetchDataFromFirestore() {
-      this.message = 'Carregando dados...'
-      const firestore = getFirestore()
-      const pollutantsCollection = collection(firestore, process.env.VUE_APP_FIRESTORE_COLLECTION_PATH)
+      try {
+        this.downloading = true
+        this.message = 'Carregando dados...'
+        const firestore = getFirestore()
+        const pollutantsCollection = collection(firestore, process.env.VUE_APP_FIRESTORE_COLLECTION_PATH)
 
-      let documentsQuery = null
-      const firebaseTimeStamps = this.getFirebaseTimeStamps()
-      documentsQuery = query(
-        pollutantsCollection,
-        where("Timestamp", ">=", firebaseTimeStamps.startTimestamp),
-        where("Timestamp", "<=", firebaseTimeStamps.endTimestamp),
-        orderBy('Timestamp', 'desc'),
-        limit(10000)
-      )
-      const querySnapshot = await getDocs(documentsQuery);
+        let documentsQuery = null
+        const firebaseTimeStamps = this.getFirebaseTimeStamps()
+        documentsQuery = query(
+          pollutantsCollection,
+          where("Timestamp", ">=", firebaseTimeStamps.startTimestamp),
+          where("Timestamp", "<=", firebaseTimeStamps.endTimestamp),
+          orderBy('Timestamp', 'desc')
+        )
+        const querySnapshot = await getDocs(documentsQuery);
 
-      const docs = []
-      querySnapshot.forEach((doc) => {
-        docs.push(doc.data())
-      });
-      this.numberOfDocuments = querySnapshot.size
-      this.documents = docs
-      
-      if(!!this.documents && this.documents.length > 0) {
-        const csvData = this.convertToCsv(this.documents)
-        download(csvData, `MOQA-${this.selectedStartDate}-${this.selectedEndDate}.csv`, 'text/csv')
-      } else {
-        this.message = 'Nenhum documento encontrado'
+        const docs = []
+        querySnapshot.forEach((doc) => {
+          docs.push(doc.data())
+        });
+        this.numberOfDocuments = querySnapshot.size
+        this.documents = docs
+        
+        if(!!this.documents && this.documents.length > 0) {
+          const csvData = this.convertToCsv(this.documents)
+          download(csvData, `MoQa-${this.selectedStartDate}-${this.selectedEndDate}.csv`, 'text/csv')
+
+          const downloadHistoryCollection = collection(firestore, 'download-history');
+          const downloadRecord = {
+            user: this.user,
+            startDate: firebaseTimeStamps.startTimestamp,
+            endDate: firebaseTimeStamps.endTimestamp,
+            numberOfDocuments: this.numberOfDocuments,
+            timestamp: new Date()
+          };
+          await addDoc(downloadHistoryCollection, downloadRecord);
+        } else {
+          this.message = 'Nenhum documento encontrado'
+        }
+      } finally {
+        this.downloading = false
       }
+    },
+    saveHistoryDownloadUser () {
+
     },
     convertToCsv(data) {
       const fields = Object.keys(data[0])
