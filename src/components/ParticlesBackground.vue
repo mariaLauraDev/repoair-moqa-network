@@ -58,7 +58,7 @@ export default {
         line_linked: {
           enable: true,
           distance: 300,
-          color: "#ffffff",
+          color: "#f8f9fa",
           opacity: 0.4,
           width: 2
         },
