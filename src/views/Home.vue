@@ -28,21 +28,25 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background: transparent;
 }
 
 .home-page__title {
   text-align: center;
   color: $color-primary;
+  background: transparent;
 }
 
 .home-page__title h1 {
   margin-bottom: 10px;
   font-size: 36px;
+  background: transparent;
 }
 
 .home-page__title h2 {
   font-size: 24px;
   font-weight: normal;
-  color: $color-secondary; /* Defina a cor do subtítulo */
+  color: $color-secondary;
+  background: transparent;
 }
 </style>
