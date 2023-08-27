@@ -1,0 +1,60 @@
+$font-family: 'Poppins', Helvetica, sans-serif;
+$extrabold-font-weight: 800;
+$semibold-font-weight: 600;
+$light-font-weight: 300;
+
+$color-primary: #1c3c1f;
+$color-primary-rgb: 28, 60, 31;
+$color-primary-transparency: rgba(28, 60, 31, 0.8);
+$color-gray: #DEDFE0;
+$color-gray-transparency: rgba(193, 198, 201, 0.8);
+$color-secondary: #c2ce4d;
+$color-secondary-rgb: 194, 206, 77;
+$color-background: #f8f9fa;
+$color-background-rgb: 248, 249, 250;
+$color-text: #212529;
+$color-text-rgb: 33, 37, 41;
+$color-text-light: #6c757d;
+$color-text-lighter: #adb5bd;
+$color-text-lightest: #dee2e6;
+$color-text-white: #fff;
+$color-text-black: #000;
+$color-text-success: #28a745;
+$color-text-danger: #dc3545;
+$color-text-warning: #ffc107;
+$color-text-info: #17a2b8;
+$color-text-muted: #6c757d;
+
+$title-font-size: 2.5rem; // 40px
+$subtitle-font-size: 1.5rem; // 24px
+$body-font-size: 1rem; // 16px
+$label-font-size: 0.875rem; // 14px
+$small-font-size: 0.75rem; // 12px
+
+$border-radius: 0.25rem; // 4px
+$border-radius-sm: 0.2rem; // 3px
+$border-radius-lg: 0.3rem; // 5px
+
+$border-width: 1px;
+$border-color: #dee2e6;
+$border-color-light: #e9ecef;
+$border-color-lighter: #f1f3f5;
+$border-color-lightest: #f8f9fa;
+
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+$transition: all 0.2s ease-in-out;
+
+$spacing: 1rem; // 16px
+$spacing-sm: 0.5rem; // 8px
+$spacing-lg: 1.5rem; // 24px
+
+$zindex-navbar: 1000;
+$zindex-dropdown: 1000;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;
+$zindex-navbar-fixed: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-modal: 1050;

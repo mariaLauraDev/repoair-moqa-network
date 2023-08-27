@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="login-area">
+    <canvas class="canvas particles-bg" width="375" height="667" style="width: 100%; height: 100%; position: absolute; z-index: -1; top: 0px; left: 0px;"></canvas>
     <h1>Acesse sua Conta</h1>
     <form @submit.prevent="signIn">
       <label for="email">E-mail</label>

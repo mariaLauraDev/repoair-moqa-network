@@ -5,7 +5,7 @@
     <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" />
     <label for="endDate">Data de Término:</label>
     <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" />
-    <button @click="fetchData"> Download </button>
+    <button @click.prevent="fetchData"> Download </button>
 
     <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
     <summary-data :documents="documents" :message="message" />

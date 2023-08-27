@@ -11,6 +11,9 @@
     "dotenv": "^16.3.1",
     "downloadjs": "^1.4.7",
     "firebase": "^10.2.0",
+    "particles.js": "^2.0.0",
+    "sass": "^1.66.1",
+    "sass-loader": "^13.3.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.1.0"

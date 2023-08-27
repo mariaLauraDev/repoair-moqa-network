@@ -1,0 +1,324 @@
+@import 'variables';
+@import 'fonts';
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: $color-background;
+}
+
+#moqa-portal {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-size: 150% 150%;
+}
+
+#moqa-portal, html, body, main { height: 100%; }
+
+body {
+  font-family: $font-family;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: $title-font-size;
+  font-weight: $extrabold-font-weight;
+}
+
+h2 {
+  font-size: $subtitle-font-size;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: $body-font-size;
+  font-weight: $semibold-font-weight;
+}
+
+h4 {
+  font-size: $label-font-size;
+  font-weight: $semibold-font-weight;
+}
+
+h5 {
+  font-size: $small-font-size;
+  font-weight: $semibold-font-weight;
+}
+
+h6 {
+  font-size: $small-font-size;
+  font-weight: $semibold-font-weight;
+}
+
+p {
+  font-size: $body-font-size;
+  font-weight: $light-font-weight;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: $transition;
+  &:hover {
+    color: $color-secondary;
+  }
+}
+
+header {
+  color: $color-text;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  padding: 0 40px;
+  box-shadow: 0 6px 7.5px -2px rgba(0, 0, 0, 0.075), 0 12.5px 19px 0 rgba(0, 0, 0, 0.0225), 0 4.5px 25px 0 rgba(0, 0, 0, 0.0225);
+}
+
+.router-link-active {
+  font-weight: bold;
+  transition: font-weight .3s ease;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: $body-font-size;
+  font-weight: $semibold-font-weight;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: $border-radius;
+  transition: $transition;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.btn-login {
+  padding: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  background: $color-primary;
+  border-radius: 3px;
+  box-shadow: 0 10px 26px 0 rgba(0, 0, 0, 0.1);
+  color: #fff;
+  margin-left: 10px;
+  font-weight: $extrabold-font-weight;
+  display: inline-block;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-login:hover {
+  background-color: $color-primary-transparency;
+  color: #fff;
+}
+
+.btn-logout {
+  padding: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  background: $color-gray;
+  border: none;
+  border-radius: 3px;
+  color: $color-text;
+  box-shadow: none;
+  font-weight: $light-font-weight;
+  display: inline-block;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  margin-left: 30px;
+}
+
+.btn-logout:hover {
+  background-color: $color-gray-transparency;
+}
+
+.btn-success {
+  color: $color-text-white;
+  background-color: $color-text-success;
+  border-color: $color-text-success;
+  &:hover {
+    color: $color-text-white;
+    background-color: darken($color-text-success, 10%);
+    border-color: darken($color-text-success, 10%);
+  }
+}
+
+.btn-danger {
+  color: $color-text-white;
+  background-color: $color-text-danger;
+  border-color: $color-text-danger;
+  &:hover {
+    color: $color-text-white;
+    background-color: darken($color-text-danger, 10%);
+    border-color: darken($color-text-danger, 10%);
+  }
+}
+
+.btn-warning {
+  color: $color-text-white;
+  background-color: $color-text-warning;
+  border-color: $color-text-warning;
+  &:hover {
+    color: $color-text-white;
+    background-color: darken($color-text-warning, 10%);
+    border-color: darken($color-text-warning, 10%);
+  }
+}
+
+.btn-info {
+  color: $color-text-white;
+  background-color: $color-text-info;
+  border-color: $color-text-info;
+  &:hover {
+    color: $color-text-white;
+    background-color: darken($color-text-info, 10%);
+    border-color: darken($color-text-info, 10%);
+  }
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: $small-font-size;
+  line-height: 1.5;
+  border-radius: $border-radius-sm;
+}
+
+.btn-lg {
+  padding: 0.5rem 1rem;
+  font-size: $body-font-size;
+  line-height: 1.5;
+  border-radius: $border-radius-lg;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-group, .btn-group-vertical {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.btn-group > .btn, .btn-group-vertical > .btn {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.btn-group > .btn:hover, .btn-group-vertical > .btn:hover {
+  z-index: 1;
+}
+
+.btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn:focus, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn.active {
+  z-index: 1;
+}
+
+.btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group {
+  margin-left: -1px;
+}
+
+.btn-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.btn-toolbar .input-group {
+  width: auto;
+}
+
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.dropdown-toggle-split {
+  padding-right: 0.5625rem;
+  padding-left: 0.5625rem;
+}
+
+.dropdown-toggle-split::after, .dropup .dropdown-toggle-split::after, .dropright .dropdown-toggle-split::after {
+  margin-left: 0;
+}
+
+.dropleft .dropdown-toggle-split::before {
+  margin-right: 0;
+}
+
+.btn-sm + .dropdown-toggle-split, .btn-group-sm > .btn + .dropdown-toggle-split {
+  padding-right: 0.375rem;
+  padding-left: 0.375rem;
+}
+
+.btn-lg + .dropdown-toggle-split, .btn-group-lg > .btn + .dropdown-toggle-split {
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.btn-group-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.btn-group-vertical .btn, .btn-group-vertical .btn-group {
+  width: 100%;
+}
+
+.btn-group-vertical > .btn + .btn, .btn-group-vertical > .btn + .btn-group, .btn-group-vertical > .btn-group + .btn, .btn-group-vertical > .btn-group + .btn-group {
+  margin-top: -1px;
+  margin-left: 0;
+}
+
+.btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle), .btn-group-vertical > .btn-group:not(:last-child) > .btn {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group-vertical > .btn:not(:first-child), .btn-group-vertical > .btn-group:not(:first-child) > .btn {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.btn-group-toggle > .btn, .btn-group-toggle > .btn-group > .btn {
+  margin-bottom: 0;
+}
+
+.btn-group-toggle > .btn input[type="radio"], .btn-group-toggle > .btn input[type="checkbox"], .btn-group-toggle > .btn-group > .btn input[type="radio"], .btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
