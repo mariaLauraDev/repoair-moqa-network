@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "csp-html-webpack-plugin": "^5.1.0",
     "dotenv": "^16.3.1",
     "downloadjs": "^1.4.7",
     "firebase": "^10.2.0",
