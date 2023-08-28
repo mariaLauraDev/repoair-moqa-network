@@ -15,12 +15,12 @@ module.exports = defineConfig({
       new CspHtmlWebpackPlugin(
         {
           'default-src': "'self'",
-          'script-src': ["'self'", "'unsafe-eval'", "https://*.firebase.com", "https://firebaseio.com"],
+          'script-src': ["'self'", "'unsafe-eval'", "https://*.firebase.com", "https://firebaseio.com", "https://apis.google.com/"],
           'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
           'img-src': ["'self'", "data:"],
           'font-src': ["'self'", "https:"],
           'connect-src': ["'self'", "https:"],
-          'frame-src': ["'self'"],
+          'frame-src': ["'self'", "https://*.firebase.com", "https://moqatrama-prod.firebaseapp.com/"],
           'media-src': ["'self'"],
           'connect-src': ["'self'", "https:", "https://moqa-portal.vercel.app/", "http://localhost:8080/"],
         },
