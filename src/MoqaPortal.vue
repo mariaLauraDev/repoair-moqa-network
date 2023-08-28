@@ -295,6 +295,7 @@ export default {
 
 .btn-submit {
   margin-left: 10px;
+  background: $color-primary;
 }
 
 @media (max-width: 780px) {

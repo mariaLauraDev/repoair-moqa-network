@@ -23,6 +23,7 @@
           <p v-if="errorMessage">{{ errorMessage }}</p>
           <button
             type="submit"
+            :class="{ 'disabled': logInLoading }"
             :disabled="logInLoading"
             class="btn-submit"
           >
@@ -138,6 +139,15 @@ export default {
 
 .btn-submit {
   width: 100%;
+  background: #1a82ff !important;
+  border-color:  #1a82ff !important;
+}
+
+.disabled {
+  background: #1a82ff !important;
+  border-color:  #1a82ff !important;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 label {
