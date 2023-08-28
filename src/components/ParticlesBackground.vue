@@ -105,7 +105,7 @@ export default {
             speed: 3
           },
           repulse: {
-            distance: 200,
+            distance: 400,
             duration: 0.4
           },
           push: {
@@ -123,6 +123,9 @@ export default {
 </script>
 
 <style scoped>
+#particles-js {
+  background: #1c3c1f !important;
+}
 .particles-bg {
   position: absolute;
   top: 0;

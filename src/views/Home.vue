@@ -5,7 +5,9 @@
     <div class="home-page__content">
       <div class="home-page__title">
         <h1>Portal de Qualidade do ar</h1>
-        <h2>Dispositivos Moqa</h2>
+      </div>
+      <div class="home-page__subtitle">
+        <h2>Dispositivos MoQa</h2>
       </div>
     </div>
   </div>
@@ -22,31 +24,42 @@ export default {
 </script>
 
 <style lang="scss">
-.home-page__content {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: transparent;
+.home-page {
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: transparent;
+  }
+
+  &__title {
+    text-align: center;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background: transparent;
+    
+    h1 {
+      color: $color-primary;
+      margin-bottom: 10px;
+      font-size: $title-font-size;
+      background: transparent;
+    }
+  }
+  
+  &__subtitle {
+    background-color: transparent;
+
+    h2 {
+      font-size: $subtitle-font-size;
+      font-weight: $semibold-font-weight;
+      color: $color-secondary;
+      background-color: transparent;
+    }
+  }
 }
 
-.home-page__title {
-  text-align: center;
-  color: $color-primary;
-  background: transparent;
-}
-
-.home-page__title h1 {
-  margin-bottom: 10px;
-  font-size: 36px;
-  background: transparent;
-}
-
-.home-page__title h2 {
-  font-size: 24px;
-  font-weight: normal;
-  color: $color-secondary;
-  background: transparent;
-}
 </style>

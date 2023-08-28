@@ -34,6 +34,11 @@ h1 {
 h2 {
   font-size: $subtitle-font-size;
   font-weight: bold;
+  display: block;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
 h3 {
@@ -61,6 +66,10 @@ p {
   font-weight: $light-font-weight;
 }
 
+ul {
+  list-style: none;
+}
+
 a {
   color: $color-primary;
   text-decoration: none;
@@ -86,6 +95,14 @@ header {
   box-shadow: 0 6px 7.5px -2px rgba(0, 0, 0, 0.075), 0 12.5px 19px 0 rgba(0, 0, 0, 0.0225), 0 4.5px 25px 0 rgba(0, 0, 0, 0.0225);
 }
 
+label {
+  color: $color-text;
+  width: 100%;
+  font-weight: regular;
+  cursor: pointer;
+  position: relative;
+}
+
 .router-link-active {
   font-weight: bold;
   transition: font-weight .3s ease;
@@ -109,7 +126,7 @@ header {
   }
 }
 
-.btn-login {
+.btn-submit {
   padding: 0.5rem 1rem;
   list-style: none;
   margin: 0;
@@ -119,12 +136,12 @@ header {
   border-radius: 3px;
   box-shadow: 0 10px 26px 0 rgba(0, 0, 0, 0.1);
   color: #fff;
-  margin-left: 10px;
   font-weight: $extrabold-font-weight;
   display: inline-block;
   align-items: center;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  font-family: $font-family;
 }
 
 .btn-login:hover {
@@ -197,128 +214,4 @@ header {
     background-color: darken($color-text-info, 10%);
     border-color: darken($color-text-info, 10%);
   }
-}
-
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-  font-size: $small-font-size;
-  line-height: 1.5;
-  border-radius: $border-radius-sm;
-}
-
-.btn-lg {
-  padding: 0.5rem 1rem;
-  font-size: $body-font-size;
-  line-height: 1.5;
-  border-radius: $border-radius-lg;
-}
-
-.btn-block {
-  display: block;
-  width: 100%;
-}
-
-.btn-group, .btn-group-vertical {
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-}
-
-.btn-group > .btn, .btn-group-vertical > .btn {
-  position: relative;
-  flex: 1 1 auto;
-}
-
-.btn-group > .btn:hover, .btn-group-vertical > .btn:hover {
-  z-index: 1;
-}
-
-.btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn:focus, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn.active {
-  z-index: 1;
-}
-
-.btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group {
-  margin-left: -1px;
-}
-
-.btn-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-.btn-toolbar .input-group {
-  width: auto;
-}
-
-.btn-group > .btn:first-child {
-  margin-left: 0;
-}
-
-.btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) > .btn {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.dropdown-toggle-split {
-  padding-right: 0.5625rem;
-  padding-left: 0.5625rem;
-}
-
-.dropdown-toggle-split::after, .dropup .dropdown-toggle-split::after, .dropright .dropdown-toggle-split::after {
-  margin-left: 0;
-}
-
-.dropleft .dropdown-toggle-split::before {
-  margin-right: 0;
-}
-
-.btn-sm + .dropdown-toggle-split, .btn-group-sm > .btn + .dropdown-toggle-split {
-  padding-right: 0.375rem;
-  padding-left: 0.375rem;
-}
-
-.btn-lg + .dropdown-toggle-split, .btn-group-lg > .btn + .dropdown-toggle-split {
-  padding-right: 0.75rem;
-  padding-left: 0.75rem;
-}
-
-.btn-group-vertical {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.btn-group-vertical .btn, .btn-group-vertical .btn-group {
-  width: 100%;
-}
-
-.btn-group-vertical > .btn + .btn, .btn-group-vertical > .btn + .btn-group, .btn-group-vertical > .btn-group + .btn, .btn-group-vertical > .btn-group + .btn-group {
-  margin-top: -1px;
-  margin-left: 0;
-}
-
-.btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle), .btn-group-vertical > .btn-group:not(:last-child) > .btn {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.btn-group-vertical > .btn:not(:first-child), .btn-group-vertical > .btn-group:not(:first-child) > .btn {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.btn-group-toggle > .btn, .btn-group-toggle > .btn-group > .btn {
-  margin-bottom: 0;
-}
-
-.btn-group-toggle > .btn input[type="radio"], .btn-group-toggle > .btn input[type="checkbox"], .btn-group-toggle > .btn-group > .btn input[type="radio"], .btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
-  position: absolute;
-  clip: rect(0, 0, 0, 0);
-  pointer-events: none;
 }

@@ -16,12 +16,13 @@ module.exports = defineConfig({
         {
           'default-src': "'self'",
           'script-src': ["'self'", "'unsafe-eval'", "https://*.firebase.com", "https://firebaseio.com"],
-          'style-src': ["'self'", "'unsafe-inline'"],
+          'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
           'img-src': ["'self'", "data:"],
           'font-src': ["'self'", "https:"],
           'connect-src': ["'self'", "https:"],
           'frame-src': ["'self'"],
           'media-src': ["'self'"],
+          'connect-src': ["'self'", "https:", "https://moqa-portal.vercel.app/", "http://localhost:8080/"],
         },
         {
           enabled: true,
