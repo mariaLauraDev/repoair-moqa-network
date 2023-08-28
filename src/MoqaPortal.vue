@@ -153,7 +153,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 800px; //1520px
+    max-width: 1520px;
     margin: 0 auto;
     width: 100%;
   }

@@ -1,14 +1,42 @@
 <template>
-  <div>
-    <p id="instructions"> Selecione um período para visualizar os dados. </p>
-    <label for="startDate">Data de Início:</label>
-    <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" />
-    <label for="endDate">Data de Término:</label>
-    <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" />
-    <button @click.prevent="fetchData"> Download </button>
+  <div class="download-view">
+    <div class="download-view__container">
+      <div class="download-header__container">
+        <div class="download-header__title">
+          <h2 id="instructions"> Selecione um período: </h2>
+        </div>
+        <div class="download-header__options-container">
+          <div class="download-header__option">
+            <label for="startDate">
+              <div>
+                <small> Data inicial </small>
+                <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" required>
+              </div>
+            </label>
+          </div>
 
-    <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
-    <summary-data :documents="documents" :message="message" />
+          <div class="download-header__option">
+            <label for="endDate">
+              <div>
+                <small> Data Final </small>
+                <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" required>
+              </div>
+            </label>
+          </div>
+
+          <button @click.prevent="fetchData" class="btn-action"> Download </button>
+        </div>
+      </div>
+      
+      <!-- <label for="startDate">Data de Início:</label>
+      <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" /> -->
+      <!-- <label for="endDate">Data de Término:</label>
+      <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" /> -->
+  
+      <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
+      <summary-data :documents="documents" :message="message" />
+    </div>
+    
   </div>
 </template>
 
@@ -155,3 +183,76 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.download-view{
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__container {
+    padding: 0 50px;
+    box-sizing: border-box;
+    max-width: 1520px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+.download-header__title {
+  font-size: $subtitle-font-size;
+  color: $color-primary;
+  font-weight: $semibold-font-weight;
+}
+
+.download-header__container{
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  width: 100%;
+  margin: 30px auto;
+}
+
+.download-header__options-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  align-items: right;
+  gap: 20px;
+  width: 70%;
+}
+
+@media (max-width: 780px) {
+  .download-header__container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .download-header__options-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 250px;
+  }
+
+  .download-header__option {
+    width: 100%;
+  }
+
+  .btn-action{
+    width: 100%;
+  }
+}
+
+</style>

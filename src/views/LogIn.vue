@@ -25,7 +25,7 @@
             type="submit"
             :class="{ 'disabled': logInLoading }"
             :disabled="logInLoading"
-            class="btn-submit"
+            class="btn-action"
           >
             Entrar
           </button>
@@ -137,10 +137,8 @@ export default {
   }
 }
 
-.btn-submit {
+.btn-action{
   width: 100%;
-  background: #1a82ff !important;
-  border-color:  #1a82ff !important;
 }
 
 .disabled {
@@ -148,45 +146,6 @@ export default {
   border-color:  #1a82ff !important;
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-label {
-  margin-bottom: 5px;
-  border-radius: 5px;
-  max-width: 500px;
-
-  input, span {
-    height: 50px;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    small {
-      font-size: 12px;
-      margin-bottom: 3px;
-      margin-left: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      grid-gap: 5px;
-      gap: 5px;
-    }
-
-    input {
-      width: 100%;
-      border: none;
-      outline: none;
-      border-radius: 5px;
-      padding: 15px;
-      background: hsla(0,0%,100%,.5);
-      font-size: 17px;
-      color: $color-text;
-      height: 50px;
-    }
-  }
 }
 
 .login-container {

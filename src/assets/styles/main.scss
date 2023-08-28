@@ -33,12 +33,13 @@ h1 {
 
 h2 {
   font-size: $subtitle-font-size;
-  font-weight: bold;
   display: block;
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
+  color: $color-primary;
+  font-weight: bold;
 }
 
 h3 {
@@ -101,6 +102,42 @@ label {
   font-weight: regular;
   cursor: pointer;
   position: relative;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  max-width: 500px;
+
+  input, span {
+    height: 50px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    small {
+      font-size: 12px;
+      margin-bottom: 3px;
+      margin-left: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      grid-gap: 5px;
+      gap: 5px;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      padding: 15px;
+      background: hsla(0,0%,100%,.5);
+      font-size: 17px;
+      color: $color-text;
+      height: 50px;
+    }
+  }
 }
 
 .router-link-active {
@@ -147,6 +184,39 @@ label {
   background-color: $color-primary-transparency;
   color: #fff;
 }
+
+.btn-action {
+  padding: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: $extrabold-font-weight;
+  display: inline-block;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  font-family: $font-family;
+  background: #1a82ff !important;
+  border-color:  #1a82ff !important;
+}
+
+.disabled {
+  background: #1a82ff !important;
+  border-color:  #1a82ff !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 780px) {
+  .btn-action{
+    width: 100%;
+  }
+}
+
 
 .btn-logout {
   padding: 0.5rem 1rem;
