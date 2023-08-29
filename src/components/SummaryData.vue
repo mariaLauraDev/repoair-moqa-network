@@ -31,8 +31,6 @@ export default{
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
 .container {
   margin: 25px auto;
   font-size: 13px;
@@ -43,32 +41,6 @@ export default{
   font-weight: bold;
   margin-bottom: 2rem;
   text-align: center;
-}
-
-.table {
-  width: 100%;
-  border-spacing: 0;
-  box-sizing: border-box;
-}
-
-.table__cell,
-.table__header {
-  padding: 0.5rem;
-  text-align: left;
-}
-
-.table__header {
-    text-transform: capitalize;
-    font-weight: bold;
-    text-align: left;
-}
-
-.table__cell {
-  padding-inline: .5rem;
-}
-
-.table__row:nth-child(even) {
-  background-color: #dee2e6;
 }
 
 </style>

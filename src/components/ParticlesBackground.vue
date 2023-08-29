@@ -7,6 +7,20 @@
 <script>
 
 export default {
+  props: {
+    particlesColor: {
+      type: String,
+      default: '#1c3c1f'
+    },
+    lineLinkedColor: {
+      type: String,
+      default: '#f8f9fa'
+    },
+    background: {
+      type: String,
+      default:  '#f8f9fa'
+    },
+  },
   mounted() {
     particlesJS('particles-js', {
       particles: {
@@ -24,7 +38,7 @@ export default {
           type: "circle",
           stroke: {
             width: 0,
-            color: "#000000"
+            color: "#1c3c1f"
           },
           polygon: {
             nb_sides: 5
@@ -123,17 +137,13 @@ export default {
 </script>
 
 <style scoped>
-#particles-js {
-  background: #1c3c1f !important;
-}
 .particles-bg {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  height: 100vh!important;
-  position: fixed!important;
+  height: 100vh !important;
+  position: fixed !important;
   z-index: 0 !important;
 }
 </style>

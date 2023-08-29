@@ -97,12 +97,16 @@
     </div>
   </header>
   <router-view/>
+  <Footer />
 </template>
 
 <script >
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
-
+import Footer from '@/components/Footer.vue'
 export default {
+  components: {
+    Footer
+  },
   data() {
     return {
       auth: null,
@@ -145,6 +149,8 @@ export default {
 
 <style lang="scss">
 .header {
+  background-color: $color-background;
+
   &__container {
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;

@@ -3,7 +3,7 @@
     <div class="download-view__container">
       <div class="download-header__container">
         <div class="download-header__title">
-          <h2 id="instructions"> Selecione um período: </h2>
+          <h2 id="instructions"> EXPORTAR RELATÓRIO CSV</h2>
         </div>
         <div class="download-header__options-container">
           <div class="download-header__option">
@@ -32,9 +32,17 @@
       <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" /> -->
       <!-- <label for="endDate">Data de Término:</label>
       <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" /> -->
-  
-      <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
-      <summary-data :documents="documents" :message="message" />
+
+      <div class="download-body">
+        <div class="download-body__summary">
+          <div class="download-body__count">
+            <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
+          </div>
+        </div>
+        <div class="downlod-body__data">
+          <summary-data :documents="documents" :message="message" />
+        </div>
+      </div>
     </div>
     
   </div>
@@ -67,7 +75,7 @@ export default {
       selectedStartDate: null,
       selectedEndDate: null,
       documents: [],
-      message: 'Sem dados para exibir',
+      message: 'Selecione um período para exportar os dados',
       numberOfDocuments: 0,
       downloading: false,
       user: null,
@@ -85,10 +93,7 @@ export default {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        this.user = {
-          email: user.email,
-          uid: user.uid,
-        }
+        this.user = user.email
       }
     })
   },
@@ -194,7 +199,7 @@ export default {
   align-items: center;
 
   &__container {
-    padding: 0 50px;
+    padding: 0 20px;
     box-sizing: border-box;
     max-width: 1520px;
     margin: 0 auto;
@@ -206,6 +211,8 @@ export default {
   font-size: $subtitle-font-size;
   color: $color-primary;
   font-weight: $semibold-font-weight;
+  width: 100%;
+  text-align: left;
 }
 
 .download-header__container{
@@ -217,17 +224,17 @@ export default {
   flex-wrap: nowrap;
   align-content: flex-start;
   width: 100%;
-  margin: 30px auto;
+  margin: 30px 0;
 }
 
 .download-header__options-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
-  align-items: right;
+  justify-content: flex-end; //flex-end
+  align-items: right; //right
   gap: 20px;
-  width: 70%;
+  width: 100%;
 }
 
 @media (max-width: 780px) {
@@ -252,6 +259,10 @@ export default {
 
   .btn-action{
     width: 100%;
+  }
+
+  .download-header__title {
+    text-align: center;
   }
 }
 

@@ -154,6 +154,7 @@ export default {
   z-index: 10;
   letter-spacing: .5px;
   box-shadow: 0 0 15px 4px rgb(0 0 0 / 8%);
+  background-color: $color-background;
 }
 
 @media (max-width: 780px) {

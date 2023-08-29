@@ -5,7 +5,6 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  background-color: $color-background;
 }
 
 #moqa-portal {
@@ -16,6 +15,7 @@
   justify-content: flex-start;
   align-items: center;
   background-size: 150% 150%;
+  background-color: $color-background !important;
 }
 
 #moqa-portal, html, body, main { height: 100%; }
@@ -283,4 +283,35 @@ label {
     background-color: darken($color-text-info, 10%);
     border-color: darken($color-text-info, 10%);
   }
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+  box-sizing: border-box;
+}
+
+.table__cell,
+.table__header {
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.table__header {
+  text-transform: capitalize;
+  font-weight: bold;
+  text-align: left;
+}
+
+.table__cell {
+  padding-inline: .5rem;
+}
+
+.table__row {
+  position: relative;
+  z-index: 1;
+}
+
+.table__row:nth-child(even) {
+  background-color: #dee2e6 !important;
 }
