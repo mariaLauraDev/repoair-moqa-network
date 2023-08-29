@@ -97,7 +97,7 @@
     </div>
   </header>
   <router-view/>
-  <Footer />
+  <Footer v-if="!isLoginRoute" />
 </template>
 
 <script >
