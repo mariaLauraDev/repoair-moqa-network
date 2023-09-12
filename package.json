@@ -12,6 +12,7 @@
     "dotenv": "^16.3.1",
     "downloadjs": "^1.4.7",
     "firebase": "^10.2.0",
+    "leaflet": "^1.9.4",
     "particles.js": "^2.0.0",
     "sass": "^1.66.1",
     "sass-loader": "^13.3.2",

@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Portal from '../views/Portal.vue'
 import LogIn from '../views/LogIn.vue'
+import Monitoring from '../views/Monitoring.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const router = createRouter({
@@ -31,6 +32,15 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         title: 'MoQa | Portal'
+      }
+    },
+    {
+      path:'/monitoring-control',
+      name: 'monitoring control',
+      component: Monitoring,
+      meta: {
+        requiresAuth: true,
+        title: 'MoQa | Monitoring'
       }
     },
     {

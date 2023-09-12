@@ -96,6 +96,22 @@ header {
   box-shadow: 0 6px 7.5px -2px rgba(0, 0, 0, 0.075), 0 12.5px 19px 0 rgba(0, 0, 0, 0.0225), 0 4.5px 25px 0 rgba(0, 0, 0, 0.0225);
 }
 
+.router-view {
+  width: 100%;
+  padding: 0 40px;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 780px) {
+  header, .router-view {
+    padding: 0 15px;
+  }
+}
+
 label {
   color: $color-text;
   width: 100%;
@@ -314,4 +330,14 @@ label {
 
 .table__row:nth-child(even) {
   background-color: #dee2e6 !important;
+}
+
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none;
+}
+
+.material-icons {
+  font-size: 32px;  /* Preferred icon size */
+  color: $color-primary;
 }

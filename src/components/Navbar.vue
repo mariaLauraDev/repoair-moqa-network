@@ -1,17 +1,124 @@
 <template>
-  <Navbar />
-  <router-view class="router-view"/>
-  <!-- <Footer v-if="!isLoginRoute" /> -->
+  <header class="header">
+    <div
+      class="header__container"
+      :class="{ 'centered-container': isLoginRoute }"
+      >
+      <div class="logo">
+        <router-link to="/" style="justify-content: center">
+          <img
+            width="auto"
+            height="100px"
+            loading="lazy"
+            class="logo__img"
+            src="../assets/images/logo.webp"
+            alt="Logo Moqa Portal"
+            title="Logo Moqa Portal">
+        </router-link>
+      </div>
+      <nav v-if="!isLoginRoute">
+        <ul class="header__menu">
+          <li>
+            <router-link
+              v-if="isLoggedIn"
+              to="/monitoring-control"
+            >
+              Mapa
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="isLoggedIn"
+              to="/portal"
+            >
+              Portal
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="!isLoggedIn"
+              to="/log-in"
+              class="btn-submit"
+            >
+              Entrar
+            </router-link>
+
+            <div
+              v-else
+              @click="handleSignOut"
+              class="btn-logout"
+            >
+              Sair
+          </div>
+          </li>
+          <!-- <li>
+            <router-link to="/register">Register</router-link> |
+          </li> -->
+        </ul>
+        <div
+          @click.prevent="changeModalState"
+          class="menu-icon menu-icon-mobile"
+          :class="{ 'menu-icon--active': isModalOpen }"
+        >
+          <div class="menu-icon__line menu-icon__line--top"></div>
+          <div class="menu-icon__line menu-icon__line--middle"></div>
+          <div class="menu-icon__line menu-icon__line--bottom"></div>
+        </div>
+        <div
+          class="header__menu-modal"
+          :class="{ 'header__menu-modal--open': isModalOpen }"
+        >
+          <ul class="header__menu-mobile">
+            <li :class="{ 'header__menu-li-active': isModalOpen }">
+              <router-link
+                v-if="isLoggedIn"
+                :class="{ 'header__menu-li-active': isModalOpen }"
+                to="/monitoring-control"
+              >
+                Monitoramento
+              </router-link>
+            </li>
+            <li :class="{ 'header__menu-li-active': isModalOpen }">
+              <router-link
+                v-if="isLoggedIn"
+                :class="{ 'header__menu-li-active': isModalOpen }"
+                to="/portal"
+              >
+                Portal
+              </router-link>
+            </li>
+            <li :class="{ 'header__menu-li-active': isModalOpen }">
+              <router-link
+                v-if="!isLoggedIn"
+                class="btn-submit"
+                :class="{ 'header__menu-li-active': isModalOpen }"
+                to="/log-in"
+              >
+                Entrar 
+              </router-link>
+
+              <div
+                v-else
+                @click="handleSignOut"
+                class="btn-logout"
+              >
+                Sair
+            </div>
+            </li>
+            <!-- <li :class="{ 'header__menu-li-active': isModalOpen }">
+              <router-link to="/register">Register</router-link :class="{ 'header__menu-li-active': isModalOpen }"> |
+            </li> -->
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <script >
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 
-import Navbar from '@/components/Navbar.vue'
 export default {
-  components: {
-    Navbar
-  },
   data() {
     return {
       auth: null,
@@ -113,7 +220,8 @@ export default {
       transition: right .3s ease-in-out;
 
       &--open{
-        right: 0!important;
+        right: 0 !important;
+        background-color: #f8f9fa !important;
       }
     }
 
