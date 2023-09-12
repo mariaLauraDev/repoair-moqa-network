@@ -65,7 +65,7 @@ export default {
           // console.log("Successfully signed in!")
           const user = userCredential.user
           this.$store.dispatch('setUser', user)
-          this.$router.push('/portal')
+          this.$router.push('/monitoring-control')
         })
         .catch((error) => {
           switch (error.code) {
