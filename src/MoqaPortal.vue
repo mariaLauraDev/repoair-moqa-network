@@ -1,5 +1,5 @@
 <template>
-  <Navbar />
+  <Navbar :routes="routes"/>
   <router-view class="router-view"/>
   <!-- <Footer v-if="!isLoginRoute" /> -->
 </template>
@@ -17,7 +17,21 @@ export default {
       auth: null,
       isLoggedIn: false,
       isModalOpen: false,
-      showNavbar: false
+      showNavbar: false,
+      routes: [
+        {
+          name: 'Mapa',
+          path: '/monitoring-control',
+        },
+        {
+          name: 'Data Repository',
+          path: '/data-repository',
+        },
+        {
+          name: 'Dashboard',
+          path: '/dashboard',
+        }
+      ]
     }
   },
   mounted() {

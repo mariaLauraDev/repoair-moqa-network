@@ -1,40 +1,43 @@
 <template>
-  <div class="login-area">
-    <ParticlesBackground />
+  <div>
+    <transition name="fade">
+      <div class="login-area">
+        <ParticlesBackground />
 
-    <div class="login-container">
-      <div class="login-card">
-        <h2 class="title">Acesse sua Conta</h2>
-        <form @submit.prevent="signIn">
-          <label for="email">
-            <div>
-              <small> E-mail</small>
-              <input type="text" id="email" v-model="email" placeholder="Digite seu e-mail" required>
-            </div>
-          </label>
-          <label for="password">
-            <div>
-              <small>
-                <small> Senha</small>
-              </small>
-              <input type="password" id="password" v-model="password" placeholder="Digite sua senha" required>
-            </div>
-          </label>
-          <p v-if="errorMessage">{{ errorMessage }}</p>
-          <button
-            type="submit"
-            :class="{ 'disabled': logInLoading }"
-            :disabled="logInLoading"
-            class="btn-action"
-          >
-            Entrar
-          </button>
-          <!-- <button @click="signInWithGoogle">Entrar com o Google</button> -->
-        </form>
+        <div class="login-container">
+          <div class="login-card">
+            <h2 class="title">Acesse sua Conta</h2>
+            <form @submit.prevent="signIn">
+              <label for="email">
+                <div>
+                  <small> E-mail</small>
+                  <input type="text" id="email" v-model="email" placeholder="Digite seu e-mail" required>
+                </div>
+              </label>
+              <label for="password">
+                <div>
+                  <small>
+                    <small> Senha</small>
+                  </small>
+                  <input type="password" id="password" v-model="password" placeholder="Digite sua senha" required>
+                </div>
+              </label>
+              <p v-if="errorMessage">{{ errorMessage }}</p>
+              <button
+                type="submit"
+                :class="{ 'disabled': logInLoading }"
+                :disabled="logInLoading"
+                class="btn-action"
+              >
+                Entrar
+              </button>
+              <!-- <button @click="signInWithGoogle">Entrar com o Google</button> -->
+            </form>
+          </div>
+          
+        </div>
       </div>
-      
-    </div>
-
+    </transition>
   </div>
 </template>
 

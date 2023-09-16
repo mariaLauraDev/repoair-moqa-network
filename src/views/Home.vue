@@ -1,16 +1,21 @@
 <template>
-  <div class="home-page">
-    <ParticlesBackground />
-
-    <div class="home-page__content">
-      <div class="home-page__title">
-        <h1>Portal de Qualidade do ar</h1>
+  <div>
+    <transition name="fade">
+      <div class="home-page">
+        <ParticlesBackground />
+    
+        <div class="home-page__content">
+          <div class="home-page__title">
+            <h1>Repositório de Dados</h1>
+          </div>
+          <div class="home-page__subtitle">
+            <h2>Monitoramento da Qualidade do Ar - Rede MoQA</h2>
+          </div>
+        </div>
       </div>
-      <div class="home-page__subtitle">
-        <h2>Dispositivos MoQa</h2>
-      </div>
-    </div>
+    </transition>
   </div>
+  
 </template>
 
 <script>

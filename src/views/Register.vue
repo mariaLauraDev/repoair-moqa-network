@@ -35,7 +35,7 @@ export default {
           // console.log(data)
           // console.log(data.user)
           // console.log("Successfully registered!")
-          this.$router.push('/portal')
+          this.$router.push('/data-repository')
         })
         .catch((error) => {
           // console.log(error)
@@ -59,7 +59,7 @@ export default {
         .then((result) => {
           console.log("Successfully signed in with Google!")
           console.log(result.user)
-          this.$router.push('/portal')
+          this.$router.push('/data-repository')
         })
         .catch((error) => {
           console.log(error)

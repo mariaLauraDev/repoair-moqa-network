@@ -1,6 +1,8 @@
 <template>
   <div>
-    <l-map v-if=markersLoaded :markers="markers" />
+    <transition name="fade">
+      <l-map v-if="markersLoaded" :markers="markers" />
+    </transition>
   </div>
 </template>
 
@@ -23,15 +25,10 @@ export default {
     return {
       markers: [],
       markersLoaded: false,
-      markersData: [
-        {name: 'Laura', lat: -3.825437152584873, long: -38.48425019484144 },
-        { lat: -3.789, long: -38.520, name: 'Marcador 2' },
-      ]
     }
   },
   mounted() {
     this.fetchMonitors()
-    console.log('markersData', this.markersData)
   },
   methods: {
     async fetchMonitors() {

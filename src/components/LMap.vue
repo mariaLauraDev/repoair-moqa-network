@@ -67,4 +67,7 @@ export default {
   border-radius: 15px;
 }
 
+.yellow {
+  color: #f1c40f;
+}
 </style>

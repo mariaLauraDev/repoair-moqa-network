@@ -11,27 +11,24 @@
             height="100px"
             loading="lazy"
             class="logo__img"
-            src="../assets/images/logo.webp"
+            src="../assets/svg/logo.svg"
             alt="Logo Moqa Portal"
             title="Logo Moqa Portal">
         </router-link>
       </div>
       <nav v-if="!isLoginRoute">
-        <ul class="header__menu">
-          <li>
+        <ul
+          class="header__menu"
+        >
+          <li
+          v-for="(route, index) in routes"
+          :key="index"
+          >
             <router-link
               v-if="isLoggedIn"
-              to="/monitoring-control"
+              :to="route.path"
             >
-              Mapa
-            </router-link>
-          </li>
-          <li>
-            <router-link
-              v-if="isLoggedIn"
-              to="/portal"
-            >
-              Portal
+              {{ route.name }}
             </router-link>
           </li>
           <li>
@@ -42,14 +39,13 @@
             >
               Entrar
             </router-link>
-
             <div
               v-else
               @click="handleSignOut"
               class="btn-logout"
             >
               Sair
-          </div>
+            </div>
           </li>
           <!-- <li>
             <router-link to="/register">Register</router-link> |
@@ -69,22 +65,17 @@
           :class="{ 'header__menu-modal--open': isModalOpen }"
         >
           <ul class="header__menu-mobile">
-            <li :class="{ 'header__menu-li-active': isModalOpen }">
+            <li 
+              v-if="isLoggedIn"
+              :class="{ 'header__menu-li-active': isModalOpen }"
+            >
               <router-link
-                v-if="isLoggedIn"
+                v-for="(route, index) in routes"
+                :key="index"
                 :class="{ 'header__menu-li-active': isModalOpen }"
-                to="/monitoring-control"
+                :to="route.path"
               >
-                Monitoramento
-              </router-link>
-            </li>
-            <li :class="{ 'header__menu-li-active': isModalOpen }">
-              <router-link
-                v-if="isLoggedIn"
-                :class="{ 'header__menu-li-active': isModalOpen }"
-                to="/portal"
-              >
-                Portal
+                {{ route.name }}
               </router-link>
             </li>
             <li :class="{ 'header__menu-li-active': isModalOpen }">
@@ -117,6 +108,8 @@
 
 <script >
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import DesktopNavbar from './DesktopNavbar.vue';
+import MobileNavbar from './MobileNavbar.vue';
 
 export default {
   data() {
@@ -125,6 +118,16 @@ export default {
       isLoggedIn: false,
       isModalOpen: false,
       showNavbar: false
+    }
+  },
+  components: {
+    DesktopNavbar,
+    MobileNavbar
+  },
+  props: {
+    routes: {
+      type: Array,
+      required: true,
     }
   },
   mounted() {
@@ -141,6 +144,9 @@ export default {
     isLoginRoute() {
       return this.$route.path === '/log-in'
     },
+    isDesktop() {
+      return window.innerWidth >= 768
+    }
   },
   methods: {
     async handleSignOut() {

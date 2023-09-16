@@ -6,7 +6,6 @@
   margin: 0;
   box-sizing: border-box;
 }
-
 #moqa-portal {
   text-align: center;
   min-height: 100vh;
@@ -17,20 +16,16 @@
   background-size: 150% 150%;
   background-color: $color-background !important;
 }
-
 #moqa-portal, html, body, main { height: 100%; }
-
 body {
   font-family: $font-family;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
 }
-
 h1 {
   font-size: $title-font-size;
   font-weight: $extrabold-font-weight;
 }
-
 h2 {
   font-size: $subtitle-font-size;
   display: block;
@@ -41,36 +36,29 @@ h2 {
   color: $color-primary;
   font-weight: bold;
 }
-
 h3 {
   font-size: $body-font-size;
   font-weight: $semibold-font-weight;
 }
-
 h4 {
   font-size: $label-font-size;
   font-weight: $semibold-font-weight;
 }
-
 h5 {
   font-size: $small-font-size;
   font-weight: $semibold-font-weight;
 }
-
 h6 {
   font-size: $small-font-size;
   font-weight: $semibold-font-weight;
 }
-
 p {
   font-size: $body-font-size;
   font-weight: $light-font-weight;
 }
-
 ul {
   list-style: none;
 }
-
 a {
   color: $color-primary;
   text-decoration: none;
@@ -79,7 +67,6 @@ a {
     color: $color-secondary;
   }
 }
-
 header {
   color: $color-text;
   margin: 0;
@@ -95,7 +82,6 @@ header {
   padding: 0 40px;
   box-shadow: 0 6px 7.5px -2px rgba(0, 0, 0, 0.075), 0 12.5px 19px 0 rgba(0, 0, 0, 0.0225), 0 4.5px 25px 0 rgba(0, 0, 0, 0.0225);
 }
-
 .router-view {
   width: 100%;
   padding: 0 40px;
@@ -105,13 +91,11 @@ header {
   align-items: center;
   justify-content: center;
 }
-
 @media (max-width: 780px) {
   header, .router-view {
     padding: 0 15px;
   }
 }
-
 label {
   color: $color-text;
   width: 100%;
@@ -121,16 +105,13 @@ label {
   margin-bottom: 5px;
   border-radius: 5px;
   max-width: 500px;
-
   input, span {
     height: 50px;
   }
-
   div {
     display: flex;
     flex-direction: column;
     width: 100%;
-
     small {
       font-size: 12px;
       margin-bottom: 3px;
@@ -141,7 +122,6 @@ label {
       grid-gap: 5px;
       gap: 5px;
     }
-
     input {
       width: 100%;
       border: none;
@@ -155,12 +135,10 @@ label {
     }
   }
 }
-
 .router-link-active {
   font-weight: bold;
   transition: font-weight .3s ease;
 }
-
 .btn {
   display: inline-block;
   padding: 0.5rem 1rem;
@@ -178,7 +156,6 @@ label {
     text-decoration: none;
   }
 }
-
 .btn-submit {
   padding: 0.5rem 1rem;
   list-style: none;
@@ -195,12 +172,10 @@ label {
   cursor: pointer;
   font-family: $font-family;
 }
-
 .btn-login:hover {
   background-color: $color-primary-transparency;
   color: #fff;
 }
-
 .btn-action {
   padding: 0.5rem 1rem;
   list-style: none;
@@ -218,22 +193,17 @@ label {
   background: #1a82ff !important;
   border-color:  #1a82ff !important;
 }
-
 .disabled {
   background: #1a82ff !important;
   border-color:  #1a82ff !important;
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-
 @media (max-width: 780px) {
   .btn-action{
     width: 100%;
   }
 }
-
-
 .btn-logout {
   padding: 0.5rem 1rem;
   list-style: none;
@@ -252,11 +222,9 @@ label {
   cursor: pointer;
   margin-left: 30px;
 }
-
 .btn-logout:hover {
   background-color: $color-gray-transparency;
 }
-
 .btn-success {
   color: $color-text-white;
   background-color: $color-text-success;
@@ -267,7 +235,6 @@ label {
     border-color: darken($color-text-success, 10%);
   }
 }
-
 .btn-danger {
   color: $color-text-white;
   background-color: $color-text-danger;
@@ -278,7 +245,6 @@ label {
     border-color: darken($color-text-danger, 10%);
   }
 }
-
 .btn-warning {
   color: $color-text-white;
   background-color: $color-text-warning;
@@ -289,7 +255,6 @@ label {
     border-color: darken($color-text-warning, 10%);
   }
 }
-
 .btn-info {
   color: $color-text-white;
   background-color: $color-text-info;
@@ -300,44 +265,44 @@ label {
     border-color: darken($color-text-info, 10%);
   }
 }
-
 .table {
   width: 100%;
   border-spacing: 0;
   box-sizing: border-box;
 }
-
 .table__cell,
 .table__header {
   padding: 0.5rem;
   text-align: left;
 }
-
 .table__header {
   text-transform: capitalize;
   font-weight: bold;
   text-align: left;
 }
-
 .table__cell {
   padding-inline: .5rem;
 }
-
 .table__row {
   position: relative;
   z-index: 1;
 }
-
 .table__row:nth-child(even) {
   background-color: #dee2e6 !important;
 }
-
 .leaflet-div-icon {
   background: transparent !important;
   border: none;
 }
-
 .material-icons {
   font-size: 32px;  /* Preferred icon size */
   color: $color-primary;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }

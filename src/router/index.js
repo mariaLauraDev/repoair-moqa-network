@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
-import Portal from '../views/Portal.vue'
+import DataRepository from '../views/DataRepository.vue'
 import LogIn from '../views/LogIn.vue'
 import Monitoring from '../views/Monitoring.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
@@ -26,12 +26,12 @@ const router = createRouter({
       }
     },
     {
-      path:'/portal',
-      name: 'portal',
-      component: Portal,
+      path:'/data-repository',
+      name: 'data repository',
+      component: DataRepository,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Portal'
+        title: 'MoQa | Data Repository'
       }
     },
     {

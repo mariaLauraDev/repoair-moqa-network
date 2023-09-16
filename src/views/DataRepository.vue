@@ -1,51 +1,55 @@
 <template>
-  <div class="download-view">
-    <div class="download-view__container">
-      <div class="download-header__container">
-        <div class="download-header__title">
-          <h2 id="instructions"> EXPORTAR RELATÓRIO CSV</h2>
-        </div>
-        <div class="download-header__options-container">
-          <div class="download-header__option">
-            <label for="startDate">
-              <div>
-                <small> Data inicial </small>
-                <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" required>
+  <div>
+    <transition name="fade">
+      <div class="download-view">
+        <div class="download-view__container">
+          <div class="download-header__container">
+            <div class="download-header__title">
+              <h2 id="instructions"> CONSULTA DE DADOS</h2>
+            </div>
+            <div class="download-header__options-container">
+              <div class="download-header__option">
+                <label for="startDate">
+                  <div>
+                    <small> Data inicial </small>
+                    <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" required>
+                  </div>
+                </label>
               </div>
-            </label>
-          </div>
-
-          <div class="download-header__option">
-            <label for="endDate">
-              <div>
-                <small> Data Final </small>
-                <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" required>
-              </div>
-            </label>
-          </div>
-
-          <button @click.prevent="fetchData" class="btn-action"> Download </button>
-        </div>
-      </div>
-      
-      <!-- <label for="startDate">Data de Início:</label>
-      <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" /> -->
-      <!-- <label for="endDate">Data de Término:</label>
-      <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" /> -->
-
-      <div class="download-body">
-        <div class="download-body__summary">
-          <div class="download-body__count">
-            <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
-          </div>
-        </div>
-        <div class="downlod-body__data">
-          <summary-data :documents="documents" :message="message" />
-        </div>
-      </div>
-    </div>
     
+              <div class="download-header__option">
+                <label for="endDate">
+                  <div>
+                    <small> Data Final </small>
+                    <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" required>
+                  </div>
+                </label>
+              </div>
+    
+              <button @click.prevent="fetchData" class="btn-action"> Download </button>
+            </div>
+          </div>
+          
+          <!-- <label for="startDate">Data de Início:</label>
+          <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" /> -->
+          <!-- <label for="endDate">Data de Término:</label>
+          <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" /> -->
+    
+          <div class="download-body">
+            <div class="download-body__summary">
+              <div class="download-body__count">
+                <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
+              </div>
+            </div>
+            <div class="downlod-body__data">
+              <summary-data :documents="documents" :message="message" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
+
 </template>
 
 <script>
