@@ -27,11 +27,11 @@ const router = createRouter({
     },
     {
       path:'/data-repository',
-      name: 'data repository',
+      name: 'dados',
       component: DataRepository,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Data Repository'
+        title: 'MoQa | Dados'
       }
     },
     {

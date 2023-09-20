@@ -24,7 +24,7 @@ export default {
           path: '/monitoring-control',
         },
         {
-          name: 'Data Repository',
+          name: 'Dados',
           path: '/data-repository',
         },
         {
