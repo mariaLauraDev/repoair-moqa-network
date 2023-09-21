@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <l-map v-if="markersLoaded" :markers="markers" />
+      <l-map v-if="markersLoaded && pageLoaded" :markers="markers" />
     </transition>
   </div>
 </template>
@@ -25,10 +25,12 @@ export default {
     return {
       markers: [],
       markersLoaded: false,
+      pageLoaded: false,
     }
   },
   mounted() {
     this.fetchMonitors()
+    this.pageLoaded = true
   },
   methods: {
     async fetchMonitors() {

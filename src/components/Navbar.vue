@@ -1,6 +1,7 @@
 <template>
   <header class="header">
     <div
+      v-if="componentLoaded"
       class="header__container"
       :class="{ 'centered-container': isLoginRoute }"
       >
@@ -117,7 +118,8 @@ export default {
       auth: null,
       isLoggedIn: false,
       isModalOpen: false,
-      showNavbar: false
+      showNavbar: false,
+      componentLoaded: false,
     }
   },
   components: {
@@ -139,6 +141,7 @@ export default {
         this.isLoggedIn = false
       }
     })
+    this.componentLoaded = true
   },
   computed: {
     isLoginRoute() {

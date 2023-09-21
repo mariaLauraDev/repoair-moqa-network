@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <div class="home-page">
+      <div v-if="pageLoaded" class="home-page">
         <ParticlesBackground />
     
         <div class="home-page__content">
@@ -24,6 +24,14 @@ import ParticlesBackground from "@/components/ParticlesBackground.vue";
 export default {
   components: {
     ParticlesBackground
+  },
+  data() {
+    return {
+      pageLoaded: false,
+    }
+  },
+  mounted() {
+    this.pageLoaded = true
   },
 };
 </script>

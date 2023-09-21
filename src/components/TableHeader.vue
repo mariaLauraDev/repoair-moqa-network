@@ -1,7 +1,8 @@
 <template>
   <thead>
     <tr class="table__header">
-      <HeaderCell label="Nº" />
+      <header-cell v-for="(column, index) in headerColumns" :key="index" :label="column" />
+      <!-- <HeaderCell label="Nº" />
       <HeaderCell label="moqaID" />
       <HeaderCell label="Timestamp" />
       <HeaderCell label="extTemp" />
@@ -24,7 +25,7 @@
       <HeaderCell label="bmeLog" />
       <HeaderCell label="pmsLog" />
       <HeaderCell label="msdLog" />
-      <HeaderCell label="rtcLog" />
+      <HeaderCell label="rtcLog" /> -->
     </tr>
   </thead>
 </template>
@@ -34,6 +35,12 @@ import HeaderCell from './HeaderCell.vue';
 
 export default {
   name: 'TableHeader',
+  props : {
+    headerColumns: {
+      type: Array,
+      required: true
+    }
+  },
   components: {
     HeaderCell
   }

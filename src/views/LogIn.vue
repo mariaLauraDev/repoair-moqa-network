@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <div class="login-area">
+      <div v-if="pageLoaded" class="login-area">
         <ParticlesBackground />
 
         <div class="login-container">
@@ -58,7 +58,11 @@ export default {
   data() {
     return {
       logInLoading: false,
+      pageLoaded: false,
     }
+  },
+  mounted() {
+    this.pageLoaded = true
   },
   methods: {
     signIn() {

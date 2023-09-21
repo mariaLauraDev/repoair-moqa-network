@@ -1,17 +1,22 @@
 <template>
   <div>
     <transition name="fade">
-      <div class="dashboard">
-        
+      <div v-if="pageLoaded" class="dashboard">
       </div>
     </transition>
-
   </div>
 </template>
 
 <script>
 export default {
-
+  data() {
+    return {
+      pageLoaded: false,
+    }
+  },
+  mounted() {
+    this.pageLoaded = true
+  },
 }
 </script>
 

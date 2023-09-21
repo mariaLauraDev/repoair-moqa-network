@@ -1,6 +1,6 @@
 <template>
   <table class="table">
-    <TableHeader />
+    <TableHeader :header-columns="headerColumns"/>
     <tbody>
       <Row v-for="(row, index) in rows" :rowContent="row" :key="index" :index="index"/>
     </tbody>
@@ -19,6 +19,10 @@ export default {
   },
   props: {
     rows: {
+      type: Array,
+      required: true
+    },
+    headerColumns: {
       type: Array,
       required: true
     }

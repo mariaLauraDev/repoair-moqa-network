@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import DataRepository from '../views/DataRepository.vue'
 import LogIn from '../views/LogIn.vue'
 import Monitoring from '../views/Monitoring.vue'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import Dashboard from '../views/Dashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,20 +19,19 @@ const router = createRouter({
       }
     },
     {
+      path:'/log-in',
+      name: 'log-in',
+      component: LogIn,
+      meta: {
+        title: 'MoQa | LogIn'
+      }
+    },
+    {
       path: '/register',
       name: 'register',
       component: Register,
       meta: {
         title: 'MoQa | Register'
-      }
-    },
-    {
-      path:'/data-repository',
-      name: 'dados',
-      component: DataRepository,
-      meta: {
-        requiresAuth: true,
-        title: 'MoQa | Dados'
       }
     },
     {
@@ -44,11 +44,21 @@ const router = createRouter({
       }
     },
     {
-      path:'/log-in',
-      name: 'log-in',
-      component: LogIn,
+      path:'/data-repository',
+      name: 'dados',
+      component: DataRepository,
       meta: {
-        title: 'MoQa | LogIn'
+        requiresAuth: true,
+        title: 'MoQa | Dados'
+      }
+    },
+    {
+      path:'/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true,
+        title: 'MoQa | Dashboard'
       }
     },
   ]

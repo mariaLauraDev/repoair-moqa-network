@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
     <template v-if="documents.length > 0">
-      <Table :rows="documents" />
+      <Table :rows="documents" :header-columns="headerColumns" />
     </template>
     <template v-else>
       <p> {{ message }}</p>

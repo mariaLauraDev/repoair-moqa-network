@@ -1,6 +1,6 @@
 <template>
   <Navbar :routes="routes"/>
-  <router-view class="router-view"/>
+  <router-view  class="router-view"/>
   <!-- <Footer v-if="!isLoginRoute" /> -->
 </template>
 
