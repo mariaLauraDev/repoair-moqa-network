@@ -2,10 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
+import Profile from '../views/Profile.vue'
 import DataRepository from '../views/DataRepository.vue'
 import LogIn from '../views/LogIn.vue'
 import Monitoring from '../views/Monitoring.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Analyze from '../views/Analyze.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,6 +37,15 @@ const router = createRouter({
       }
     },
     {
+      path:'/profile',
+      name: 'profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true,
+        title: 'MoQa | Profile'
+      }
+    },
+    {
       path:'/monitoring-control',
       name: 'monitoring control',
       component: Monitoring,
@@ -61,6 +72,15 @@ const router = createRouter({
         title: 'MoQa | Dashboard'
       }
     },
+    {
+      path:'/analyze',
+      name: 'analyze',
+      component: Analyze,
+      meta: {
+        requiresAuth: true,
+        title: 'MoQa | Análise'
+      }
+    },
   ]
 })
 
@@ -79,6 +99,11 @@ const getCurrentUser = () => {
 
 router.beforeEach( async (to, from, next) => {
   const title = to.meta.title
+
+  // if ( to.fullPath === '/' && await getCurrentUser() ) {
+  //   next('/dashboard')
+  // }
+
   if (title) {
     document.title = title
   }
@@ -88,7 +113,7 @@ router.beforeEach( async (to, from, next) => {
       next()
     } else {
       alert('You must be signed in to see this page')
-      next('/')
+      next('/log-in')
     }
   } else {
     next()

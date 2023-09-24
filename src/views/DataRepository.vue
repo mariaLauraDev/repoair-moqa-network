@@ -3,10 +3,14 @@
     <transition name="fade">
       <div v-if="pageLoaded" class="download-view">
         <div class="download-view__container">
-          <div class="download-header__container">
-            <div class="download-header__title">
+          <p style="font-weight: 600"> Selecione um período para exportar os dados:</p>
+          <div
+            class="download-header__container"
+            style="border-width: 1px; border-radius: 0.375rem; padding-bottom: 1.25rem; padding-top: 1.25rem; padding-left: 1rem; padding-right: 1rem;"
+          >
+            <!-- <div class="download-header__title">
               <h2 id="instructions"> CONSULTA DE DADOS</h2>
-            </div>
+            </div> -->
             <div class="download-header__options-container">
 
               <!-- <div class="download-header__options-group" style="display: flex; flex-direction: column; align-items: leaft; justify-content: flex-start; gap: 5px"> -->
@@ -89,7 +93,7 @@
                 :class="{ 'disabled': !canSearchData }"
                 style="display: flex; align-items: center ; padding: 0.3rem 0.3rem;"
               >
-                <i class="material-icons" style="color: #fff"> search </i>
+                <span class="material-symbols-outlined" style="color: #fff"> search </span>
               </button>
               <button
                 @click.prevent="downloadCsv"
@@ -98,7 +102,7 @@
                 class="btn-action"
                 style="display: flex; align-items: center ; padding: 0.3rem 0.3rem;"
               >
-                <i class="material-icons" style="color: #fff"> arrow_downward </i>
+                <span class="material-symbols-outlined" style="color: #fff"> arrow_downward </span>
               </button>
             </div>
           </div>
@@ -155,7 +159,7 @@ export default {
       selectedStartTime: '00:00',
       selectedEndTime: '23:59',
       documents: [],
-      message: 'Selecione um período para exportar os dados',
+      message: '',
       numberOfDocuments: 0,
       downloading: false,
       fetching: false,
@@ -319,18 +323,18 @@ export default {
   flex-direction: row;
   box-sizing: border-box;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: nowrap;
   align-content: flex-start;
   width: 100%;
-  margin: 30px 0;
+  margin: 15px 0;
 }
 
 .download-header__options-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end; //flex-end
+  justify-content: flex-start; //flex-end
   align-items: right; //right
   gap: 20px;
   width: 100%;

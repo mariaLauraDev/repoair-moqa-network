@@ -31,10 +31,6 @@ export default{
 </script>
 
 <style>
-.container {
-  margin: 25px auto;
-  font-size: 13px;
-}
 
 .title {
   font-size: 11px;

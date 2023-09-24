@@ -52,15 +52,6 @@ export default {
   gap: 20px;
 }
 
-.container {
-  width: 100%;
-  max-width: 1520px;
-}
-
-.container {
-  margin: 0 auto;
-  padding: 0 15px;
-}
 
 .footer section article {
   margin: 10px 0;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <div v-if="pageLoaded" class="dashboard">
+      <div v-if="pageLoaded" class="analyze">
         Em breve!
       </div>
     </transition>

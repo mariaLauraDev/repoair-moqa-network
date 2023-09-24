@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2 style="margin-top: 40px">CONTROLE DE MONITORAMENTO</h2>
     <div id="mapContainer" />
   </div>
 </template>
@@ -20,8 +19,6 @@ export default {
   },
   mounted() {
     this.createMapLayer()
-
-    console.log(this.markers)
   },
   beforeDestroy() {
     if (this.map) {
@@ -44,7 +41,7 @@ export default {
       this.markers.forEach((marker) => {
         // Defina um ícone personalizado para o marcador
         const customIcon = L.divIcon({
-          html: `<i class="material-icons"> memory </i>`, // Substitua 'marker.icon' pelo ícone desejado
+          html: `<span class="material-symbols-outlined"> memory </span>`, // Substitua 'marker.icon' pelo ícone desejado
           iconSize: [40, 40], // Tamanho do ícone
         });
 
@@ -59,12 +56,13 @@ export default {
 
 <style scoped lang="scss">
 #mapContainer {
-  width: 90vw;
+  width: 100%;
   height: calc(80vh - 50px);
   margin-top: 25px;
-  box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
-  border: 5px solid rgb(222, 226, 230);
+  //box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
+  border: 1px solid rgb(222, 226, 230);
   border-radius: 15px;
+  z-index: 1;
 }
 
 .yellow {

@@ -15,7 +15,6 @@
       </div>
     </transition>
   </div>
-  
 </template>
 
 <script>
@@ -44,35 +43,48 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; 
     background: transparent;
+    padding: 20px;
   }
 
   &__title {
     text-align: center;
-    text-align: center;
     white-space: nowrap;
-    vertical-align: middle;
-    background: transparent;
     
     h1 {
       color: $color-primary;
       margin-bottom: 10px;
-      font-size: $title-font-size;
-      background: transparent;
+      font-size: 24px;
     }
   }
   
   &__subtitle {
-    background-color: transparent;
-
     h2 {
-      font-size: $subtitle-font-size;
+      font-size: 18px;
       font-weight: $semibold-font-weight;
       color: $color-secondary;
-      background-color: transparent;
     }
   }
 }
 
+@media (min-width: 768px) {
+  .home-page {
+    &__content {
+      padding: 40px;
+    }
+
+    &__title {
+      h1 {
+        font-size: 36px;
+      }
+    }
+    
+    &__subtitle {
+      h2 {
+        font-size: 24px;
+      }
+    }
+  }
+}
 </style>
