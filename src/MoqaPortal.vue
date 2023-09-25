@@ -26,10 +26,9 @@
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import Header from '@/components/Header.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import Navbar from '@/components/Navbar.vue'
+
 export default {
   components: {
-    Navbar,
     Header,
     Sidebar
   },

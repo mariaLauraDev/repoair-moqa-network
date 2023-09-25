@@ -51,6 +51,7 @@ export default {
   &__title {
     text-align: center;
     white-space: nowrap;
+    background-color: white;
     
     h1 {
       color: $color-primary;
@@ -60,6 +61,8 @@ export default {
   }
   
   &__subtitle {
+    background-color: white;
+
     h2 {
       font-size: 18px;
       font-weight: $semibold-font-weight;
