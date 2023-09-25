@@ -3,14 +3,11 @@
     <transition name="fade">
       <div v-if="pageLoaded" class="download-view">
         <div class="download-view__container">
-          <p style="font-weight: 600"> Selecione um período para exportar os dados:</p>
+          <p style="font-weight: 600"> Selecione os filtros para exportar </p>
           <div
             class="download-header__container"
-            style="border-width: 1px; border-radius: 0.375rem; padding-bottom: 1.25rem; padding-top: 1.25rem; padding-left: 1rem; padding-right: 1rem;"
+            style="padding-top: 0.25rem; padding-bottom: 1.25rem;"
           >
-            <!-- <div class="download-header__title">
-              <h2 id="instructions"> CONSULTA DE DADOS</h2>
-            </div> -->
             <div class="download-header__options-container">
 
               <!-- <div class="download-header__options-group" style="display: flex; flex-direction: column; align-items: leaft; justify-content: flex-start; gap: 5px"> -->
@@ -107,21 +104,26 @@
             </div>
           </div>
           
-          <!-- <label for="startDate">Data de Início:</label>
-          <input type="date" id="startDate" v-model="selectedStartDate" aria-labelledby="instructions" /> -->
-          <!-- <label for="endDate">Data de Término:</label>
-          <input type="date" id="endDate" v-model="selectedEndDate" aria-labelledby="instructions" /> -->
-    
-          <div class="download-body">
-            <div class="download-body__summary">
-              <div class="download-body__count">
-                <p v-if="numberOfDocuments > 0" aria-live="polite">{{ numberOfDocuments }} documentos encontrados</p>
-              </div>
-            </div>
-            <div class="downlod-body__data">
-            </div>
+          <hr class="divider" />
+
+          <div v-if="fetching" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-top: 2rem;">
+            <TreeDotsLoading />
           </div>
-          <TablePaginated v-if="numberOfDocuments > 0" :header-columns="summaryHeader" :rows="documents" :rows-props="summaryHeader" :table-title="tableTitle" />
+          <div v-if="numberOfDocuments > 0">
+              <p class="title"> Resumo </p>
+            <section
+              class="download-header__summary"
+            >
+              <Card title="Total de dados" :value="numberOfDocuments + ' documentos'" description="no período selecionado"/>
+              <Card title=" Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
+            </section>
+      
+            <TablePaginated :header-columns="monitorsHeader" :rows="monitorsFound" :rows-props="monitorsProps" table-title="Monitores encontrados" />
+            <TablePaginated :header-columns="summaryHeader" :rows="documents" :rows-props="summaryHeader" :table-title="tableTitle" />
+          </div>
+          <div v-else>
+            <p style="margin-top: 2rem;"> {{ message }} </p>
+          </div>
         </div>
       </div>
     </transition>
@@ -132,7 +134,9 @@
 <script>
 import { getFirestore } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-
+import Card from '../components/Card.vue'
+import TablePaginated from '../components/TablePaginated.vue';
+import TreeDotsLoading from '../components/TreeDotsLoading.vue';
 import {
   collection,
   getDocs,
@@ -145,11 +149,12 @@ import {
 } from 'firebase/firestore'
 
 import download from 'downloadjs';
-import TablePaginated from '../components/TablePaginated.vue';
 
 export default {
   components: {
-    TablePaginated
+    TablePaginated,
+    Card,
+    TreeDotsLoading
   },
   data() {
     return {
@@ -158,16 +163,20 @@ export default {
       selectedEndDate: null,
       selectedStartTime: '00:00',
       selectedEndTime: '23:59',
-      documents: {},
+      documents: [],
+      monitorsFound: [],
       message: '',
       tableTitle: 'Dados encontrados',
       numberOfDocuments: 0,
+      numberOfMonitors: 0,
       downloading: false,
       fetching: false,
       user: null,
       today: new Date().toISOString().slice(0, 10),
       messages: ['Selecione um período para exportar os dados', 'Carregando dados...', 'Nenhum dado encontrado para os filtros selecionados'],
-      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"]
+      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
+      monitorsHeader: ["MoqaID", "Último registro (+3h de fuso)"],
+      monitorsProps: ["moqaID", "lastTimestamp"]
     }
   },
   computed: {
@@ -215,8 +224,11 @@ export default {
     },
     async fetchDataFromFirestore() {
       try {
+        this.documents = []
+        this.monitorsFound = []
+        this.numberOfDocuments = 0
+        this.numberOfMonitors = 0
         this.fetching = true
-        this.message = this.messages[1]
         const firestore = getFirestore()
         const pollutantsCollection = collection(firestore, 'system-1')
 
@@ -238,15 +250,14 @@ export default {
         });
         this.numberOfDocuments = querySnapshot.size
         this.documents = docs
-        console.log('type', typeof this.documents)
-        console.log('documents', this.documents.slice(0, 2))
+        this.extractMonitorsFound()
 
-        this.documents.length === 0 ? this.message = this.messages[2] : this.message = this.messages[1]
+        this.documents.length === 0 ? this.message = this.messages[2] : ''
       } finally {
         this.fetching = false
       }
     },
-    async downloadCsv () {
+    async downloadCsv() {
       if (!this.documents || this.documents.length === 0) {
         this.message = "Não é possível exportar dados vazios."
         return
@@ -270,6 +281,22 @@ export default {
       } finally {
         this.downloading = false
       }
+    },
+    extractMonitorsFound() {
+      const monitors = [];
+      const moqaIDs = new Set()
+
+      this.documents.forEach((document) => {
+        const { moqaID, Timestamp } = document
+
+        if (!moqaIDs.has(moqaID)) {
+          monitors.push({ moqaID, lastTimestamp: new Date(Timestamp.seconds * 1000).toISOString() })
+          moqaIDs.add(moqaID)
+        }
+      });
+      
+      this.monitorsFound = monitors
+      this.numberOfMonitors = monitors.length
     },
     convertToCsv(data) {
       const fields = Object.keys(data[0])
@@ -295,81 +322,108 @@ export default {
 </script>
 
 <style lang="scss">
-.download-view{
-  margin: 0;
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
-  &__container {
-    padding: 0 20px;
-    box-sizing: border-box;
-    max-width: 1520px;
-    margin: 0 auto;
-    width: 100%;
-    gap:10px
-  }
-}
-
-.download-header__title {
-  font-size: $subtitle-font-size;
-  color: $color-primary;
-  font-weight: $semibold-font-weight;
-  width: 100%;
-  text-align: left;
-}
-
-.download-header__container{
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
+.download-header__container {
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  flex-wrap: nowrap;
-  align-content: flex-start;
-  width: 100%;
-  margin: 15px 0;
+  align-items: center;
+  gap:10px
 }
 
 .download-header__options-container {
-  display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start; //flex-end
-  align-items: right; //right
-  gap: 20px;
+  justify-content: flex-start;
+  align-items: center;
+  width: 250px;
+}
+
+.download-header__option {
   width: 100%;
 }
 
-@media (max-width: 780px) {
-  .download-header__container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    align-items: center;
-    gap:10px
-  }
+.btn-action{
+  width: 100%;
+}
 
-  .download-header__options-container {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    align-items: center;
-    width: 250px;
-  }
+.download-header__title {
+  text-align: center;
+}
 
-  .download-header__option {
+.download-header__summary {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.title {
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.divider {
+  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
+  margin: 0;
+  border-top-width: 1px;
+  color: inherit;
+  height: 0;
+}
+
+@media (min-width: 780px) {
+  .download-view{
+    margin: 0;
+    box-sizing: border-box;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    &__container {
+      padding: 0 20px;
+      box-sizing: border-box;
+      max-width: 1520px;
+      margin: 0 auto;
+      width: 100%;
+      gap:10px
+    }
   }
-
-  .btn-action{
-    width: 100%;
-  }
-
+  
   .download-header__title {
-    text-align: center;
+    font-size: $subtitle-font-size;
+    color: $color-primary;
+    font-weight: $semibold-font-weight;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .download-header__container{
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    width: 100%;
+    margin-top: 15px;
+  }
+  
+  .download-header__options-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start; //flex-end
+    align-items: right; //right
+    gap: 20px;
+    width: 100%;
+  }
+
+  .download-header__summary {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
 }
 

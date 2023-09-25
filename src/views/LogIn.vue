@@ -142,7 +142,7 @@ export default {
   }
 }
 
-.btn-action{
+.btn-action {
   width: 100%;
 }
 

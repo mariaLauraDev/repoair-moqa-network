@@ -24,7 +24,7 @@
               :key="index"
               class="cell"
             >
-              {{row[rowProp] }}
+              {{ row[rowProp] }}
             </td>
           </tr>
         </tbody>
