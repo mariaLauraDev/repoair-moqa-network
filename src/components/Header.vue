@@ -101,10 +101,12 @@
               </div>
             </div>
           </transition>
+          <div v-if="isUserModalOpen" class="modal-overlay" @click.prevent="changeUserModalState"></div>
         </div>
 
         <!-- Mobile Dropdown menu -->
         <div
+          v-if="showLoginButton"
           class="header__actions__user"
           :class="{'open': isModalOpen}"
         >
@@ -170,7 +172,7 @@
               </div>
             </div>
           </transition>
-          
+          <div v-if="isModalOpen" class="modal-overlay" @click.prevent="changeModalState"></div>
         </div>
       </div>
     </div>
@@ -388,6 +390,15 @@ export default {
   border-top-width: 1px;
   color: inherit;
   height: 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
 }
 
 @media (min-width: 768px) {
