@@ -46,7 +46,7 @@
             <div
               v-if="isUserModalOpen"
               class="header__actions__modal"
-              style="right: 230px;"
+              style="right: 0px; margin-top: 2.75rem"
             >
               <div
                 v-if="isLoggedIn"
@@ -64,7 +64,7 @@
                 class="profile-options"
               >
                 <router-link
-                  v-for="(option, index) in loggedProfileMenuOptions"
+                  v-for="(option, index) in profileDesktopMenuOptions"
                   :key="index"
                   class="profile-options__item"
                   @click.prevent="changeUserModalState"
@@ -72,7 +72,9 @@
                 >
                   {{ option.title }}
                 </router-link>
-                <hr class="divider" />
+                <hr
+                  v-if="isHomePath"
+                  class="divider" />
                 <button
                   @click.prevent="handleSignOut"
                   class="profile-options__item"
@@ -90,7 +92,7 @@
                   class="profile-options__item"
                 >
                   <router-link
-                    @click.prevent="changeModalState"
+                    @click.prevent="changeUserModalState"
                     :to="option.path"
                   >
                     {{ option.title }}
@@ -227,8 +229,21 @@ export default {
         return '/'
       }
     },
-    showLoginButton () {
+    profileDesktopMenuOptions () {
+      if (this.isLoggedIn) {
+        return this.isHomePath? this.loggedProfileMenuOptions : []
+      } else {
+        return this.deafultProfileOptions
+      }
+    },
+    isHomePath () {
       return this.$route.path === '/'
+    },
+    isLoginOrRegisterPath () {
+      return this.$route.path === '/log-in' || this.$route.path === '/register'
+    },
+    showLoginButton () {
+      return this.$route.path !== '/log-in' && this.$route.path !== '/register'
     }
   },
   mounted() {
@@ -260,6 +275,7 @@ export default {
       try {
         await signOut(this.auth)
         this.$router.push('/')
+        this.$router.go(0)
         console.log('Signed out successfully.')
       } catch (error) {
         console.error('Error signing out:', error.message)
@@ -380,7 +396,8 @@ export default {
   }
 
   .header__actions__portal {
-    display: block;
+    display: flex;
+    position: relative;
   }
 }
 </style>

@@ -100,9 +100,9 @@ const getCurrentUser = () => {
 router.beforeEach( async (to, from, next) => {
   const title = to.meta.title
 
-  // if ( to.fullPath === '/' && await getCurrentUser() ) {
-  //   next('/dashboard')
-  // }
+  if ( to.fullPath === '/log-in' && await getCurrentUser() ) {
+    next('/monitoring-control')
+  }
 
   if (title) {
     document.title = title
