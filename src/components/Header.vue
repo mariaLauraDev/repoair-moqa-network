@@ -216,6 +216,10 @@ export default {
         {
           title: 'Dashboard',
           path: '/dashboard',
+        },
+        {
+          title: 'Análise',
+          path: '/analyze',
         }
       ],
     }

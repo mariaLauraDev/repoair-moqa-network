@@ -47,7 +47,7 @@ export default {
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)
-          .bindPopup(marker.name)
+          .bindPopup(marker.name +' | ' + marker.idDb)
       });
     }
   }
@@ -60,8 +60,8 @@ export default {
   height: calc(80vh - 50px);
   margin-top: 25px;
   //box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
-  border: 1px solid rgb(222, 226, 230);
-  border-radius: 15px;
+  border: 3px solid rgb(222, 226, 230);
+  border-radius: 0.375rem;
   z-index: 1;
 }
 

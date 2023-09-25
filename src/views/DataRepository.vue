@@ -102,7 +102,7 @@
                 class="btn-action"
                 style="display: flex; align-items: center ; padding: 0.3rem 0.3rem;"
               >
-                <span class="material-symbols-outlined" style="color: #fff"> arrow_downward </span>
+                <span class="material-symbols-outlined" style="color: #fff"> download </span>
               </button>
             </div>
           </div>
@@ -119,9 +119,9 @@
               </div>
             </div>
             <div class="downlod-body__data">
-              <summary-data :documents="documents" :message="message" :header-columns="summaryHeader"/>
             </div>
           </div>
+          <TablePaginated v-if="numberOfDocuments > 0" :header-columns="summaryHeader" :rows="documents" :rows-props="summaryHeader" :table-title="tableTitle" />
         </div>
       </div>
     </transition>
@@ -145,11 +145,11 @@ import {
 } from 'firebase/firestore'
 
 import download from 'downloadjs';
-import SummaryData from '../components/SummaryData.vue';
+import TablePaginated from '../components/TablePaginated.vue';
 
 export default {
   components: {
-    SummaryData
+    TablePaginated
   },
   data() {
     return {
@@ -158,15 +158,16 @@ export default {
       selectedEndDate: null,
       selectedStartTime: '00:00',
       selectedEndTime: '23:59',
-      documents: [],
+      documents: {},
       message: '',
+      tableTitle: 'Dados encontrados',
       numberOfDocuments: 0,
       downloading: false,
       fetching: false,
       user: null,
       today: new Date().toISOString().slice(0, 10),
       messages: ['Selecione um período para exportar os dados', 'Carregando dados...', 'Nenhum dado encontrado para os filtros selecionados'],
-      summaryHeader: ["Nº", "moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"]
+      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"]
     }
   },
   computed: {
@@ -237,6 +238,8 @@ export default {
         });
         this.numberOfDocuments = querySnapshot.size
         this.documents = docs
+        console.log('type', typeof this.documents)
+        console.log('documents', this.documents.slice(0, 2))
 
         this.documents.length === 0 ? this.message = this.messages[2] : this.message = this.messages[1]
       } finally {
