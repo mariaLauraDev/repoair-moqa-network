@@ -7,10 +7,9 @@
       <div>
         <button
         @click.prevent="downloadCsv"
-        :class="{ 'disabled': !canDownloadData }"
+        :class="{ 'downloading': !canDownloadData }"
         :disabled="!canDownloadData"
         class="btn-action--download"
-        style=""
       >
         <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
         <span style="margin-left: .5rem"> Exportar </span>
@@ -287,6 +286,12 @@ export default {
 }
 
 .btn-action--download:hover {
+  color: #64748b;
+  background-color: #fff;
+}
+
+.downloading {
+  cursor: not-allowed;
   color: #64748b;
   background-color: #fff;
 }
