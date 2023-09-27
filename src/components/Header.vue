@@ -387,6 +387,11 @@ export default {
   font-weight: 500
 }
 
+.profile-options__item:hover {
+  background-color: rgba(178, 199, 78, 0.3);
+  cursor: pointer;
+}
+
 .divider {
   margin-bottom: 0.25rem;
   margin-top: 0.25rem;

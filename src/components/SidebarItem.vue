@@ -47,4 +47,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.sidebar__item:hover {
+  background-color: rgba(178, 199, 78, 0.3);
+  //transition: background-color 0.3s ease-in-out;
+}
 </style>

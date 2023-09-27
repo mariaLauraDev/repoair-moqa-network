@@ -112,6 +112,11 @@ export default {
   display: inline-flex;
 }
 
+.sidebar__item:hover {
+  background-color: rgba(178, 199, 78, 0.3);
+  //transition: background-color 0.3s ease-in-out;
+}
+
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,7 +126,7 @@ export default {
 .router-link-active, .router-link-exact-active {
   //sets bg color #B2C79A for active link
   background-color: rgba(178, 199, 78, 0.3); ; 
-  transition: background-color 0.3s ease-in-out;
+  //transition: background-color 0.3s ease-in-out;
   font-weight: 600;
 }
 
