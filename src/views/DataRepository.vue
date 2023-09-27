@@ -3,7 +3,7 @@
     <transition name="fade">
       <div v-if="pageLoaded" class="download-view">
         <div class="download-view__container">
-          <p style="font-weight: 600"> Selecione os filtros para exportar </p>
+          <p style="font-weight: 600"> Selecione os filtros para consultar o banco de dados </p>
           <div
             class="download-header__container"
             style="padding-top: 0.25rem; padding-bottom: 1.25rem;"
@@ -92,15 +92,7 @@
               >
                 <span class="material-symbols-outlined" style="color: #fff"> search </span>
               </button>
-              <button
-                @click.prevent="downloadCsv"
-                :class="{ 'disabled': !canDownloadData }"
-                :disabled="!canDownloadData"
-                class="btn-action"
-                style="display: flex; align-items: center ; padding: 0.3rem 0.3rem;"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"> download </span>
-              </button>
+              
             </div>
           </div>
           
@@ -118,8 +110,25 @@
               <Card title=" Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
             </section>
       
-            <TablePaginated :header-columns="monitorsHeader" :rows="monitorsFound" :rows-props="monitorsProps" table-title="Monitores encontrados" />
-            <TablePaginated :header-columns="summaryHeader" :rows="documents" :rows-props="summaryHeader" :table-title="tableTitle" />
+            <TablePaginated
+              :header-columns="monitorsHeader"
+              :rows="monitorsFound"
+              :rows-props="monitorsProps"
+              table-title="Monitores encontrados"
+              :user="user"
+              :selected-start-date="selectedStartDate"
+              :selected-end-date="selectedEndDate"
+            />
+
+            <TablePaginated
+              :header-columns="summaryHeader"
+              :rows="documents"
+              :rows-props="summaryHeader"
+              table-title="Dados encontrados"
+              :user="user"
+              :selected-start-date="selectedStartDate"
+              :selected-end-date="selectedEndDate"
+            />
           </div>
           <div v-else>
             <p style="margin-top: 2rem;"> {{ message }} </p>

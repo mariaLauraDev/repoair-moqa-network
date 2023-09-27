@@ -1,6 +1,23 @@
 <template>
   <div class="table_container">
-    <p class="table__title"> {{ tableTitle }} </p>
+    <div
+      style="display: flex; justify-content: space-between; align-items: center;"
+    >
+      <p class="table__title"> {{ tableTitle }} </p>
+      <div>
+        <button
+        @click.prevent="downloadCsv"
+        :class="{ 'disabled': !canDownloadData }"
+        :disabled="!canDownloadData"
+        class="btn-action--download"
+        style=""
+      >
+        <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
+        <span style="margin-left: .5rem"> Exportar </span>
+      </button>
+      </div>
+    </div>
+
     <div class="table__content">
       <table class="table">
         <thead>
@@ -41,66 +58,129 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      rows: {
-        type: Array,
-        default: () => []
-      },
-      rowsProps: {
-        type: Array,
-        required: true
-      },
-      headerColumns: {
-        type: Array,
-        required: true
-      },
-      tableTitle: {
-        type: String,
-        required: true
-      }
+import download from 'downloadjs';
+import { getFirestore, collection, addDoc,Timestamp } from 'firebase/firestore'
+
+export default {
+  props: {
+    rows: {
+      type: Array,
+      default: () => []
     },
-    data() {
-      return {
-        currentPage: 1,
-        rowsPerPage: 10
-      };
+    rowsProps: {
+      type: Array,
+      required: true
     },
-    computed: {
-      isFirstPage() {
-        return this.currentPage === 1;
-      },
-      isLastPage() {
-        return this.currentPage === this.totalPages;
-      },
-      totalPages() {
-        return Math.ceil(this.rows.length / this.rowsPerPage);
-      },
-      displayedRows() {
-        const start = (this.currentPage - 1) * this.rowsPerPage;
-        const end = start + this.rowsPerPage;
-        return this.rows.slice(start, end);
-      }
+    headerColumns: {
+      type: Array,
+      required: true
     },
-    methods: {
-      firstPage () {
-        this.currentPage = 1
-      },
-      prevPage() {
-        if (this.currentPage > 1) {
-          this.currentPage--;
-        }
-      },
-      nextPage() {
-        if (this.currentPage < this.totalPages) {
-          this.currentPage++;
-        }
-      },
-      lastPage () {
-        this.currentPage = this.totalPages
-      }
+    tableTitle: {
+      type: String,
+      required: true
+    },
+    selectedStartDate: {
+      type: String,
+      required: true
+    },
+    selectedEndDate: {
+      type: String,
+      required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    },
+  },
+  data() {
+    return {
+      currentPage: 1,
+      rowsPerPage: 10,
+      downloading: false,
     }
+  },
+  computed: {
+    isFirstPage() {
+      return this.currentPage === 1;
+    },
+    isLastPage() {
+      return this.currentPage === this.totalPages;
+    },
+    totalPages() {
+      return Math.ceil(this.rows.length / this.rowsPerPage);
+    },
+    displayedRows() {
+      const start = (this.currentPage - 1) * this.rowsPerPage;
+      const end = start + this.rowsPerPage;
+      return this.rows.slice(start, end);
+    },
+    canDownloadData () {
+      return this.rows.length > 0 && !this.downloading
+    }
+  },
+  methods: {
+    firstPage () {
+      this.currentPage = 1
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    lastPage () {
+      this.currentPage = this.totalPages
+    },
+    async downloadCsv() {
+      if (!this.rows || this.rows.length === 0) {
+        console.log("Não é possível exportar dados vazios.")
+        return
+      }
+
+      try {
+        this.downloading = true
+        const csvData = this.convertToCsv(this.rows)
+        download(csvData, `${this.tableTitle.replace(/\s+/g, '-').toUpperCase()}-${this.selectedStartDate}-ate-${this.selectedEndDate}.csv`, 'text/csv')
+        const firestore = getFirestore()
+        const downloadHistoryCollection = collection(firestore, 'download-history')
+        const downloadRecord = {
+          user: this.user,
+          tableTitle: this.tableTitle,
+          startDate: this.selectedStartDate,
+          endDate: this.selectedEndDate,
+          numberOfDocuments: this.rows.length,
+          timestamp: new Date()
+        }
+        await addDoc(downloadHistoryCollection, downloadRecord)
+      } finally {
+        this.downloading = false
+      }
+    },
+    convertToCsv(data) {
+      const fields = Object.keys(data[0])
+
+      const csvHeader = fields.join(',')
+
+      const csvData = data.map((row) => {
+        return fields.map((field) => {
+          if (field === 'Timestamp') {
+            const timestamp = row[field]
+            const formattedTimestamp = new Date(timestamp.seconds * 1000).toISOString()
+            return formattedTimestamp
+          } else {
+            return row[field]
+          }
+        }).join(',')
+      }).join('\n')
+
+      return `${csvHeader}\n${csvData}`
+    },
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -175,7 +255,6 @@
 .pagination button:hover {
   color: $color-primary;
   background-color: rgba(178, 199, 78, 0.3);
-
 }
 
 .pagination button[disabled] {
@@ -188,5 +267,27 @@
   font-weight: 500;
   font-size: .75rem;
   line-height: 1rem;
+}
+
+.btn-action--download {
+  display: flex;
+  align-items: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+  text-align: left;
+  color: $color-primary;
+  background-color: rgba(178, 199, 78, 0.3);
+}
+
+.btn-action--download:hover {
+  color: #64748b;
+  background-color: #fff;
 }
 </style>
