@@ -237,6 +237,7 @@ export default {
         this.monitorsFound = []
         this.numberOfDocuments = 0
         this.numberOfMonitors = 0
+        this.message = ''
         this.fetching = true
         const firestore = getFirestore()
         const pollutantsCollection = collection(firestore, 'system-1')
