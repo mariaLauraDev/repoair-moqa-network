@@ -57,7 +57,7 @@ export default {
 <style scoped lang="scss">
 #mapContainer {
   width: 100%;
-  height: calc(80vh - 50px);
+  height: calc(50vh);
   margin-top: 25px;
   //box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
   border: 3px solid rgb(222, 226, 230);
@@ -67,5 +67,11 @@ export default {
 
 .yellow {
   color: #f1c40f;
+}
+
+@media (min-width: 768px) {
+  #mapContainer {
+    height: calc(50vh);
+  }
 }
 </style>

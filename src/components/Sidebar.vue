@@ -44,20 +44,20 @@ export default {
       //   path: '/profile',
       //   icon: 'profile'
       // },
+      // {
+      //   title: 'Mapa',
+      //   path: '/monitoring-control',
+      //   icon: 'map'
+      // },
       {
-        title: 'Mapa',
-        path: '/monitoring-control',
-        icon: 'map'
+        title: 'Dashboard',
+        path: '/dashboard',
+        icon: 'space_dashboard'
       },
       {
         title: 'Dados',
         path: '/data-repository',
         icon: 'cloud_download'
-      },
-      {
-        title: 'Dashboard',
-        path: '/dashboard',
-        icon: 'space_dashboard'
       },
       {
         title: 'Análise',

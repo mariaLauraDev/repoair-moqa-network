@@ -206,16 +206,16 @@ export default {
         //   path: '/profile',
         // },
         {
-          title: 'Mapa',
-          path: '/monitoring-control',
+          title: 'Dashboard',
+          path: '/dashboard',
         },
+        // {
+        //   title: 'Mapa',
+        //   path: '/monitoring-control',
+        // },
         {
           title: 'Dados',
           path: '/data-repository',
-        },
-        {
-          title: 'Dashboard',
-          path: '/dashboard',
         },
         {
           title: 'Análise',

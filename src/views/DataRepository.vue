@@ -10,7 +10,7 @@
           >
             <div class="download-header__options-container">
 
-              <!-- <div class="download-header__options-group" style="display: flex; flex-direction: column; align-items: leaft; justify-content: flex-start; gap: 5px"> -->
+              <div class="download-header__options-group">
                 <div class="download-header__option">
                   <label for="startDate">
                     <div>
@@ -42,9 +42,9 @@
                     </div>
                   </label>
                 </div>
-              <!-- </div> -->
+              </div>
 
-              <!-- <div class="download-header__options-group" style="display: flex; flex-direction: column; align-items: leaft; justify-content: flex-start; gap: 5px"> -->
+              <div class="download-header__options-group">
                 <div class="download-header__option">
                   <label for="endDate">
                     <div>
@@ -80,23 +80,21 @@
                     </div>
                   </label>
                 </div>
-              <!-- </div> -->
+              </div>
             </div>
-            <div class="download-header__actions" style="display: flex; flex-direction: row; align-items: center; justify-content: flex-end; gap: 10px">
+            <div class="download-header__actions">
               <button
                 @click.prevent="fetchData"
+                class="btn-action--search"
+                :class="{ 'fetching': !canSearchData }"
                 :disabled="!canSearchData"
-                class="btn-action"
-                :class="{ 'disabled': !canSearchData }"
-                style="display: flex; align-items: center ; padding: 0.3rem 0.3rem;"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"> search </span>
+                >
+                <span class="material-symbols-outlined" style="padding: 0.1rem 0; color: #fff"> search </span>
               </button>
-              
             </div>
           </div>
           
-          <hr class="divider" />
+          <!-- <hr class="divider" /> -->
 
           <div v-if="fetching" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-top: 2rem;">
             <TreeDotsLoading />
@@ -114,7 +112,7 @@
               :header-columns="monitorsHeader"
               :rows="monitorsFound"
               :rows-props="monitorsProps"
-              table-title="Monitores encontrados"
+              table-title="Últimos dados dos monitores"
               :user="user"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
@@ -184,8 +182,8 @@ export default {
       today: new Date().toISOString().slice(0, 10),
       messages: ['Selecione um período para exportar os dados', 'Carregando dados...', 'Nenhum dado encontrado para os filtros selecionados'],
       summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
-      monitorsHeader: ["MoqaID", "Último registro (+3h de fuso)"],
-      monitorsProps: ["moqaID", "lastTimestamp"]
+      monitorsHeader: ["moqaID", "lastTimestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
+      monitorsProps: ["moqaID", "lastTimestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"]
     }
   },
   computed: {
@@ -297,10 +295,57 @@ export default {
       const moqaIDs = new Set()
 
       this.documents.forEach((document) => {
-        const { moqaID, Timestamp } = document
+        const {
+          moqaID,
+          Timestamp,
+          extTemp,
+          alt,
+          codeID,
+          boardID,
+          Pres,
+          hum,
+          intTemp,
+          pm1,
+          pm25,
+          adc0,
+          co2,
+          adc1,
+          adc2,
+          adc3,
+          tvocs,
+          adsLog,
+          ccsLog,
+          bmeLog,
+          pmsLog,
+          msdLog,
+          rtcLog } = document
 
         if (!moqaIDs.has(moqaID)) {
-          monitors.push({ moqaID, lastTimestamp: new Date(Timestamp.seconds * 1000).toISOString() })
+          monitors.push({
+            moqaID,
+            lastTimestamp: new Date(Timestamp.seconds * 1000).toISOString(),
+            extTemp,
+            alt,
+            codeID,
+            boardID,
+            Pres,
+            hum,
+            intTemp,
+            pm1,
+            pm25,
+            adc0,
+            co2,
+            adc1,
+            adc2,
+            adc3,
+            tvocs,
+            adsLog,
+            ccsLog,
+            bmeLog,
+            pmsLog,
+            msdLog,
+            rtcLog
+          })
           moqaIDs.add(moqaID)
         }
       });
@@ -342,11 +387,23 @@ export default {
 }
 
 .download-header__options-container {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   align-items: center;
   width: 250px;
+}
+
+.download-header__options-group{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  margin-top: 0.75rem;
 }
 
 .download-header__option {
@@ -379,6 +436,44 @@ export default {
   border-top-width: 1px;
   color: inherit;
   height: 0;
+}
+
+.download-header__actions {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  align-items: right;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-action--search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  margin-top: .75rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+  text-align: left;
+  width: 100%;
+  color: $color-primary;
+  background-color: $color-primary;
+}
+
+.fetching {
+  background: $color-primary !important;
+  border-color:  $color-primary !important;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (min-width: 780px) {
@@ -434,6 +529,11 @@ export default {
     display: grid;
     gap: 1.25rem;
     grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .btn-action--search {
+    width: 42px;
+    height: 42px;
   }
 }
 

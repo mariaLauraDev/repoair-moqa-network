@@ -7,9 +7,9 @@
       <div>
         <button
         @click.prevent="downloadCsv"
+        class="btn-action--download"
         :class="{ 'downloading': !canDownloadData }"
         :disabled="!canDownloadData"
-        class="btn-action--download"
       >
         <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
         <span style="margin-left: .5rem"> Exportar </span>
@@ -47,11 +47,11 @@
       </table>
     </div>
     <div v-if="rows.length > rowsPerPage" class="pagination">
-      <button v-if="!isFirstPage" @click.prevent="firstPage" :disabled="currentPage === 1">Primeira</button>
-      <button v-if="!isFirstPage" @click.prevent="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <button @click.prevent="firstPage" :disabled="currentPage === 1">Primeira</button>
+      <button @click.prevent="prevPage" :disabled="currentPage === 1">Anterior</button>
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button v-if="!isLastPage" @click.prevent="nextPage" :disabled="currentPage === totalPages">Próxima</button>
-      <button v-if="!isLastPage" @click.prevent="lastPage" :disabled="currentPage === totalPages">Última</button>
+      <button @click.prevent="nextPage" :disabled="currentPage === totalPages">Próxima</button>
+      <button @click.prevent="lastPage" :disabled="currentPage === totalPages">Última</button>
     </div>
   </div>
 </template>
@@ -86,10 +86,10 @@ export default {
       type: String,
       required: true
     },
-    user: {
-      type: Object,
-      required: true
-    },
+    // user: {
+    //   type: Object,
+    //   required: true
+    // },
   },
   data() {
     return {
@@ -144,17 +144,17 @@ export default {
         this.downloading = true
         const csvData = this.convertToCsv(this.rows)
         download(csvData, `${this.tableTitle.replace(/\s+/g, '-').toUpperCase()}-${this.selectedStartDate}-ate-${this.selectedEndDate}.csv`, 'text/csv')
-        const firestore = getFirestore()
-        const downloadHistoryCollection = collection(firestore, 'download-history')
-        const downloadRecord = {
-          user: this.user,
-          tableTitle: this.tableTitle,
-          startDate: this.selectedStartDate,
-          endDate: this.selectedEndDate,
-          numberOfDocuments: this.rows.length,
-          timestamp: new Date()
-        }
-        await addDoc(downloadHistoryCollection, downloadRecord)
+        // const firestore = getFirestore()
+        // const downloadHistoryCollection = collection(firestore, 'download-history')
+        // const downloadRecord = {
+        //   user: this.user,
+        //   tableTitle: this.tableTitle,
+        //   startDate: this.selectedStartDate,
+        //   endDate: this.selectedEndDate,
+        //   numberOfDocuments: this.rows.length,
+        //   timestamp: new Date()
+        // }
+        // await addDoc(downloadHistoryCollection, downloadRecord)
       } finally {
         this.downloading = false
       }

@@ -86,7 +86,7 @@ export default {
         await signOut(this.auth)
         this.$router.push('/')
         this.$router.go(0)
-        console.log('Signed out successfully.')
+        .log('Signed out successfully.')
       } catch (error) {
         console.error('Error signing out:', error.message)
       }

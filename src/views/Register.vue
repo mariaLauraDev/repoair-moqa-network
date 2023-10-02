@@ -58,7 +58,6 @@ export default {
       signInWithPopup(getAuth(), provider)
         .then((result) => {
           console.log("Successfully signed in with Google!")
-          console.log(result.user)
           this.$router.push('/data-repository')
         })
         .catch((error) => {
