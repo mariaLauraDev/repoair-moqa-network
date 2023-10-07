@@ -51,6 +51,16 @@
           <Card title=" Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
         </section>
 
+        <div>
+          <scatter-chart
+            :data="pm10GraphData"
+            isHourSeries="true"
+            xAxisLabel="Hora"
+            yAxisLabel="PM10"
+            title="Concentração de PM10 ao longo do tempo"
+          ></scatter-chart>
+        </div>
+
         <transition name="fade">
           <div>
             <!-- <TablePaginated
@@ -100,6 +110,7 @@ import TreeDotsLoading from '../components/TreeDotsLoading.vue';
 import Card from '../components/Card.vue'
 import monitorsProps from '../utils/monitorsProps.js'
 import extractMonitorsFound from '../utils/extractMonitorsFound.js'
+import ScatterChart from '../components/ScatterChart.vue';
 
 import {
   getFirestore,
@@ -118,22 +129,24 @@ export default {
     LMap,
     TablePaginated,
     TreeDotsLoading,
-    Card
+    Card,
+    ScatterChart
   },
   data() {
     return {
       markers: [],
       markersLoaded: false,
       pageLoaded: false,
-      timeRange: 360,
+      timeRange: 1440,
       fetchingDocuments: false,
       hasFetchedDocuments: false,
       documents: [],
       numberOfDocuments: 0,
       numberOfMonitors: 0,
       monitorsFound: [],
+      pm10GraphData: [],
       user: null,
-      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
+      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm10", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
     }
   },
   mounted() {
@@ -161,6 +174,9 @@ export default {
     timeRange(newTimeRange) {
       this.fetchDocuments()
     },
+    documents(newDocuments) {
+      this.pm10GraphData = this.prepareGraphData('Timestamp', 'pm10')
+    }
   },
   methods: {
     async fetchMonitors() {
@@ -200,7 +216,7 @@ export default {
           where('Timestamp', '>=', start),
           where('Timestamp', '<=', end),
           orderBy('Timestamp', 'desc'),
-          limit(5000)
+          limit(3000)
         )
 
         const querySnapshot = await getDocs(documentsQuery)
@@ -228,8 +244,16 @@ export default {
     getMonitorsProps() {
       return monitorsProps
     },
-    prepareGraphData () {
+    prepareGraphData (xField, yField) {
+      const chartData = []
 
+      this.documents.forEach((doc) => {
+        const x = doc[xField]
+        const y = doc[yField]
+        chartData.push({ x, y })
+      })
+
+      return chartData.reverse()
     }
   }
 };

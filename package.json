@@ -7,12 +7,16 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-moment": "^1.0.1",
     "core-js": "^3.8.3",
     "csp-html-webpack-plugin": "^5.1.0",
     "dotenv": "^16.3.1",
     "downloadjs": "^1.4.7",
     "firebase": "^10.2.0",
+    "import": "^0.0.6",
     "leaflet": "^1.9.4",
+    "moment": "^2.29.4",
     "particles.js": "^2.0.0",
     "sass": "^1.66.1",
     "sass-loader": "^13.3.2",

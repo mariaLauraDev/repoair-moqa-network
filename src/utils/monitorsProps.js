@@ -9,6 +9,7 @@ const monitorsProps = [
   "hum",
   "intTemp",
   "pm1",
+  "pm10",
   "pm25",
   "adc0",
   "co2",
