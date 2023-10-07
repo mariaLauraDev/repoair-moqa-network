@@ -7,7 +7,7 @@
             class="page-title space__medium--bottom"
             style="font-weight: 600"
           >
-            Baixar relatórios
+            Dados
           </h1>
           <div
             class="download-header__container"
@@ -93,8 +93,9 @@
                 class="btn-action--search"
                 :class="{ 'fetching': !canSearchData }"
                 :disabled="!canSearchData"
-                >
+              >
                 <span class="material-symbols-outlined" style="padding: 0.1rem 0; color: #fff"> search </span>
+                Buscar
               </button>
             </div>
           </div>
@@ -472,7 +473,8 @@ export default {
   line-height: 1rem;
   text-align: left;
   width: 100%;
-  color: $color-primary;
+  color: #fff;
+  gap: 6px;
   background-color: $color-primary;
 }
 
@@ -556,8 +558,7 @@ label div input {
   }
 
   .btn-action--search {
-    width: 42px;
-    height: 42px;
+    width: 40%;
   }
 }
 

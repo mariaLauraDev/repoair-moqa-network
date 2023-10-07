@@ -8,21 +8,31 @@
         >
           Dashboard
         </h1>
-        <div
-          class="time-range--btn"
-        >
-          <div class="select">
-            <span class="material-symbols-outlined" style="font-size: 1.15rem;"> history </span>
-            <select
-              v-model="timeRange"
-            >
-              <option value="5">5 min</option>
-              <option value="15">15 min</option>
-              <option value="30">30 min</option>
-              <option value="60">1 hora</option>
-              <option value="360">6 horas</option>
-              <option value="1440">24 horas</option>
-            </select>
+
+        <div class="actions-btn">
+          <div
+            class="time-range--btn"
+          >
+            <div class="select">
+              <span class="material-symbols-outlined" style="font-size: 1.15rem;"> history </span>
+              <select
+                v-model="timeRange"
+              >
+                <option value="5">5 min</option>
+                <option value="15">15 min</option>
+                <option value="30">30 min</option>
+                <option value="60">1 hora</option>
+                <option value="360">6 horas</option>
+                <option value="1440">24 horas</option>
+              </select>
+            </div>
+          </div>
+          <div
+            class="refreshg--btn"
+            :class="{ 'refreshing': fetchingDocuments }"
+            @click="fetchDocuments"
+          >
+            <span class="material-symbols-outlined" style="font-size: 1.15rem;"> sync </span>
           </div>
         </div>
 
@@ -226,10 +236,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.time-range--btn{
+
+.actions-btn {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 20px;
+}
+
+.refreshg--btn {
+  height: 100%;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #1c3c1f;
+  background-color: #e8eeca;
+}
+
+.refreshing {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 select {

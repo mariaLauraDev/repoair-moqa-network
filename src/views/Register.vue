@@ -35,7 +35,7 @@ export default {
           // console.log(data)
           // console.log(data.user)
           // console.log("Successfully registered!")
-          this.$router.push('/data-repository')
+          this.$router.push('/data')
         })
         .catch((error) => {
           // console.log(error)
@@ -58,7 +58,7 @@ export default {
       signInWithPopup(getAuth(), provider)
         .then((result) => {
           console.log("Successfully signed in with Google!")
-          this.$router.push('/data-repository')
+          this.$router.push('/data')
         })
         .catch((error) => {
           console.log(error)

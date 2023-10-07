@@ -56,7 +56,7 @@ export default {
       },
       {
         title: 'Dados',
-        path: '/data-repository',
+        path: '/data',
         icon: 'cloud_download'
       },
       {

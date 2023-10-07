@@ -46,7 +46,7 @@ export default {
         },
         {
           name: 'Dados',
-          path: '/data-repository',
+          path: '/data',
         },
         {
           name: 'Dashboard',

@@ -128,7 +128,7 @@
                 <p style="font-weight: 600;font-size: .875rem;line-height: 1.25rem;">Olá, {{currentUser?.displayName}}</p>
                 <a
                   :href="mailto" class="leading-none text-muted-foreground"
-                  style="color: #64748b; line-height: 1; cursor: pointer; cursor: pointer; text-decoration: none; font-size: .7rem;"
+                  style="color: #64748b; line-height: 1; cursor: pointer; text-decoration: none; font-size: .7rem;   overflow-x: auto;"
                   >{{ currentUser.email }}</a
                 >
               </div>
@@ -215,7 +215,7 @@ export default {
         // },
         {
           title: 'Dados',
-          path: '/data-repository',
+          path: '/data',
         },
         {
           title: 'Análise',

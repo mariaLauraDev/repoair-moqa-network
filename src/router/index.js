@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
-import DataRepository from '../views/DataRepository.vue'
+import Data from '../views/Data.vue'
 import LogIn from '../views/LogIn.vue'
 import Monitoring from '../views/Monitoring.vue'
 import Dashboard from '../views/Dashboard.vue'
@@ -55,9 +55,9 @@ const router = createRouter({
       }
     },
     {
-      path:'/data-repository',
+      path:'/data',
       name: 'dados',
-      component: DataRepository,
+      component: Data,
       meta: {
         requiresAuth: true,
         title: 'MoQa | Dados'
