@@ -290,6 +290,7 @@ select {
 }
 
 .dashboard__summary {
+  margin-top: 1.25rem;
   display: grid;
   gap: 1.25rem;
 }
@@ -313,7 +314,6 @@ select {
 
 @media (min-width: 780px) {
   .dashboard__summary {
-    margin-top: 1.25rem;
     display: grid;
     gap: 1.25rem;
     grid-template-columns: repeat(2,minmax(0,1fr));
