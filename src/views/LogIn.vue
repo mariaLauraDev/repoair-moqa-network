@@ -70,7 +70,7 @@ export default {
           // console.log("Successfully signed in!")
           const user = userCredential.user
           this.$store.dispatch('setUser', user)
-          this.$router.push('/monitoring-control')
+          this.$router.push('/dashboard')
         })
         .catch((error) => {
           switch (error.code) {
@@ -96,7 +96,7 @@ export default {
           // console.log("Successfully signed in with Google!")
           const user = userCredential.user
           this.$store.dispatch('setUser', user)
-          this.$router.push('/monitoring-control')
+          this.$router.push('/dashboard')
         })
         .catch((error) => {
           // console.log(error)
