@@ -1,57 +1,70 @@
 <template>
   <div class="table_container">
-    <div
-      style="display: flex; justify-content: space-between; align-items: center;"
-    >
-      <p class="table__title"> {{ tableTitle }} </p>
-      <div>
-        <button
-        @click.prevent="downloadCsv"
-        class="btn-action--download"
-        :class="{ 'downloading': !canDownloadData }"
-        :disabled="!canDownloadData"
+    <div>
+      <div
+        style="display: flex; justify-content: space-between; align-items: center;"
       >
-        <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
-        <span style="margin-left: .5rem"> Exportar </span>
-      </button>
+        <p class="table__title"> {{ tableTitle }} </p>
+        <div
+          v-if="rows.length > 0"
+        >
+          <button
+          @click.prevent="downloadCsv"
+          class="btn-action--download"
+          :class="{ 'downloading': !canDownloadData }"
+          :disabled="!canDownloadData"
+        >
+          <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
+          <span style="margin-left: .5rem"> Exportar </span>
+        </button>
+        </div>
       </div>
-    </div>
-
-    <div class="table__content">
-      <table class="table">
-        <thead>
-          <tr class="row-header">
-            <th
-              v-for="(column, index) in headerColumns"
-              :key="index"
-              class="header-cell">
-              {{ column }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(row, index) in displayedRows"
-            :key="index"
-            class="row"
-          >
-            <td
-              v-for="(rowProp, index) in rowsProps"
-              :key="index"
-              class="cell"
-            >
-              {{ rowProp === 'Timestamp' ? new Date(row[rowProp].seconds*1000).toISOString() : row[rowProp] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-if="rows.length > rowsPerPage" class="pagination">
-      <button @click.prevent="firstPage" :disabled="currentPage === 1">Primeira</button>
-      <button @click.prevent="prevPage" :disabled="currentPage === 1">Anterior</button>
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button @click.prevent="nextPage" :disabled="currentPage === totalPages">Próxima</button>
-      <button @click.prevent="lastPage" :disabled="currentPage === totalPages">Última</button>
+      
+      <div
+        v-if="rows.length > 0"
+      >
+        <div
+          class="table__content"
+        >
+          <table class="table">
+            <thead>
+              <tr class="row-header">
+                <th
+                  v-for="(column, index) in headerColumns"
+                  :key="index"
+                  class="header-cell">
+                  {{ column }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(row, index) in displayedRows"
+                :key="index"
+                class="row"
+              >
+                <td
+                  v-for="(rowProp, index) in rowsProps"
+                  :key="index"
+                  class="cell"
+                >
+                  {{ rowProp === 'Timestamp' ? new Date(row[rowProp].seconds*1000).toISOString() : row[rowProp] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-if="rows.length > rowsPerPage" class="pagination">
+          <button @click.prevent="firstPage" :disabled="currentPage === 1">Primeira</button>
+          <button @click.prevent="prevPage" :disabled="currentPage === 1">Anterior</button>
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+          <button @click.prevent="nextPage" :disabled="currentPage === totalPages">Próxima</button>
+          <button @click.prevent="lastPage" :disabled="currentPage === totalPages">Última</button>
+        </div>
+      </div>
+      <div v-else>
+        <p>Não há dados para exibir.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -94,7 +107,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      rowsPerPage: 10,
+      rowsPerPage: 5,
       downloading: false,
     }
   },

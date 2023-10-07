@@ -3,7 +3,12 @@
     <transition name="fade">
       <div v-if="pageLoaded" class="download-view">
         <div class="download-view__container">
-          <p style="font-weight: 600"> Selecione os filtros para consultar o banco de dados </p>
+          <h1
+            class="page-title space__medium--bottom"
+            style="font-weight: 600"
+          >
+            Baixar relatórios
+          </h1>
           <div
             class="download-header__container"
             style="padding-top: 0.25rem; padding-bottom: 1.25rem;"
@@ -100,7 +105,7 @@
             <TreeDotsLoading />
           </div>
           <div v-if="numberOfDocuments > 0">
-              <p class="title"> Resumo </p>
+            <p class="title"> Resumo </p>
             <section
               class="download-header__summary"
             >
@@ -383,7 +388,9 @@ export default {
   align-items: center;
   justify-content: flex-start;
   align-items: center;
-  gap:10px
+  gap:10px;
+  background-color: whitesmoke;
+  padding: 15px;
 }
 
 .download-header__options-container {
@@ -468,6 +475,23 @@ export default {
   color: $color-primary;
   background-color: $color-primary;
 }
+
+h1 {
+  font-size: 1.5em;
+}
+
+h1 {
+  display: block;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+label div input {
+  background: #fff !important;
+}
+
 
 .fetching {
   background: $color-primary !important;
