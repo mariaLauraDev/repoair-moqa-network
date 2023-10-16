@@ -48,11 +48,7 @@
                   :key="index"
                   class="cell"
                 >
-                  {{ rowProp === 'Timestamp'?
-                      new Date(row[rowProp].seconds * 1000).toISOString() :
-                        rowProp === 'lastTimestamp' ? 
-                          new Date(row[rowProp]).toISOString() :
-                          row[rowProp] }}
+                '{{ row[rowProp] }}
                 </td>
               </tr>
             </tbody>

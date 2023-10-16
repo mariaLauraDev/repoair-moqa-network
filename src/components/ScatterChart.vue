@@ -89,7 +89,7 @@ export default {
         },
         labels: {
           formatter: function() {
-            return moment(this.value).format('DD/MM HH:mm');
+            return moment(this.value).format('DD/MM HH:mm:ss');
           }
         }
       },
