@@ -67,7 +67,6 @@ export default {
               x: item.x,
               y: item.y
             }));
-        const randomColor = this.getRandomColor(index);
 
         return {
           label: moqaID,

@@ -8,10 +8,19 @@ import LogIn from '../views/LogIn.vue'
 import Monitoring from '../views/Monitoring.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Analyze from '../views/Analyze.vue'
+import NotFound from '../views/NotFound.vue';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFound,
+      meta: {
+        title: 'MoQa | 404 Not Found'
+      }
+    },
     {
       path: '/',
       name: 'home',
@@ -112,7 +121,7 @@ router.beforeEach( async (to, from, next) => {
     if(await getCurrentUser()) {
       next()
     } else {
-      alert('You must be signed in to see this page')
+      alert('Você deve estar logado para ver esta página!')
       next('/log-in')
     }
   } else {

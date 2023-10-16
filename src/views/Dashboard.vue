@@ -60,7 +60,7 @@
         
         <p style="font-weight: 700;"> Parâmetros metereológicos </p>
         <section
-          v-if="hasFetchedDocuments"
+          v-if="documents.length > 0"
           class="dashboard__summary"
         >
           <scatter-chart
@@ -74,8 +74,8 @@
             :data="hum"
             isHourSeries="true"
             xAxisLabel="Hora"
-            yAxisLabel="PM10"
-            title="Concentração de PM10 ao longo do tempo"
+            yAxisLabel="hum"
+            title="Humidade ao longo do tempo"
           ></scatter-chart>
           <scatter-chart
             :data="extTemp"
@@ -95,7 +95,7 @@
 
         <p style="font-weight: 700;"> Parâmetros poluentes </p>
         <section
-          v-if="hasFetchedDocuments"
+          v-if="documents.length > 0"
           class="dashboard__summary"
         >
           <scatter-chart
@@ -240,7 +240,7 @@ export default {
       markers: [],
       markersLoaded: false,
       pageLoaded: false,
-      timeRange: 1440,
+      timeRange: 5,
       fetchingDocuments: false,
       hasFetchedDocuments: false,
       documents: [],
@@ -253,14 +253,16 @@ export default {
     }
   },
   mounted() {
+    console.log('timestampRanges', this.timestampRanges)
     this.fetchMonitors()
     this.fetchDocuments()
     this.pageLoaded = true
   },
   computed: {
     timestampRanges() {
-      const nowInTimestamp = Math.floor(Date.now() / 1000);  
-      const rangeStartTimestamp = nowInTimestamp - this.timeRange * 60
+      const browserTimezoneOffset = new Date().getTimezoneOffset()
+      const nowInTimestamp = Math.floor(Date.now()/ 1000)
+      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60) - (browserTimezoneOffset * 60);
       return {
         start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
         end: this.calculateFirebaseTimestamp(nowInTimestamp),
@@ -373,8 +375,6 @@ export default {
 
         dataCounts[moqaID]++;
       });
-
-      console.log('dataCounts', dataCounts)
 
       return dataCounts;
     },

@@ -225,10 +225,18 @@ export default {
       return this.fetchDataFromFirestore()
     },
     getFirebaseTimeStamps() {
-      const startDate = new Date(this.selectedStartDate + "T" + this.selectedStartTime + ":00").getTime()/1000
-      const endDate = new Date(this.selectedEndDate + "T"+ this.selectedEndTime+ ":59").getTime()/1000 
-      const startTimestamp = new Timestamp(startDate, 0)
-      const endTimestamp = new Timestamp(endDate, 0)
+      const browserTimezoneOffset = new Date().getTimezoneOffset()
+      //browserTimezoneOffset é + para esquerda e - para direita, logo fazer - browserTimezoneOffset para converter para a hora na solicitação local do browser
+
+      const startDate = new Date(`${this.selectedStartDate}T${this.selectedStartTime}:00Z`)
+      const endDate = new Date(`${this.selectedEndDate}T${this.selectedEndTime}:59Z`)
+
+      //o firebase ja identifica o timezone do browser e converte para UTC, por isso tenho que solicitar a data com o timezone do browser
+      startDate.setMinutes(startDate.getMinutes() - browserTimezoneOffset)
+      endDate.setMinutes(endDate.getMinutes() - browserTimezoneOffset)
+
+      const startTimestamp = new Timestamp(startDate.getTime()/1000, 0)
+      const endTimestamp = new Timestamp(endDate.getTime()/1000, 0)
 
       return {
         startTimestamp,
