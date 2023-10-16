@@ -6,10 +6,17 @@
 
 <script>
 import Highcharts from 'highcharts';
-import exporting from 'highcharts/modules/exporting';
-import moment from 'moment';
-exporting(Highcharts);
 
+import accessibility from 'highcharts/modules/accessibility'
+accessibility(Highcharts)
+Highcharts.setOptions({
+  accessibility: {
+    enabled: true
+  }
+})
+
+import exporting from 'highcharts/modules/exporting'
+exporting(Highcharts)
 Highcharts.setOptions({
   exporting: {
     accessibility: {

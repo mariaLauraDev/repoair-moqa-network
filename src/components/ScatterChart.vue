@@ -1,15 +1,24 @@
 <template>
   <div class="chart-container">
     <div ref="chart" class="chart"></div>
+    <!-- <p class="highcharts-description">The following chart demonstrates some accessibility features  of Highcharts, including use of the <code>linkedDescription</code> option.</p> -->
   </div>
 </template>
 
 <script>
 import Highcharts from 'highcharts';
 import moment from 'moment';
+
+import accessibility from 'highcharts/modules/accessibility';
+accessibility(Highcharts);
+Highcharts.setOptions({
+  accessibility: {
+    enabled: true
+  }
+})
+
 import exporting from 'highcharts/modules/exporting';
 exporting(Highcharts);
-
 Highcharts.setOptions({
   exporting: {
     accessibility:{
