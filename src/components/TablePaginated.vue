@@ -48,7 +48,11 @@
                   :key="index"
                   class="cell"
                 >
-                  {{ rowProp === 'Timestamp' ? new Date(row[rowProp].seconds*1000).toISOString() : row[rowProp] }}
+                  {{ rowProp === 'Timestamp'?
+                      new Date(row[rowProp].seconds * 1000).toISOString() :
+                        rowProp === 'lastTimestamp' ? 
+                          new Date(row[rowProp]).toISOString() :
+                          row[rowProp] }}
                 </td>
               </tr>
             </tbody>
@@ -182,7 +186,7 @@ export default {
           if (field === 'Timestamp') {
             const timestamp = row[field]
             //to ISOString é deslocamento zero, to String é mais adequado porque considera o fuso
-            const formattedTimestamp = new Date(timestamp.seconds * 1000)
+            const formattedTimestamp = timestamp.seconds*1000
             return formattedTimestamp
           } else {
             return row[field]

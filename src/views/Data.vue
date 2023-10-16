@@ -337,7 +337,7 @@ export default {
         if (!moqaIDs.has(moqaID)) {
           monitors.push({
             moqaID,
-            lastTimestamp: new Date(Timestamp.seconds * 1000).toISOString(),
+            lastTimestamp: Timestamp.seconds * 1000,
             extTemp,
             alt,
             codeID,
