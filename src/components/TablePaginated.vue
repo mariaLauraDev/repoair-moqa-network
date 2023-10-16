@@ -181,7 +181,8 @@ export default {
         return fields.map((field) => {
           if (field === 'Timestamp') {
             const timestamp = row[field]
-            const formattedTimestamp = new Date(timestamp.seconds * 1000).toISOString()
+            //to ISOString é deslocamento zero, to String é mais adequado porque considera o fuso
+            const formattedTimestamp = new Date(timestamp.seconds * 1000)
             return formattedTimestamp
           } else {
             return row[field]

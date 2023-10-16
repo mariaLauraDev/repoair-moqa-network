@@ -1,99 +1,121 @@
 <template>
   <div class="chart-container">
-    <canvas class="bar-chart" ref="chart"></canvas>
+    <div ref="chart"></div>
   </div>
 </template>
 
 <script>
-import { Chart } from 'chart.js/auto';
+import Highcharts from 'highcharts';
+import exporting from 'highcharts/modules/exporting';
+import moment from 'moment';
+exporting(Highcharts);
+
+Highcharts.setOptions({
+  exporting: {
+    accessibility: {
+      enabled: true
+    },
+    enabled: true,
+    buttons: {
+      contextButton: {
+        menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG"],
+        symbol: 'menu',
+        symbolFill: '#666666',
+        symbolSize: 14,
+        symbolStroke: '#666666',
+        symbolStrokeWidth: 3,
+        symbolX: 14.5,
+        symbolY: 13.5,
+      }
+    }
+  }
+});
 
 export default {
   props: ['data', 'title', 'xAxisLabel', 'yAxisLabel'],
   mounted() {
     this.renderChart();
   },
-  data() {
-    return {
-      colorPalette: [
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 205, 86, 0.2)',
-        'rgba(255, 100, 100, 0.2)',
-        'rgba(100, 100, 255, 0.2)'
-      ],
-      borderColorPalette: [
-        'rgba(75, 192, 192, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 99, 132, 1)',
-        'rgba(255, 159, 64, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 205, 86, 1)',
-        'rgba(255, 100, 100, 1)',
-        'rgba(100, 100, 255, 1)'
-      ]
-    };
-  },
   watch: {
     data: 'renderChart'
   },
   methods: {
     renderChart() {
-      if (this.chart) {
-        this.chart.destroy();
-      }
-
       const moqaIDs = Object.keys(this.data);
       const dataCounts = Object.values(this.data);
 
-      const ctx = this.$refs.chart.getContext('2d');
-      this.chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: moqaIDs,
-          datasets: [
-            {
-              label: this.yAxisLabel,
-              data: dataCounts,
-              backgroundColor: this.colorPalette,
-              borderColor: this.borderColorPalette,
-              borderWidth: 1
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text:  this.xAxisLabel
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: this.yAxisLabel
-              },
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: this.title
-            }
+      const options = {
+        chart: {
+          type: 'bar',
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: '#e5e7eb',
+          spacingTop: 20,
+          spacingLeft:20,
+          spacingRight:20,
+          spacingBottom: 20,
+          style:
+          {
+            fontFamily: 'Poppins',
+            fontSize: '0.75rem',
+            fontWeight: '400',
+            color: '#333333'
           }
+        },
+        title: {
+          text: this.title,
+          align: 'center',
+          margin: 40,
+          style: {
+            color: '#333333',
+            fontWeight: 'bold'
+          }
+        },
+        xAxis: {
+          categories: moqaIDs,
+          title: {
+            text: this.xAxisLabel
+          }
+        },
+        yAxis: {
+          title: {
+            text: this.yAxisLabel
+          }
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 5
+          }
+        },
+        series: [{
+          name: this.yAxisLabel,
+          data: dataCounts,
+          color: 'rgba(75, 192, 192, 0.8)'
+        }],
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 400
+            },
+            chartOptions: {
+              legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+              }
+            }
+          }]
         }
-      });
+      };
+
+      const chartElement = this.$refs.chart;
+      this.chart = Highcharts.chart(chartElement, options);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .chart-container {
   position: relative;
   height: 100%;
@@ -101,12 +123,5 @@ export default {
   font-size: 0.75rem;
   line-height: 1rem;
   text-align: left;
-  border-width: 1px;
-  border-radius: 0.5rem;
-}
-
-.bar-chart {
-  width: 100%;
-  height: 100%;
 }
 </style>

@@ -253,7 +253,6 @@ export default {
     }
   },
   mounted() {
-    console.log('timestampRanges', this.timestampRanges)
     this.fetchMonitors()
     this.fetchDocuments()
     this.pageLoaded = true
