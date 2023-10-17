@@ -48,7 +48,7 @@
                   :key="index"
                   class="cell"
                 >
-                '{{ row[rowProp] }}
+                {{ rowProp ==='Timestamp' ? row[rowProp]?.seconds : row[rowProp] }}
                 </td>
               </tr>
             </tbody>
@@ -199,6 +199,7 @@ export default {
 <style lang="scss" scoped>
 .table_container {
   margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .table__title {

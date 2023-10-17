@@ -35,9 +35,19 @@
             <span class="material-symbols-outlined" style="font-size: 1.15rem;"> sync </span>
           </div>
         </div>
-
-        <div style="margin-bottom: 1.25rem">
-          <l-map v-if="markersLoaded" :markers="markers" />
+        
+        <div>
+          <div  v-if="markersLoaded" class="feed__map">
+            <l-map
+              :markers="markers"
+              @markerClicked="setMarkerClicked"
+            />
+            <marker-feed
+              v-if="documents.length > 0"
+              :marker="markerClicked"
+              :last-document="lastMarkerDocument"
+            />
+          </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <TreeDotsLoading />
           </div>
@@ -48,119 +58,19 @@
           v-if="hasFetchedDocuments"
           class="dashboard__summary"
         >
-          <Card title="Total de dados" :value="numberOfDocuments + ' documentos'" description="no período selecionado"/>
-          <Card title=" Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
           <bar-chart
             :data="bargraph"
             xAxisLabel="MoqaID"
             yAxisLabel="Quantidade de dados"
             title="Quantidade de dados por monitor"
+            :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
           />
-        </section>
-        
-        <p style="font-weight: 700;"> Parâmetros metereológicos </p>
-        <section
-          v-if="documents.length > 0"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            :data="pres"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="Pressão"
-            title="Pressão ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="hum"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="hum"
-            title="Humidade ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="extTemp"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="Temperatura externa"
-            title="Temperatura externa ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="intTemp"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="Temperatura interna"
-            title="Temperatura interna ao longo do tempo"
-          ></scatter-chart>
-        </section>
-
-        <p style="font-weight: 700;"> Parâmetros poluentes </p>
-        <section
-          v-if="documents.length > 0"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            :data="pm1"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="pm1"
-            title="PM1 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="pm10"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="PM10"
-            title="PM10 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="pm25"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="PM25"
-            title="PM25 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="adc0"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="ADC0"
-            title="ADC0 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="adc1"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="ADC1"
-            title="ADC1 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="adc2"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="ADC2"
-            title="ADC2 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="adc3"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="ADC3"
-            title="ADC3 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="co2"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="CO2"
-            title="CO2 ao longo do tempo"
-          ></scatter-chart>
-          <scatter-chart
-            :data="tvocs"
-            isHourSeries="true"
-            xAxisLabel="Hora"
-            yAxisLabel="TVOCs"
-            title="TVOCs ao longo do tempo"
-          ></scatter-chart>
+          <div
+            style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem;"
+          >
+            <Card title="Total de dados" :value="numberOfDocuments + ' documentos'" description="no período selecionado"/>
+            <Card title="Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
+          </div>
         </section>
 
         <transition name="fade">
@@ -200,6 +110,59 @@
             </div>
           </div>
         </transition>
+
+        <p style="font-weight: 700;"> Parâmetros metereológicos </p>
+        <section
+          v-if="documents.length > 0"
+          class="dashboard__summary"
+        >
+          <scatter-chart
+            v-for="(data, index) in scatterWeatherChartData" 
+            :key="index"
+            :data="data.data"
+            :isHourSeries="true"
+            :xAxisLabel="data.xAxisLabel"
+            :yAxisLabel="data.yAxisLabel"
+            :title="data.title"
+            :subtitle="data.subtitle"
+          ></scatter-chart>
+        </section>
+
+        <p style="font-weight: 700;"> Parâmetros poluentes </p>
+        <section
+          v-if="documents.length > 0"
+          class="dashboard__summary"
+        >
+          <scatter-chart
+            v-for="(data, index) in scatterPollutionChartData" 
+            :key="index"
+            :data="data.data"
+            :isHourSeries="true"
+            :xAxisLabel="data.xAxisLabel"
+            :yAxisLabel="data.yAxisLabel"
+            :title="data.title"
+            :subtitle="data.subtitle"
+          ></scatter-chart>
+        </section>
+
+        <p style="font-weight: 700;"> Erros </p>
+        <section
+          v-if="documents.length > 0"
+          class="dashboard__summary"
+        >
+          <scatter-chart
+            v-for="(data, index) in errorsChartData" 
+            :key="index"
+            :data="data.data"
+            :isHourSeries="true"
+            :xAxisLabel="data.xAxisLabel"
+            :yAxisLabel="data.yAxisLabel"
+            :title="data.title"
+            :subtitle="data.subtitle"
+          ></scatter-chart>
+        </section>
+
+        
       </div>
     </transition>
   </div>
@@ -214,6 +177,12 @@ import monitorsProps from '../utils/monitorsProps.js'
 import extractMonitorsFound from '../utils/extractMonitorsFound.js'
 import ScatterChart from '../components/ScatterChart.vue';
 import BarChart from '../components/BarChart.vue';
+import MarkerFeed from '../components/MarkerFeed.vue';
+import weatherFields from '../utils/weatherFields.js'
+import pollutionFields from '../utils/pollutionFields.js'
+import fieldsUnits from '../utils/fieldsUnits.js'
+import logFields from '../utils/logFields.js'
+
 import {
   getFirestore,
   collection,
@@ -233,7 +202,8 @@ export default {
     TreeDotsLoading,
     Card,
     ScatterChart,
-    BarChart
+    BarChart,
+    MarkerFeed
   },
   data() {
     return {
@@ -247,8 +217,9 @@ export default {
       numberOfDocuments: 0,
       numberOfMonitors: 0,
       monitorsFound: [],
-
+      markerClicked: null,
       user: null,
+      lastMarkerDocument: null,
       summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm10", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
     }
   },
@@ -280,23 +251,41 @@ export default {
     },
     documents(newDocuments) {
       this.bargraph = this.groupDataByMoqaID()
-      this.pm10 = this.prepareGraphData('Timestamp', 'pm10')
-      this.pm1 = this.prepareGraphData('Timestamp', 'pm1')
-      this.pm25 = this.prepareGraphData('Timestamp', 'pm25')
-      this.pres = this.prepareGraphData('Timestamp', 'Pres')
-      this.hum = this.prepareGraphData('Timestamp', 'hum')
-      this.intTemp = this.prepareGraphData('Timestamp', 'intTemp')
-      this.alt = this.prepareGraphData('Timestamp', 'alt')
-      this.extTemp = this.prepareGraphData('Timestamp', 'extTemp')
-      this.co2 = this.prepareGraphData('Timestamp', 'co2')
-      this.tvocs = this.prepareGraphData('Timestamp', 'tvocs')
-      this.adc0 = this.prepareGraphData('Timestamp', 'adc0')
-      this.adc1 = this.prepareGraphData('Timestamp', 'adc1')
-      this.adc2 = this.prepareGraphData('Timestamp', 'adc2')
-      this.adc3 = this.prepareGraphData('Timestamp', 'adc3')      
+      //na rota de dashboard irao os dados brutos e em analise faz-se a conversão
+
+      this.scatterWeatherChartData = weatherFields.map(fieldName => ({
+        data: this.prepareGraphData('Timestamp', fieldName),
+        xAxisLabel: 'Hora',
+        yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
+        title: `${fieldName} ao longo do tempo`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+      }));
+
+      this.scatterPollutionChartData = pollutionFields.map(fieldName => ({
+        data: this.prepareGraphData('Timestamp', fieldName),
+        xAxisLabel: 'Hora',
+        yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
+        title: `${fieldName} ao longo do tempo`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+      }));
+
+      this.errorsChartData = logFields.map(fieldName => ({
+        data: this.prepareGraphData('Timestamp', fieldName),
+        xAxisLabel: 'Hora',
+        yAxisLabel: `${fieldName}`,
+        title: `${fieldName} ao longo do tempo`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+      }));
     }
   },
   methods: {
+    formatTimestamp(timestamp) {
+      return new Date(timestamp * 1000).toLocaleString('en-GB', { timeZone: 'UTC' });
+    },
+    setMarkerClicked(marker) {
+      this.markerClicked = marker
+      this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked.idDb)
+    },
     async fetchMonitors() {
       try {
         const firestore = getFirestore()
@@ -346,6 +335,10 @@ export default {
         
         this.documents = docs
         this.monitorsFound = extractMonitorsFound(docs)
+        this.markerClicked =
+          this.markers.find(marker => marker.idDb === this.monitorsFound[0].moqaID)
+        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked.idDb)
+
         this.numberOfDocuments = docs.length
         this.numberOfMonitors = this.monitorsFound.length
       } catch (error) {
@@ -433,6 +426,12 @@ select {
   gap: 1.25rem;
 }
 
+.feed__map {
+  margin: 1.25rem 0px;
+  display: grid;
+  gap: 1.25rem;
+}
+
 .select {
   padding: 0.1rem 0.5rem;
   border-radius: 0.375rem;
@@ -452,6 +451,12 @@ select {
 
 @media (min-width: 780px) {
   .dashboard__summary {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .feed__map {
     display: grid;
     gap: 1.25rem;
     grid-template-columns: repeat(2,minmax(0,1fr));

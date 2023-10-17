@@ -39,7 +39,14 @@ Highcharts.setOptions({
 });
 
 export default {
-  props: ['data', 'title', 'xAxisLabel', 'yAxisLabel'],
+  props: [
+    'data',
+    'title',
+    'xAxisLabel',
+    'yAxisLabel',
+    'isHourSeries',
+    'subtitle'
+  ],
   mounted() {
     this.renderChart();
   },
@@ -76,6 +83,13 @@ export default {
           style: {
             color: '#333333',
             fontWeight: 'bold'
+          }
+        },
+        subtitle: {
+          text: this.subtitle,
+          style: {
+            color: '#333333',
+            fontWeight: 'normal'
           }
         },
         xAxis: {

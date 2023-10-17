@@ -15,6 +15,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    initialView: {
+      type: Object,
+      required: false,
+      default: () => ({})
     }
   },
   mounted() {
@@ -25,9 +30,10 @@ export default {
       this.map.remove()
     }
   },
+  //[ -3.783112, -38.513393]
   methods: {
     createMapLayer() {
-      this.map = L.map('mapContainer').setView([ -3.783112, -38.513393], 12)
+      this.map = L.map('mapContainer').setView([ -3.8098523517031966, -38.508271730400864], 13)
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution:
           '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -47,8 +53,19 @@ export default {
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)
-          .bindPopup(marker.name +' | ' + marker.idDb)
+          .bindPopup(marker.name)
+          .bindTooltip(`${marker.idDb}`, {
+            permanent: true,
+            direction: 'bottom'
+          })
+          .on('click', () => {
+            this.zoomMoqaClicked(marker.lat, marker.long);
+            this.$emit('markerClicked', marker)
+          })
       });
+    },
+    zoomMoqaClicked(latitude, longitude) {
+      this.map.setView([latitude, longitude], 13);
     }
   }
 }
@@ -58,7 +75,6 @@ export default {
 #mapContainer {
   width: 100%;
   height: calc(50vh);
-  margin-top: 25px;
   //box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
   border: 3px solid rgb(222, 226, 230);
   border-radius: 0.375rem;

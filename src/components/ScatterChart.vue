@@ -41,7 +41,14 @@ Highcharts.setOptions({
 })
 
 export default {
-  props: ['data', 'title', 'xAxisLabel', 'yAxisLabel', 'isHourSeries'],
+  props: [
+    'data',
+    'title',
+    'xAxisLabel',
+    'yAxisLabel',
+    'isHourSeries',
+    'subtitle'
+  ],
   mounted() {
     this.renderChart();
   },
@@ -67,7 +74,7 @@ export default {
         {
           fontFamily: 'Poppins',
           fontSize: '0.75rem',
-          fontWeight: '400',
+          fontWeight: 'normal',
           color: '#333333'
         }
       },
@@ -81,6 +88,13 @@ export default {
         },
         VerticalAlign: 'middle',
         widthAdjust: -40
+      },
+      subtitle: {
+        text: this.subtitle,
+        style: {
+          color: '#333333',
+          fontWeight: 'normal'
+        }
       },
       xAxis: {
         type: this.isHourSeries ? 'datetime' : 'linear',

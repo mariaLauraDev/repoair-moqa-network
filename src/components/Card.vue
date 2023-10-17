@@ -32,6 +32,7 @@
   padding: 1.5rem;
   border-width: 1px;
   border-radius: 0.5rem;
+  width: 100%;
 }
 
 .card-title__container {
