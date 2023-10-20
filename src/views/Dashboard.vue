@@ -300,6 +300,7 @@ export default {
 
         const markersQuery = query(
           markersCollection,
+          orderBy('id', 'asc'),
           limit(25)
         )
 
