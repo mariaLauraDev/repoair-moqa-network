@@ -102,9 +102,9 @@ export default {
           text: this.xAxisLabel
         },
         labels: {
-          formatter: function() {
-            return moment(this.value).format('DD/MM HH:mm:ss');
-          }
+          // formatter: function() {
+          //   return moment(this.value).format('DD/MM HH:mm:ss');
+          // }
         }
       },
       yAxis: {

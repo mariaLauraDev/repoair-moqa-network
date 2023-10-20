@@ -33,7 +33,7 @@ export default {
   //[ -3.783112, -38.513393]
   methods: {
     createMapLayer() {
-      this.map = L.map('mapContainer').setView([ -3.8098523517031966, -38.508271730400864], 13)
+      this.map = L.map('mapContainer').setView([ -3.783112, -38.513393], 11)
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution:
           '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'

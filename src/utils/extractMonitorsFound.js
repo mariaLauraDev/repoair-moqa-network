@@ -10,7 +10,7 @@ function extractMonitorsFound(documents) {
     } = document
 
     if (!monitorsMap.has(moqaID)) {
-      const lastTimestamp = seconds * 1000
+      const lastTimestamp = seconds
       const monitorData = { moqaID, lastTimestamp, ...rest }
       monitorsMap.set(moqaID, monitorData)
       monitors.push(monitorData)

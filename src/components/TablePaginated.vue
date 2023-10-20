@@ -91,14 +91,6 @@ export default {
       type: String,
       required: true
     },
-    selectedStartDate: {
-      type: String,
-      required: true
-    },
-    selectedEndDate: {
-      type: String,
-      required: true
-    },
     // user: {
     //   type: Object,
     //   required: true

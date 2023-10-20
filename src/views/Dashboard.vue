@@ -4,7 +4,6 @@
       <div v-if="pageLoaded" class="dashboard">
         <h1
           class="page-title space__medium--bottom"
-          style="font-weight: 600"
         >
           Dashboard
         </h1>
@@ -30,14 +29,14 @@
           <div
             class="refreshg--btn"
             :class="{ 'refreshing': fetchingDocuments }"
-            @click="fetchDocuments"
+            @click="refreshPage"
           >
             <span class="material-symbols-outlined" style="font-size: 1.15rem;"> sync </span>
           </div>
         </div>
         
         <div>
-          <div  v-if="markersLoaded" class="feed__map">
+          <div v-if="markersLoaded" class="feed__map">
             <l-map
               :markers="markers"
               @markerClicked="setMarkerClicked"
@@ -52,6 +51,14 @@
             <TreeDotsLoading />
           </div>
         </div>
+
+        <TablePaginated
+          v-if="markers.length > 0"
+          :header-columns="markersHeader"
+          :rows="markers"
+          :rows-props="markersProps"
+          table-title="Relação de monitores"
+        />
 
         <p style="font-weight: 700;"> Resumo </p>
         <section
@@ -111,6 +118,23 @@
           </div>
         </transition>
 
+        <p style="font-weight: 700;"> Erros </p>
+        <section
+          v-if="documents.length > 0"
+          class="dashboard__summary"
+        >
+          <scatter-chart
+            v-for="(data, index) in errorsChartData" 
+            :key="index"
+            :data="data.data"
+            :isHourSeries="true"
+            :xAxisLabel="data.xAxisLabel"
+            :yAxisLabel="data.yAxisLabel"
+            :title="data.title"
+            :subtitle="data.subtitle"
+          ></scatter-chart>
+        </section>
+
         <p style="font-weight: 700;"> Parâmetros metereológicos </p>
         <section
           v-if="documents.length > 0"
@@ -144,25 +168,6 @@
             :subtitle="data.subtitle"
           ></scatter-chart>
         </section>
-
-        <p style="font-weight: 700;"> Erros </p>
-        <section
-          v-if="documents.length > 0"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in errorsChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-        </section>
-
-        
       </div>
     </transition>
   </div>
@@ -219,6 +224,8 @@ export default {
       monitorsFound: [],
       markerClicked: null,
       user: null,
+      markersProps: ['id', 'name', 'idDb', 'lat', 'long'],
+      markersHeader: ['id', 'Nome', 'MoqaID', 'latitude', 'longitude'],
       lastMarkerDocument: null,
       summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm10", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
     }
@@ -231,8 +238,8 @@ export default {
   computed: {
     timestampRanges() {
       const browserTimezoneOffset = new Date().getTimezoneOffset()
-      const nowInTimestamp = Math.floor(Date.now()/ 1000)
-      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60) - (browserTimezoneOffset * 60);
+      const nowInTimestamp = Math.floor(Date.now()/ 1000) - (browserTimezoneOffset * 60)
+      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60)
       return {
         start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
         end: this.calculateFirebaseTimestamp(nowInTimestamp),
@@ -308,6 +315,14 @@ export default {
         console.error('Erro ao buscar marcadores:', error)
       }
     },
+    refreshPage() {
+      this.fetchDocuments()
+      this.monitorsFound = []
+      this.markerClicked = null
+      this.lastMarkerDocument = null
+      this.numberOfDocuments = 0
+      this.numberOfMonitors = 0
+    },
     async fetchDocuments() {
       try {
         this.fetchingDocuments = true
@@ -322,8 +337,7 @@ export default {
           documentsCollection,
           where('Timestamp', '>=', start),
           where('Timestamp', '<=', end),
-          orderBy('Timestamp', 'desc'),
-          limit(3000)
+          orderBy('Timestamp', 'desc')
         )
 
         const querySnapshot = await getDocs(documentsQuery)
@@ -334,14 +348,20 @@ export default {
         })
         
         this.documents = docs
-        this.monitorsFound = extractMonitorsFound(docs)
-        this.markerClicked =
-          this.markers.find(marker => marker.idDb === this.monitorsFound[0].moqaID)
-        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked.idDb)
-
         this.numberOfDocuments = docs.length
+        this.monitorsFound = extractMonitorsFound(docs)
         this.numberOfMonitors = this.monitorsFound.length
+        //aqui as vezes da errado se nao tiver atualizado
+        //a coleção de moqas com a transmissao
+        //porque nao vai encontrar o moqaID
+        //na coleção de monitoring
+        this.markerClicked =
+          this.markers.find(marker => marker?.idDb === this.monitorsFound[0].moqaID)
+        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.idDb)
+
+        console.log("numberOfDocuments",docs.length )
       } catch (error) {
+        console.log('Erro ao buscar documentos:', error)
         return []
       } finally {
         this.fetchingDocuments = false
