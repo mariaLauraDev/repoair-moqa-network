@@ -1,10 +1,16 @@
 <template>
   <div>
     <!-- Header -->
-    <Header />
+    <Header
+      :deafult-profile-options="deafultProfileOptions"
+      :logged-profile-menu-options="loggedProfileMenuOptions"
+    />
 
+    <div v-if="$store.state.notFound">
+      <router-view/>
+    </div>
     <div
-      v-if="isLoggedIn && !isLoginRoute && !isHomeRoute"
+      v-else-if="isLoggedIn && !isLoginRoute && !isHomeRoute"
       class="container router-content"
     >
       <Sidebar />
@@ -12,13 +18,11 @@
         <router-view />
       </main>
     </div>
-
     <div
       v-else-if="isLoginRoute || isHomeRoute"
     >
-      <router-view
-    />
-  </div>
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -26,6 +30,7 @@
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import Header from '@/components/Header.vue'
 import Sidebar from '@/components/Sidebar.vue'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -39,20 +44,6 @@ export default {
       isModalOpen: false,
       showNavbar: false,
       currentUser: null,
-      routes: [
-        {
-          name: 'Mapa',
-          path: '/monitoring-control',
-        },
-        {
-          name: 'Dados',
-          path: '/data',
-        },
-        {
-          name: 'Dashboard',
-          path: '/dashboard',
-        }
-      ]
     }
   },
   mounted() {
@@ -72,13 +63,50 @@ export default {
       }
     })
   },
+  watch: {
+    locale(newLocale) {
+      this.$i18n.locale = newLocale
+    },
+  },
   computed: {
+    ...mapState(['locale']),
     isLoginRoute() {
       return this.$route.path === '/log-in'
     },
     isHomeRoute() {
       return this.$route.path === '/'
     },
+    deafultProfileOptions() {
+      return [
+        {
+          title:  this.$t('components.header.login'),
+          path: '/log-in',
+        },
+        // {
+        //   title: 'Registra-se',
+        //   path: '/register',
+        // }
+      ]
+    },
+    loggedProfileMenuOptions() {
+      return [
+        // {
+        //   title: 'Perfil',
+        //   path: '/profile',
+        // },
+        {
+          title: this.$t('routes.dashboard.title'),
+          path: '/dashboard',
+        },
+        {
+          title: this.$t('routes.data.title'),
+          path: '/data',
+        },
+        {
+          title: this.$t('routes.analyze.title'),
+          path: '/analyze',
+        }
+      ]}
   },
   methods: {
     async handleSignOut() {

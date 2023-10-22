@@ -7,7 +7,7 @@
             class="page-title space__medium--bottom"
             style="font-weight: 600"
           >
-            Dados
+            {{ $t('routes.data.title') }}
           </h1>
           <div
             class="download-header__container"
@@ -19,7 +19,7 @@
                 <div class="download-header__option">
                   <label for="startDate">
                     <div>
-                      <small> Data inicial </small>
+                      <small> {{$t('routes.data.initial_date')}} </small>
                       <input
                         type="date"
                         id="startDate"
@@ -35,7 +35,7 @@
                 <div class="download-header__option">
                   <label for="startTime">
                     <div>
-                      <small> Hora inicial </small>
+                      <small> {{$t('routes.data.initial_hour')}} </small>
                       <input
                         v-model="selectedStartTime"
                         type="time"
@@ -53,7 +53,7 @@
                 <div class="download-header__option">
                   <label for="endDate">
                     <div>
-                      <small> Data Final </small>
+                      <small> {{$t('routes.data.final_date')}} </small>
                       <input
                         type="date"
                         id="endDate"
@@ -71,7 +71,7 @@
                 <div class="download-header__option">
                   <label for="endTime">
                     <div>
-                      <small> Hora final </small>
+                      <small> {{$t('routes.data.final_hour')}} </small>
                       <input
                       v-model="selectedEndTime"
                         type="time"
@@ -95,7 +95,7 @@
                 :disabled="!canSearchData"
               >
                 <span class="material-symbols-outlined" style="padding: 0.1rem 0; color: #fff"> search </span>
-                Buscar
+                <span> {{$t('routes.data.search')}} </span>
               </button>
             </div>
           </div>
@@ -106,30 +106,30 @@
             <TreeDotsLoading />
           </div>
           <div v-if="numberOfDocuments > 0">
-            <p class="title"> Resumo </p>
+            <p class="title"> {{ $t('resume')}} </p>
             <section
               class="download-header__summary"
             >
-              <Card title="Total de dados" :value="numberOfDocuments + ' documentos'" description="no período selecionado"/>
-              <Card title=" Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
+              <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
+              <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
             </section>
       
             <TablePaginated
-              :header-columns="monitorsHeader"
+              isTimeExport="true"
+              :header-columns="getMonitorsProps()"
               :rows="monitorsFound"
-              :rows-props="monitorsProps"
-              table-title="Últimos dados dos monitores"
-              :user="user"
+              :rows-props="getMonitorsProps()"
+              :table-title="`${$t('last_monitors_data')}`"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
             />
 
             <TablePaginated
-              :header-columns="summaryHeader"
+              isTimeExport="true"
+              :header-columns="getDocumentFields()"
               :rows="documents"
-              :rows-props="summaryHeader"
-              table-title="Dados encontrados"
-              :user="user"
+              :rows-props="getDocumentFields()"
+              :table-title="`${$t('data_found')}`"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
             />
@@ -150,18 +150,19 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Card from '../components/Card.vue'
 import TablePaginated from '../components/TablePaginated.vue';
 import TreeDotsLoading from '../components/TreeDotsLoading.vue';
+import monitorsProps from '../utils/monitorsProps.js'
+import extractMonitorsFound from '../utils/extractMonitorsFound.js'
+import documentFields from '../utils/documentFields.js'
+
 import {
   collection,
   getDocs,
-  addDoc,
   limit,
   query,
   where,
   orderBy,
   Timestamp
 } from 'firebase/firestore'
-
-import download from 'downloadjs';
 
 export default {
   components: {
@@ -179,17 +180,11 @@ export default {
       documents: [],
       monitorsFound: [],
       message: '',
-      tableTitle: 'Dados encontrados',
       numberOfDocuments: 0,
       numberOfMonitors: 0,
       downloading: false,
       fetching: false,
-      user: null,
       today: new Date(new Date().toLocaleDateString()).toISOString().split('T')[0],
-      messages: ['Selecione um período para exportar os dados', 'Carregando dados...', 'Nenhum dado encontrado para os filtros selecionados'],
-      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
-      monitorsHeader: ["moqaID", "lastTimestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
-      monitorsProps: ["moqaID", "lastTimestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"]
     }
   },
   computed: {
@@ -204,21 +199,28 @@ export default {
     },
     canDownloadData () {
       return this.documents.length > 0 && !this.fetching && !this.downloading
+    },
+    messages() {
+      return [
+        this.$t('select_a_period'),
+        this.$t('loading_data'),
+        this.$t('no_data_found_on_selected_period')
+      ]
     }
   }, 
   mounted() {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.user = user.email
-      }
-    })
     this.pageLoaded = true
   },
   methods: {
+    getMonitorsProps() {
+      return monitorsProps
+    },
+    getDocumentFields() {
+      return documentFields
+    },
     fetchData() {
       if (!this.isValidDateRange) {
-        this.message = 'Período de datas inválido. \n A data de início deve ser anterior à data de término.'
+        this.message = this.$t('invalid_date_range')
         return
       }
 
@@ -272,122 +274,17 @@ export default {
         });
         this.numberOfDocuments = querySnapshot.size
         this.documents = docs
-        this.extractMonitorsFound()
+        const monitors = extractMonitorsFound(docs)
+        this.monitorsFound = monitors
+        this.numberOfMonitors = monitors.length
 
         this.documents.length === 0 ? this.message = this.messages[2] : ''
       } finally {
         this.fetching = false
       }
     },
-    async downloadCsv() {
-      if (!this.documents || this.documents.length === 0) {
-        this.message = "Não é possível exportar dados vazios."
-        return
-      }
-
-      try {
-        this.downloading = true
-        const csvData = this.convertToCsv(this.documents)
-        download(csvData, `MoQa-${this.selectedStartDate}-${this.selectedEndDate}.csv`, 'text/csv')
-        const firestore = getFirestore()
-        const firebaseTimeStamps = this.getFirebaseTimeStamps()
-        const downloadHistoryCollection = collection(firestore, 'download-history')
-        const downloadRecord = {
-          user: this.user,
-          startDate: firebaseTimeStamps.startTimestamp,
-          endDate: firebaseTimeStamps.endTimestamp,
-          numberOfDocuments: this.numberOfDocuments,
-          timestamp: new Date()
-        }
-        await addDoc(downloadHistoryCollection, downloadRecord)
-      } finally {
-        this.downloading = false
-      }
-    },
-    extractMonitorsFound() {
-      const monitors = [];
-      const moqaIDs = new Set()
-
-      this.documents.forEach((document) => {
-        const {
-          moqaID,
-          Timestamp,
-          extTemp,
-          alt,
-          codeID,
-          boardID,
-          Pres,
-          hum,
-          intTemp,
-          pm1,
-          pm25,
-          adc0,
-          co2,
-          adc1,
-          adc2,
-          adc3,
-          tvocs,
-          adsLog,
-          ccsLog,
-          bmeLog,
-          pmsLog,
-          msdLog,
-          rtcLog } = document
-
-        if (!moqaIDs.has(moqaID)) {
-          monitors.push({
-            moqaID,
-            lastTimestamp: Timestamp.seconds * 1000,
-            extTemp,
-            alt,
-            codeID,
-            boardID,
-            Pres,
-            hum,
-            intTemp,
-            pm1,
-            pm25,
-            adc0,
-            co2,
-            adc1,
-            adc2,
-            adc3,
-            tvocs,
-            adsLog,
-            ccsLog,
-            bmeLog,
-            pmsLog,
-            msdLog,
-            rtcLog
-          })
-          moqaIDs.add(moqaID)
-        }
-      });
-      
-      this.monitorsFound = monitors
-      this.numberOfMonitors = monitors.length
-    },
-    convertToCsv(data) {
-      const fields = Object.keys(data[0])
-
-      const csvHeader = fields.join(',')
-
-      const csvData = data.map((row) => {
-        return fields.map((field) => {
-          if (field === 'Timestamp') {
-            const timestamp = row[field]
-            const formattedTimestamp = new Date(timestamp.seconds * 1000).toISOString()
-            return formattedTimestamp
-          } else {
-            return row[field]
-          }
-        }).join(',')
-      }).join('\n')
-
-      return `${csvHeader}\n${csvData}`
-    },
   },
-};
+}
 </script>
 
 <style lang="scss">

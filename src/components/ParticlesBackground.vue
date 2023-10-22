@@ -50,7 +50,7 @@ export default {
           }
         },
         opacity: {
-          value: 0.5,
+          value: 0.20,
           random: true,
           anim: {
             enable: false,

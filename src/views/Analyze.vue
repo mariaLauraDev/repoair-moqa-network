@@ -2,7 +2,7 @@
   <div>
     <transition name="fade">
       <div v-if="pageLoaded" class="analyze">
-        Em breve!
+        {{ $t('soon')}}
       </div>
     </transition>
   </div>

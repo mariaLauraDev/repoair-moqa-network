@@ -5,7 +5,7 @@
         <h1
           class="page-title space__medium--bottom"
         >
-          Dashboard
+          {{ $t('routes.dashboard.title') }}
         </h1>
 
         <div class="actions-btn">
@@ -17,12 +17,13 @@
               <select
                 v-model="timeRange"
               >
-                <option value="5">5 min</option>
-                <option value="15">15 min</option>
-                <option value="30">30 min</option>
-                <option value="60">1 hora</option>
-                <option value="360">6 horas</option>
-                <option value="1440">24 horas</option>
+                <option
+                  v-for="(option, index) in timeRangeOptions"
+                  :key="index"
+                  :value="option.value"
+                >
+                  {{ option.name }}
+                </option>
               </select>
             </div>
           </div>
@@ -37,14 +38,14 @@
         
         <div>
           <div v-if="markersLoaded" class="feed__map">
-            <l-map
-              :markers="markers"
-              @markerClicked="setMarkerClicked"
-            />
             <marker-feed
               v-if="documents.length > 0"
               :marker="markerClicked"
               :last-document="lastMarkerDocument"
+            />
+            <l-map
+              :markers="markers"
+              @markerClicked="setMarkerClicked"
             />
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -56,11 +57,11 @@
           v-if="markers.length > 0"
           :header-columns="markersHeader"
           :rows="markers"
-          :rows-props="markersProps"
-          table-title="Relação de monitores"
+          :rows-props="getMarkersProps()"
+          :table-title="`${$t('monitors_relation')}`"
         />
 
-        <p style="font-weight: 700;"> Resumo </p>
+        <p style="font-weight: 700;"> {{ $t('resume')}} </p>
         <section
           v-if="hasFetchedDocuments"
           class="dashboard__summary"
@@ -68,48 +69,40 @@
           <bar-chart
             :data="bargraph"
             xAxisLabel="MoqaID"
-            yAxisLabel="Quantidade de dados"
-            title="Quantidade de dados por monitor"
-            :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
+            :yAxisLabel="`${$t('quantity_of_data')}`"
+            :title="`${$t('quantity_of_data_by_monitor')}`"
+            :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
           />
           <div
             style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem;"
           >
-            <Card title="Total de dados" :value="numberOfDocuments + ' documentos'" description="no período selecionado"/>
-            <Card title="Total de monitores" :value="numberOfMonitors" description="no período selecionado"/>
+            <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
+            <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
           </div>
         </section>
 
         <transition name="fade">
           <div>
-            <!-- <TablePaginated
-              :header-columns="getMonitorsProps()"
-              :rows="monitorsFound"
-              :rows-props="getMonitorsProps()"
-              selected-start-date="1000"
-              selected-end-date="1000"
-              table-title="Últimos dados dos monitores"
-            /> -->
-
             <TablePaginated
               v-if="hasFetchedDocuments"
+              isTimeExport="true"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
               :header-columns="getMonitorsProps()"
               :rows="monitorsFound"
               :rows-props="getMonitorsProps()"
-              table-title="Últimos dados dos monitores"
+              :table-title="`${$t('last_monitors_data')}`"
             />
 
             <TablePaginated
               v-if="hasFetchedDocuments"
-              per-page="3"
+              isTimeExport="true"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
-              :header-columns="summaryHeader"
+              :header-columns="getDocumentFields()"
               :rows="documents"
-              :rows-props="summaryHeader"
-              table-title="Dados encontrados"
+              :rows-props="getDocumentFields()"
+              :table-title="`${$t('data_found')}`"
             />
 
             <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -118,7 +111,7 @@
           </div>
         </transition>
 
-        <p style="font-weight: 700;"> Erros </p>
+        <p style="font-weight: 700;"> {{ $t('errors')}} </p>
         <section
           v-if="documents.length > 0"
           class="dashboard__summary"
@@ -135,7 +128,7 @@
           ></scatter-chart>
         </section>
 
-        <p style="font-weight: 700;"> Parâmetros metereológicos </p>
+        <p style="font-weight: 700;"> {{ $t('metereological_parameters')}} </p>
         <section
           v-if="documents.length > 0"
           class="dashboard__summary"
@@ -152,7 +145,7 @@
           ></scatter-chart>
         </section>
 
-        <p style="font-weight: 700;"> Parâmetros poluentes </p>
+        <p style="font-weight: 700;"> {{ $t('pollutants_parameters')}} </p>
         <section
           v-if="documents.length > 0"
           class="dashboard__summary"
@@ -187,7 +180,8 @@ import weatherFields from '../utils/weatherFields.js'
 import pollutionFields from '../utils/pollutionFields.js'
 import fieldsUnits from '../utils/fieldsUnits.js'
 import logFields from '../utils/logFields.js'
-
+import documentFields from '../utils/documentFields.js'
+import markersProps from '../utils/markersProps.js'
 import {
   getFirestore,
   collection,
@@ -199,6 +193,7 @@ import {
   Timestamp,
   onSnapshot
 } from 'firebase/firestore'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -224,10 +219,7 @@ export default {
       monitorsFound: [],
       markerClicked: null,
       user: null,
-      markersProps: ['id', 'name', 'idDb', 'lat', 'long'],
-      markersHeader: ['id', 'Nome', 'MoqaID', 'latitude', 'longitude'],
       lastMarkerDocument: null,
-      summaryHeader: ["moqaID", "Timestamp", "extTemp", "alt", "codeID", "boardID", "Pres", "hum", "intTemp", "pm1", "pm10", "pm25", "adc0", "co2", "adc1", "adc2", "adc3", "tvocs", "adsLog", "ccsLog", "bmeLog", "pmsLog", "msdLog", "rtcLog"],
     }
   },
   mounted() {
@@ -236,6 +228,7 @@ export default {
     this.pageLoaded = true
   },
   computed: {
+    ...mapState(['locale']),
     timestampRanges() {
       const browserTimezoneOffset = new Date().getTimezoneOffset()
       const nowInTimestamp = Math.floor(Date.now()/ 1000) - (browserTimezoneOffset * 60)
@@ -245,12 +238,49 @@ export default {
         end: this.calculateFirebaseTimestamp(nowInTimestamp),
       }
     },
+    markersHeader() {
+      return [
+        'id',
+        this.$t('name'),
+        'MoqaID',
+        this.$t('latitude'),
+        this.$t('longitude'),
+      ]
+    },
     selectedStartDate () {
       return new Date(this.timestampRanges.start.seconds*1000).toISOString().slice(0, 10)
     },
     selectedEndDate () {
       return new Date(this.timestampRanges.end.seconds*1000).toISOString().slice(0, 10)
     },
+    timeRangeOptions() {
+      return [
+        {
+          name: `5 ${this.$t('time.min')}`,
+          value: 5
+        },
+        {
+          name: `15 ${this.$t('time.min')}`,
+          value: 15
+        },
+        {
+          name: `30 ${this.$t('time.min')}`,
+          value: 30
+        },
+        {
+          name: `1 ${this.$t('time.hour')}`,
+          value: 60
+        },
+        {
+          name: `6 ${this.$t('time.hours')}`,
+          value: 360
+        },
+        {
+          name: `24 ${this.$t('time.hours')}`,
+          value: 1440
+        }
+      ]
+    }
   },
   watch: {
     timeRange(newTimeRange) {
@@ -262,32 +292,38 @@ export default {
 
       this.scatterWeatherChartData = weatherFields.map(fieldName => ({
         data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: 'Hora',
+        xAxisLabel: this.$t('time.hour'),
         yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
-        title: `${fieldName} ao longo do tempo`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+        title: `${fieldName} ${this.$t('over_time')}`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
       }));
 
       this.scatterPollutionChartData = pollutionFields.map(fieldName => ({
         data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: 'Hora',
+        xAxisLabel: this.$t('time.hour'),
         yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
-        title: `${fieldName} ao longo do tempo`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+        title: `${fieldName} ${this.$t('over_time')}`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
       }));
 
       this.errorsChartData = logFields.map(fieldName => ({
         data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: 'Hora',
+        xAxisLabel: this.$t('time.hour'),
         yAxisLabel: `${fieldName}`,
-        title: `${fieldName} ao longo do tempo`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} até ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
+        title: `${fieldName} ${this.$t('over_time')}`,
+        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
       }));
     }
   },
   methods: {
+    getMarkersProps() {
+      return markersProps
+    },
+    getDocumentFields() {
+      return documentFields
+    },
     formatTimestamp(timestamp) {
-      return new Date(timestamp * 1000).toLocaleString('en-GB', { timeZone: 'UTC' });
+      return new Date(timestamp * 1000).toLocaleString( this.locale, { timeZone: 'UTC' });
     },
     setMarkerClicked(marker) {
       this.markerClicked = marker
@@ -383,26 +419,26 @@ export default {
         const moqaID = item.moqaID;
 
         if (!dataCounts[moqaID]) {
-          dataCounts[moqaID] = 0;
+          dataCounts[moqaID] = 0
         }
 
         dataCounts[moqaID]++;
-      });
+      })
 
       return dataCounts;
     },
     prepareGraphData (xField, yField) {
-      const groupedData = {};
+      const groupedData = {}
 
       this.documents.forEach((item) => {
         if (!groupedData[item.moqaID]) {
-          groupedData[item.moqaID] = [];
+          groupedData[item.moqaID] = []
         }
 
         const x = item[xField]
         const y = item[yField]
 
-        groupedData[item.moqaID].push({x, y});
+        groupedData[item.moqaID].push({x, y})
       })
 
       return groupedData

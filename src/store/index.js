@@ -2,9 +2,18 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    user: null
+    user: null,
+    locale: localStorage.getItem('locale') || 'en',
+    notFound: false,
   },
   mutations: {
+    SET_NOT_FOUND(state, payload) {
+      state.notFound = payload
+    },
+    SET_LOCALE(state, locale) {
+      state.locale = locale
+      localStorage.setItem('locale', locale)
+    },
     setUser(state, user) {
       state.user = user
     },
@@ -13,6 +22,7 @@ export default createStore({
     }
   },
   actions: {
+    
     setUser({ commit }, user) {
       localStorage.setItem('user', JSON.stringify(user)) 
       commit('setUser', user)

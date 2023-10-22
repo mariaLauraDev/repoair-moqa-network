@@ -19,7 +19,7 @@
         >
           logout
         </i>
-        <p class="truncate"> Sair </p>
+        <p class="truncate"> {{ $t('components.header.logout')}} </p>
         </button>
         </div>
       </div>
@@ -37,8 +37,15 @@ export default {
   },
   data() {
     return {
-      auth: null,
-      menu: [
+      auth: null
+    }
+  },
+  mounted() {
+    this.auth = getAuth()
+  },
+  computed: {
+    menu() {
+      return [
       // {
       //   title: 'Perfil',
       //   path: '/profile',
@@ -50,36 +57,22 @@ export default {
       //   icon: 'map'
       // },
       {
-        title: 'Dashboard',
+        title: this.$t('routes.dashboard.title'),
         path: '/dashboard',
         icon: 'space_dashboard'
       },
       {
-        title: 'Dados',
+        title: this.$t('routes.data.title'),
         path: '/data',
         icon: 'cloud_download'
       },
       {
-        title: 'Análise',
+        title: this.$t('routes.analyze.title'),
         path: '/analyze',
         icon: 'insert_chart'
       },
-      ],
-      bottomMenu: [
-        // {
-        //   title: "Help",
-        //   icon: "help",
-        // },
-        {
-          title: "Logout",
-          path: "/",
-          icon: "logout",
-        },
       ]
     }
-  },
-  mounted() {
-    this.auth = getAuth()
   },
   methods: {
     async handleSignOut() {

@@ -1,16 +1,20 @@
 <template>
   <div>
     <transition name="fade">
-      <div v-if="pageLoaded" class="home-page">
+      <div v-if="pageLoaded" class="container home-page">
         <ParticlesBackground />
-    
-        <div class="home-page__content">
-          <div class="home-page__title">
-            <h1>Repositório de Dados</h1>
+
+        <div class="home-page__container">
+          <div class="home-page__content">
+            <div class="home-page__title">
+              <h1> {{ $t('routes.home.title') }} </h1>
+            </div>
+            <div class="home-page__subtitle">
+              <h2> {{ $t('routes.home.subtitle') }} </h2>
+            </div>
           </div>
-          <div class="home-page__subtitle">
-            <h2>Monitoramento da Qualidade do Ar - Rede MoQA</h2>
-          </div>
+          
+          <PeopleWithDashboard />
         </div>
       </div>
     </transition>
@@ -18,11 +22,13 @@
 </template>
 
 <script>
-import ParticlesBackground from "@/components/ParticlesBackground.vue";
+import ParticlesBackground from "@/components/ParticlesBackground.vue"
+import PeopleWithDashboard from  "@/components/PeopleWithDashboard.vue"
 
 export default {
   components: {
-    ParticlesBackground
+    ParticlesBackground,
+    PeopleWithDashboard
   },
   data() {
     return {
@@ -32,20 +38,29 @@ export default {
   mounted() {
     this.pageLoaded = true
   },
-};
+}
 </script>
 
 <style lang="scss">
+.people-with-dashboard {
+  position: relative;
+  z-index: 5;
+  margin-top: 20px;
+}
+
 .home-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh; 
+
   &__content {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh; 
-    background: transparent;
-    padding: 20px;
+    position: relative;
+    z-index: 5;
   }
 
   &__title {
@@ -72,9 +87,22 @@ export default {
 }
 
 @media (min-width: 768px) {
+  .people-with-dashboard {
+    height: 100%;
+    width: 800px;
+    margin-top: 0px;
+  }
+
+  .home-page__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
   .home-page {
     &__content {
       padding: 40px;
+      align-items: flex-start;
     }
 
     &__title {

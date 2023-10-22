@@ -5,30 +5,32 @@
 
       <div class="login-container">
         <div class="login-card">
-          <h2 class="title">Acesse sua Conta</h2>
+          <h2 class="title"> {{ $t('routes.login.title')}}</h2>
           <form @submit.prevent="signIn">
             <label for="email">
               <div>
-                <small> E-mail</small>
-                <input type="text" id="email" v-model="email" placeholder="Digite seu e-mail" required>
+                <small> {{ $t('routes.login.email') }} </small>
+                <input type="text" id="email" v-model="email" :placeholder="$t('routes.login.email_placeholder')" required>
               </div>
             </label>
             <label for="password">
               <div>
                 <small>
-                  <small> Senha</small>
+                  <small> {{ $t('routes.login.password') }} </small>
                 </small>
-                <input type="password" id="password" v-model="password" placeholder="Digite sua senha" required>
+                <input type="password" id="password" v-model="password" :placeholder="$t('routes.login.password_placeholder')" required>
               </div>
             </label>
-            <p v-if="errorMessage">{{ errorMessage }}</p>
+            <transition name="fade">
+              <p class="error-message" >{{ errorMessage }}</p>
+            </transition>
             <button
               type="submit"
               :class="{ 'disabled': logInLoading }"
               :disabled="logInLoading"
               class="btn-action"
             >
-              Entrar
+              {{ $t('routes.login.action') }}
             </button>
             <!-- <button @click="signInWithGoogle">Entrar com o Google</button> -->
           </form>
@@ -57,36 +59,37 @@ export default {
     return {
       logInLoading: false,
       pageLoaded: false,
+      hasError: false,
+      errorMessage: "",
     }
   },
   mounted() {
     this.pageLoaded = true
   },
   methods: {
+    showErrorMessage(errorCode) {
+      this.hasError = true
+      this.errorMessage = this.getErrorMessage(errorCode)
+      setTimeout(() => {
+        this.errorMessage = ""
+      }, 3000)
+    },
+    getErrorMessage(errorCode) {
+      console.log(this.$i18n.messages[this.$i18n.locale].routes.login.errors[errorCode])
+      return this.$i18n.messages[this.$i18n.locale].routes.login.errors[errorCode] || "An unexpected error has occurred.";
+    },
     signIn() {
       this.logInLoading = true
       signInWithEmailAndPassword(getAuth(), this.email, this.password)
         .then((userCredential) => {
-          // console.log("Successfully signed in!")
           const user = userCredential.user
           this.$store.dispatch('setUser', user)
           this.$router.push('/dashboard')
         })
         .catch((error) => {
-          switch (error.code) {
-            case "auth/invalid-email":
-              this.errorMessage = "Invalid email address."
-              break
-            case "auth/user-not-found":
-              this.errorMessage = "User not found."
-              break
-            case "auth/wrong-password":
-              this.errorMessage = "Wrong password."
-              break
-            default:
-              this.errorMessage = "E-mail or password was incorrect."
-              break
-          }
+          this.logInLoading = false
+          console.log(error.code)
+          this.showErrorMessage(error.code)
         })
     },
     signInWithGoogle() {
@@ -115,12 +118,20 @@ export default {
   align-items: center;
 }
 
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  text-align: center;
+  min-height: 1.2rem; /* Defina uma altura mínima para o espaço da mensagem de erro */
+}
+
+
 .login-card {
   max-height: 45rem;
-  width: 25rem;
   padding: 20px 20px;
   border-radius: 10px;
   display: flex;
+  width: 20rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -162,13 +173,13 @@ export default {
   background-color: $color-background;
 }
 
-@media (max-width: 780px) {
+@media (min-width: 780px) {
   label {
-    max-width: 250px;
+    width: 100%;
   }
 
   .login-card {
-    width: 20rem;
+    width: 28rem;
   }
 }
 </style>

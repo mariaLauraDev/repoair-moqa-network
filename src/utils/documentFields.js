@@ -1,6 +1,6 @@
 const documentFields = [
   "moqaID",
-  "lastTimestamp",
+  "Timestamp",
   "extTemp",
   "alt",
   "codeID",

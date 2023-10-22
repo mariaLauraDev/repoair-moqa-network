@@ -28,6 +28,47 @@
           <span class="material-symbols-outlined" style="font-size: 1.15rem; color: #3c3c3b; font-weight: normal; font-style: normal; line-height: 1; text-transform: none; font-weight: 400; fill:0"> light_mode </span>
         </button> -->
 
+        <!-- Change Locales -->
+        <div
+          class="header__actions__locale"
+          :class="{'open': isLocaleMenuOpen}"
+        >
+          <button
+            @click.prevent="isLocaleMenuOpen = true"
+            class="header__actions__user-icon"
+          >
+            <span class="material-symbols-outlined" style="font-size: 1.15rem; color: #3c3c3b;"> translate </span>
+          </button>
+
+          
+          <transition name="modal">
+            <div
+              v-if="isLocaleMenuOpen"
+              class="header__actions__modal"
+              style="right: 0px; margin-top: 2.75rem; width: 6rem;"
+            >
+              <div
+                class="profile-options"
+              >
+                <div
+                  v-for="(option, index) in localeMenuOptions"
+                  :key="index"
+                  class="profile-options__item"
+                  :class="{'active': option.code === locale}"
+                  @click.prevent="setLanguage(option.code)"
+                >
+                  {{ option.code }}
+                </div>
+              </div>
+            </div>
+          </transition>
+          <div
+            v-if="isLocaleMenuOpen"
+            class="modal-overlay"
+            @click.prevent="isLocaleMenuOpen = false"
+          ></div>
+        </div>
+
         <!-- Profile -->
         <div
           v-if="showLoginButton"
@@ -37,7 +78,6 @@
           <button
             @click.prevent="changeUserModalState"
             class="header__actions__user-icon"
-            style="background-color: rgba(178, 199, 78, 0.3); ;"
           >
             <span class="material-symbols-outlined" style="font-size: 1.15rem; color: #3c3c3b;"> person </span>
           </button>
@@ -52,10 +92,10 @@
                 v-if="isLoggedIn"
                 class="user"
               >
-                <p style="font-weight: 600;font-size: .875rem;line-height: 1.25rem;">Olá, {{currentUser?.displayName}}</p>
+                <p style="font-weight: 600;font-size: .875rem;line-height: 1.25rem;">{{ $t('components.header.hi')}} {{currentUser?.displayName}}</p>
                 <a
-                  :href="mailto" class="leading-none text-muted-foreground"
-                  style="color: #64748b; line-height: 1; cursor: pointer; cursor: pointer; text-decoration: none; font-size: .7rem;"
+                  class="leading-none text-muted-foreground"
+                  style="color: #64748b; line-height: 1; text-decoration: none; font-size: .7rem;"
                   >{{ currentUser.email }}</a
                 >
               </div>
@@ -79,25 +119,22 @@
                   @click.prevent="handleSignOut"
                   class="profile-options__item"
                 >
-                  Sair
+                  {{ $t('components.header.logout') }}
                 </button>
               </div>
               <div
                 v-else
                 class="profile-options"
               >
-                <button
+                <router-link
                   v-for="(option, index) in deafultProfileOptions"
                   :key="index"
+                  :to="option.path"
+                  @click.prevent="changeUserModalState"
                   class="profile-options__item"
                 >
-                  <router-link
-                    @click.prevent="changeUserModalState"
-                    :to="option.path"
-                  >
-                    {{ option.title }}
-                  </router-link>
-                </button>
+                  {{ option.title }}
+                </router-link>
               </div>
             </div>
           </transition>
@@ -181,8 +218,20 @@
 
 <script>
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
+import { mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
+  props:{
+    deafultProfileOptions: {
+      type: Array,
+      default: () => []
+    },
+    loggedProfileMenuOptions: {
+      type: Array,
+      default: () => []
+    },
+  },
   data() {
     return {
       auth: null,
@@ -190,47 +239,22 @@ export default {
       isUserModalOpen: false,
       currentUser: null,
       isLoggedIn: false,
-      deafultProfileOptions: [
+      isLocaleMenuOpen: false,
+      localeMenuOptions: [
         {
-          title: 'Entrar',
-          path: '/log-in',
-        },
-        // {
-        //   title: 'Registra-se',
-        //   path: '/register',
-        // }
-      ],
-      loggedProfileMenuOptions: [
-        // {
-        //   title: 'Perfil',
-        //   path: '/profile',
-        // },
-        {
-          title: 'Dashboard',
-          path: '/dashboard',
-        },
-        // {
-        //   title: 'Mapa',
-        //   path: '/monitoring-control',
-        // },
-        {
-          title: 'Dados',
-          path: '/data',
+          code: 'pt-BR',
         },
         {
-          title: 'Análise',
-          path: '/analyze',
+          code: 'en',
         }
       ],
     }
   },
   computed: {
-    mailto() {
-      return `mailto:${this.currentUser.email}`
-    },
+    ...mapState(['locale']),
     homeLink () {
       if (this.isLoggedIn) {
-        return '/' //dashboard
+        return '/'
       } else {
         return '/'
       }
@@ -271,6 +295,15 @@ export default {
   })
   },
   methods: {
+    ...mapMutations(['SET_LOCALE']),
+    setLanguage(lang) {
+      this.isLocaleMenuOpen = false
+      this.reloadPage()
+      this.SET_LOCALE(lang)
+    },
+    reloadPage() {
+      this.$router.go()
+    },
     changeModalState() {
       return this.isModalOpen = !this.isModalOpen
     },
@@ -334,6 +367,12 @@ export default {
   display: none;
 }
 
+.header__actions__locale {
+  display: flex;
+  position: relative;
+  background-color: transparent;
+}
+
 .header__actions__user {
   position: relative;
 }
@@ -347,6 +386,7 @@ export default {
   border-width: 1px;
   justify-content: center;
   align-items: center;
+  background-color: rgba(178, 199, 78, 0.3);
 }
 
 .header__actions__modal {
@@ -407,7 +447,12 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
   background-color: transparent;
+}
+
+.profile-options__item.active {
+  background-color: rgba(178, 199, 78, 0.3) !important;
 }
 
 @media (min-width: 768px) {
@@ -415,7 +460,7 @@ export default {
     display: none;
   }
 
-  .header__actions__portal {
+  .header__actions__portal{
     display: flex;
     position: relative;
   }

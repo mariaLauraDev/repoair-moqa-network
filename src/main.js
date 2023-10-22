@@ -8,7 +8,7 @@ import { config } from './config'
 import './assets/styles/main.scss';
 import 'particles.js';
 import { v4 as uuidv4 } from 'uuid';
-
+import i18n from './plugins/i18n'
 
 // import dotenv from 'dotenv'
 const nonce = uuidv4(); // Gere um nonce único
@@ -19,6 +19,7 @@ app.config.globalProperties.$nonce = nonce
 
 app.use(store)
 app.use(router)
+app.use(i18n)
 
 const firebaseApp = initializeApp(config.firebase);
 getFirestore(firebaseApp);

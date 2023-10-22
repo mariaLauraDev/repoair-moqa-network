@@ -5,10 +5,11 @@ import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
 import Data from '../views/Data.vue'
 import LogIn from '../views/LogIn.vue'
-import Monitoring from '../views/Monitoring.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Analyze from '../views/Analyze.vue'
 import NotFound from '../views/NotFound.vue';
+import i18n from '../plugins/i18n'
+import store from '../store'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,7 +19,11 @@ const router = createRouter({
       name: 'not-found',
       component: NotFound,
       meta: {
-        title: 'MoQa | 404 Not Found'
+        title: 'routes.not_found.title'
+      },
+      beforeEnter(to, from, next) {
+        store.commit('SET_NOT_FOUND', true)
+        next()
       }
     },
     {
@@ -26,7 +31,7 @@ const router = createRouter({
       name: 'home',
       component: Home,
       meta: {
-        title: 'MoQa | Home'
+        title: `routes.home.title`
       }
     },
     {
@@ -34,7 +39,7 @@ const router = createRouter({
       name: 'log-in',
       component: LogIn,
       meta: {
-        title: 'MoQa | LogIn'
+        title: 'components.header.login'
       }
     },
     {
@@ -42,7 +47,7 @@ const router = createRouter({
       name: 'register',
       component: Register,
       meta: {
-        title: 'MoQa | Register'
+        title: 'components.header.signup'
       }
     },
     {
@@ -55,21 +60,12 @@ const router = createRouter({
       }
     },
     {
-      path:'/monitoring-control',
-      name: 'monitoring control',
-      component: Monitoring,
-      meta: {
-        requiresAuth: true,
-        title: 'MoQa | Monitoring'
-      }
-    },
-    {
       path:'/data',
-      name: 'dados',
+      name: 'data',
       component: Data,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Dados'
+        title: `routes.data.title`
       }
     },
     {
@@ -78,7 +74,7 @@ const router = createRouter({
       component: Dashboard,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Dashboard'
+        title: `routes.dashboard.title`
       }
     },
     {
@@ -87,7 +83,7 @@ const router = createRouter({
       component: Analyze,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Análise'
+        title:  `routes.analyze.title`
       }
     },
   ]
@@ -107,26 +103,30 @@ const getCurrentUser = () => {
 }
 
 router.beforeEach( async (to, from, next) => {
-  const title = to.meta.title
-
+  //colocar ou aqui na rota de register gera um bug
   if ( to.fullPath === '/log-in' && await getCurrentUser() ) {
     next('/dashboard')
   }
+  
+  if (to.meta.title) {
+    document.title = 'MoQa | ' + i18n.global.t(to.meta.title);
+  }
 
-  if (title) {
-    document.title = title
+  if (from.name === 'not-found') {
+    store.commit('SET_NOT_FOUND', false);
   }
 
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if(await getCurrentUser()) {
       next()
     } else {
-      alert('Você deve estar logado para ver esta página!')
+      alert(i18n.global.t('alerts.you_must_sign_in'))
       next('/log-in')
     }
   } else {
     next()
   }
 })
+
 
 export default router

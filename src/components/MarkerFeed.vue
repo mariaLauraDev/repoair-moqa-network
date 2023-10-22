@@ -4,22 +4,23 @@
       <p class="marker-feed-card__title ">{{ marker?.name }}</p>
     </div>
     <p class="marker-feed-card__description">MoQA ID: {{ marker?.idDb }}</p>
-    <p class="marker-feed-card__description">Latitude: {{ marker?.lat }}</p>
-    <p class="marker-feed-card__description" style="margin-bottom: 1.5rem">Longitude: {{ marker?.long }}</p>
+    <p class="marker-feed-card__description"> {{ $t('latitude')}} : {{ marker?.lat }}</p>
+    <p class="marker-feed-card__description" style="margin-bottom: 1.5rem">{{ $t('longitude')}}: {{ marker?.long }}</p>
     
     <div class="marker-feed-card__title-container">
-      <p class="marker-feed-card__title">Dados</p>
+      <p class="marker-feed-card__title"> {{ $t('data') }} </p>
     </div>
-    <p class="marker-feed-card__description">Último Timestamp: {{ formatDate(lastDocument?.Timestamp) }}</p>
+    <p class="marker-feed-card__description"> Timestamp: {{ formatDate(lastDocument?.Timestamp) }}</p>
     <p class="marker-feed-card__description">PM25: {{ lastDocument?.pm25 }} μg/m³</p>
     <p class="marker-feed-card__description">PM10: {{ lastDocument?.pm10 }} μg/m³</p>
-    <p class="marker-feed-card__description">Humidity: {{ lastDocument?.hum }} %</p>
-    <p class="marker-feed-card__description">Temperature: {{ lastDocument?.intTemp }} °C</p>
-    <!-- Add more fields as needed -->
+    <p class="marker-feed-card__description">{{ $t('humidity')}}: {{ lastDocument?.hum }} %</p>
+    <p class="marker-feed-card__description">{{ $t('temperature')}}: {{ lastDocument?.intTemp }} °C</p>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: {
     marker: {
@@ -31,10 +32,13 @@ export default {
       default: () => ({})
     }
   },
+  computed: {
+    ...mapState(['locale']),
+  },
   methods: {
     formatDate(timestamp) {
       const date = new Date(timestamp?.seconds * 1000);
-      return timestamp?.seconds > 0 ? date.toLocaleString('en-GB', { timeZone: 'UTC' }) : ''
+      return timestamp?.seconds > 0 ? date.toLocaleString(this.locale, { timeZone: 'UTC' }) : ''
     }
   }
 };

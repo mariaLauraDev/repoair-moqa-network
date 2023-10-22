@@ -15,7 +15,7 @@
           :disabled="!canDownloadData"
         >
           <span class="material-symbols-outlined" style="padding: 0.1rem 0"> download </span>
-          <span style="margin-left: .5rem"> Exportar </span>
+          <span style="margin-left: .5rem"> {{$t('components.table_paginated.export')}} </span>
         </button>
         </div>
       </div>
@@ -55,15 +55,15 @@
           </table>
         </div>
         <div v-if="rows.length > rowsPerPage" class="pagination">
-          <button @click.prevent="firstPage" :disabled="currentPage === 1">Primeira</button>
-          <button @click.prevent="prevPage" :disabled="currentPage === 1">Anterior</button>
-          <span>Página {{ currentPage }} de {{ totalPages }}</span>
-          <button @click.prevent="nextPage" :disabled="currentPage === totalPages">Próxima</button>
-          <button @click.prevent="lastPage" :disabled="currentPage === totalPages">Última</button>
+          <button @click.prevent="firstPage" :disabled="currentPage === 1">{{$t('components.table_paginated.first')}}</button>
+          <button @click.prevent="prevPage" :disabled="currentPage === 1"> {{ $t('components.table_paginated.before') }}</button>
+          <span> {{ $t('components.table_paginated.page') }} {{ currentPage }} {{ $t('components.table_paginated.of') }} {{ totalPages }}</span>
+          <button @click.prevent="nextPage" :disabled="currentPage === totalPages">{{ $t('components.table_paginated.next') }}</button>
+          <button @click.prevent="lastPage" :disabled="currentPage === totalPages">{{ $t('components.table_paginated.last') }}</button>
         </div>
       </div>
       <div v-else>
-        <p>Não há dados para exibir.</p>
+        <p> {{ $t('components.table_paginated.without_data_to_show')}} </p>
       </div>
     </div>
   </div>
@@ -71,7 +71,6 @@
 
 <script>
 import download from 'downloadjs';
-import { getFirestore, collection, addDoc,Timestamp } from 'firebase/firestore'
 
 export default {
   props: {
@@ -91,10 +90,18 @@ export default {
       type: String,
       required: true
     },
-    // user: {
-    //   type: Object,
-    //   required: true
-    // },
+    selectedStartDate: {
+      type: String,
+      default: () => ''
+    },
+    selectedEndDate: {
+      type: String,
+      default: () => ''
+    },
+    isTimeExport: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -141,32 +148,24 @@ export default {
     },
     async downloadCsv() {
       if (!this.rows || this.rows.length === 0) {
-        console.log("Não é possível exportar dados vazios.")
         return
       }
 
       try {
         this.downloading = true
         const csvData = this.convertToCsv(this.rows)
-        download(csvData, `${this.tableTitle.replace(/\s+/g, '-').toUpperCase()}-${this.selectedStartDate}-ate-${this.selectedEndDate}.csv`, 'text/csv')
-        // const firestore = getFirestore()
-        // const downloadHistoryCollection = collection(firestore, 'download-history')
-        // const downloadRecord = {
-        //   user: this.user,
-        //   tableTitle: this.tableTitle,
-        //   startDate: this.selectedStartDate,
-        //   endDate: this.selectedEndDate,
-        //   numberOfDocuments: this.rows.length,
-        //   timestamp: new Date()
-        // }
-        // await addDoc(downloadHistoryCollection, downloadRecord)
+        const documentTitleExport =
+          this.isTimeExport ?
+          `${this.tableTitle.replace(/\s+/g, '-').toUpperCase()}-${this.selectedStartDate}-${this.$t('components.table_paginated.until')}-${this.selectedEndDate}.csv`
+          :
+          `${this.tableTitle.replace(/\s+/g, '-').toUpperCase()}.csv`
+        download(csvData, documentTitleExport, 'text/csv')
       } finally {
         this.downloading = false
       }
     },
     convertToCsv(data) {
       const fields = Object.keys(data[0])
-
       const csvHeader = fields.join(',')
 
       const csvData = data.map((row) => {
@@ -174,7 +173,7 @@ export default {
           if (field === 'Timestamp') {
             const timestamp = row[field]
             //to ISOString é deslocamento zero, to String é mais adequado porque considera o fuso
-            const formattedTimestamp = timestamp.seconds*1000
+            const formattedTimestamp = timestamp.seconds
             return formattedTimestamp
           } else {
             return row[field]
