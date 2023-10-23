@@ -109,7 +109,7 @@ router.beforeEach( async (to, from, next) => {
   }
   
   if (to.meta.title) {
-    document.title = 'MoQa | ' + i18n.global.t(to.meta.title);
+    document.title = 'MoQA | ' + i18n.global.t(to.meta.title);
   }
 
   if (from.name === 'not-found') {
