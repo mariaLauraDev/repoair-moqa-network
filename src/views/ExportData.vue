@@ -208,7 +208,7 @@ export default {
       return [
         this.$t('select_a_period'),
         this.$t('loading_data'),
-        this.$t('no_data_found_on_selected_period')
+        this.$t('not_found_on_period')
       ]
     }
   }, 
