@@ -115,7 +115,7 @@
             </section>
       
             <TablePaginated
-              isTimeExport="true"
+              :isTimeExport="true"
               :header-columns="getMonitorsProps()"
               :rows="monitorsFound"
               :rows-props="getMonitorsProps()"
@@ -125,7 +125,7 @@
             />
 
             <TablePaginated
-              isTimeExport="true"
+              :isTimeExport="true"
               :header-columns="getDocumentFields()"
               :rows="documents"
               :rows-props="getDocumentFields()"

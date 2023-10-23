@@ -14,18 +14,18 @@ import store from '../store'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      component: NotFound,
-      meta: {
-        title: 'routes.not_found.title'
-      },
-      beforeEnter(to, from, next) {
-        store.commit('SET_NOT_FOUND', true)
-        next()
-      }
-    },
+    // {
+    //   path: '/:pathMatch(.*)*',
+    //   name: 'not-found',
+    //   component: NotFound,
+    //   meta: {
+    //     title: 'routes.not_found.title'
+    //   },
+    //   beforeEnter(to, from, next) {
+    //     store.commit('SET_NOT_FOUND', true)
+    //     next()
+    //   }
+    // },
     {
       path: '/',
       name: 'home',

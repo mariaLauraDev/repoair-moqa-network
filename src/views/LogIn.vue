@@ -61,6 +61,8 @@ export default {
       pageLoaded: false,
       hasError: false,
       errorMessage: "",
+      email: "",
+      password: "",
     }
   },
   mounted() {

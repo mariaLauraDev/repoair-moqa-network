@@ -85,7 +85,7 @@
           <div>
             <TablePaginated
               v-if="hasFetchedDocuments"
-              isTimeExport="true"
+              :isTimeExport="true"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
               :header-columns="getMonitorsProps()"
@@ -96,7 +96,7 @@
 
             <TablePaginated
               v-if="hasFetchedDocuments"
-              isTimeExport="true"
+              :isTimeExport="true"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
               :header-columns="getDocumentFields()"
@@ -396,7 +396,6 @@ export default {
           this.markers.find(marker => marker?.idDb === this.monitorsFound[0].moqaID)
         this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.idDb)
 
-        console.log("numberOfDocuments",docs.length )
       } catch (error) {
         console.log('Erro ao buscar documentos:', error)
         return []
