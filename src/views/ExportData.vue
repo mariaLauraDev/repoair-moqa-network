@@ -153,6 +153,7 @@ import TreeDotsLoading from '../components/TreeDotsLoading.vue';
 import monitorsProps from '../utils/monitorsProps.js'
 import extractMonitorsFound from '../utils/extractMonitorsFound.js'
 import documentFields from '../utils/documentFields.js'
+import { mapState } from 'vuex'
 
 import {
   collection,
@@ -184,10 +185,10 @@ export default {
       numberOfMonitors: 0,
       downloading: false,
       fetching: false,
-      today: new Date(new Date().toLocaleDateString()).toISOString().split('T')[0],
     }
   },
   computed: {
+    ...mapState(['locale']),
     isValidDateRange() {
       if (!this.selectedStartDate || !this.selectedEndDate) {
         return false
@@ -199,6 +200,9 @@ export default {
     },
     canDownloadData () {
       return this.documents.length > 0 && !this.fetching && !this.downloading
+    },
+    today () {
+      return new Date().toLocaleDateString()
     },
     messages() {
       return [
