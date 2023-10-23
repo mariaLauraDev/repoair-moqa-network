@@ -100,7 +100,7 @@ export default {
         },
         {
           title: this.$t('routes.data.title'),
-          path: '/data',
+          path: '/export-data',
         },
         {
           title: this.$t('routes.analyze.title'),

@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
-import Data from '../views/Data.vue'
+import ExportData from '../views/ExportData.vue'
 import LogIn from '../views/LogIn.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Analyze from '../views/Analyze.vue'
@@ -60,9 +60,9 @@ const router = createRouter({
       }
     },
     {
-      path:'/data',
-      name: 'data',
-      component: Data,
+      path:'/export-data',
+      name: 'export-data',
+      component: ExportData,
       meta: {
         requiresAuth: true,
         title: `routes.data.title`

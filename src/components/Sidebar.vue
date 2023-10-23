@@ -63,7 +63,7 @@ export default {
       },
       {
         title: this.$t('routes.data.title'),
-        path: '/data',
+        path: '/export-data',
         icon: 'cloud_download'
       },
       {
