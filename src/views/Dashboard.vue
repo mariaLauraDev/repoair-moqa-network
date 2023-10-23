@@ -38,14 +38,14 @@
         
         <div>
           <div v-if="markersLoaded" class="feed__map">
+            <l-map
+              :markers="markers"
+              @markerClicked="setMarkerClicked"
+            />
             <marker-feed
               v-if="documents.length > 0"
               :marker="markerClicked"
               :last-document="lastMarkerDocument"
-            />
-            <l-map
-              :markers="markers"
-              @markerClicked="setMarkerClicked"
             />
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">

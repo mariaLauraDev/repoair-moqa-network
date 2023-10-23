@@ -187,8 +187,8 @@
                   @click.prevent="handleSignOut"
                   class="profile-options__item"
                 >
-                  Sair
-                </button>
+                {{ $t('components.header.logout') }}
+              </button>
               </div>
               <div
                 v-else

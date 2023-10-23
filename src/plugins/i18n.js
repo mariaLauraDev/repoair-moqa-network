@@ -3,7 +3,7 @@ import en from '../locales/en'
 import ptBR from '../locales/pt-BR'
 
 const i18n = createI18n({
-  locale: localStorage.getItem('locale') || 'en',
+  locale: localStorage.getItem('locale') || 'pt-BR',
   fallbackLocale: 'en',
   messages: {
     en: en,
