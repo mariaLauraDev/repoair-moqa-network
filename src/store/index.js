@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     user: null,
-    locale: localStorage.getItem('locale') || 'en',
+    locale: localStorage.getItem('locale') || 'pt-BR',
     notFound: false,
   },
   mutations: {
