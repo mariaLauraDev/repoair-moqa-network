@@ -23,6 +23,9 @@
     >
       <router-view/>
     </div>
+    <div v-else>
+      Bug aqui
+    </div>
   </div>
 </template>
 
