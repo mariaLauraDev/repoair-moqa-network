@@ -7,25 +7,26 @@ import ExportData from '../views/ExportData.vue'
 import LogIn from '../views/LogIn.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Analyze from '../views/Analyze.vue'
-import NotFound from '../views/NotFound.vue';
+import NotFound from '../views/NotFound.vue'
+import Map from '../views/Map.vue'
 import i18n from '../plugins/i18n'
 import store from '../store'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // {
-    //   path: '/:pathMatch(.*)*',
-    //   name: 'not-found',
-    //   component: NotFound,
-    //   meta: {
-    //     title: 'routes.not_found.title'
-    //   },
-    //   beforeEnter(to, from, next) {
-    //     store.commit('SET_NOT_FOUND', true)
-    //     next()
-    //   }
-    // },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFound,
+      meta: {
+        title: 'routes.not_found.title'
+      },
+      beforeEnter(to, from, next) {
+        store.commit('SET_NOT_FOUND', true)
+        next()
+      }
+    },
     {
       path: '/',
       name: 'home',
@@ -86,6 +87,15 @@ const router = createRouter({
         title:  `routes.analyze.title`
       }
     },
+    {
+      path:'/map',
+      name: 'map',
+      component: Map,
+      meta: {
+        requiresAuth: true,
+        title:  `routes.map.title`
+      }
+    }
   ]
 })
 
@@ -127,6 +137,5 @@ router.beforeEach( async (to, from, next) => {
     next()
   }
 })
-
 
 export default router

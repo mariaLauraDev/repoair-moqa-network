@@ -19,50 +19,71 @@ export default {
     initialView: {
       type: Object,
       required: false,
+      default: () => ({ lat: -3.783112, long: -38.513393, zoom: 11 })
+    },
+    markerClicked: {
+      type: Object,
+      required: false,
       default: () => ({})
     }
   },
+  data() {
+    return {
+      map: null
+    }
+  },
+  watch: {
+    markerClicked() {
+      if (this.markerClicked.lat && this.markerClicked.long) {
+        this.zoomMoqaClicked(this.markerClicked.lat, this.markerClicked.long);
+      } else {
+        this.resetMapView();
+      }
+    }
+  },
   mounted() {
-    this.createMapLayer()
+    this.createMapLayer();
   },
   beforeDestroy() {
     if (this.map) {
-      this.map.remove()
+      this.map.remove();
     }
   },
-  //[ -3.783112, -38.513393]
   methods: {
     createMapLayer() {
-      this.map = L.map('mapContainer').setView([ -3.783112, -38.513393], 11)
+      const { lat, long, zoom } = this.initialView;
+
+      this.map = L.map('mapContainer').setView([lat, long], zoom);
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(this.map)
+        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
 
       if (this.markers.length) {
-        this.setMarkers()
+        this.setMarkers();
       }
     },
     setMarkers() {
       this.markers.forEach((marker) => {
-        // Defina um ícone personalizado para o marcador
         const customIcon = L.divIcon({
-          html: `<span class="material-symbols-outlined"> memory </span>`, // Substitua 'marker.icon' pelo ícone desejado
-          iconSize: [40, 40], // Tamanho do ícone
+          html: `<span class="material-symbols-outlined"> memory </span>`,
+          iconSize: [40, 40],
         });
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)
-          .bindPopup(marker.name)
-          .bindTooltip(`${marker.idDb}`, {
+          .bindPopup('MoqaID: ' + marker.idDb)
+          .bindTooltip(`${marker.name}`, {
             permanent: true,
             direction: 'bottom'
           })
           .on('click', () => {
-            this.zoomMoqaClicked(marker.lat, marker.long);
-            this.$emit('markerClicked', marker)
-          })
+            this.$emit('markerClicked', marker);
+          });
       });
+    },
+    resetMapView() {
+      const { lat, long, zoom } = this.initialView;
+      this.map.setView([lat, long], zoom);
     },
     zoomMoqaClicked(latitude, longitude) {
       this.map.setView([latitude, longitude], 13);
@@ -75,7 +96,6 @@ export default {
 #mapContainer {
   width: 100%;
   height: calc(50vh);
-  //box-shadow: rgb(0 0 0 / 10%) 0px 10px 26px 0px;
   border: 3px solid rgb(222, 226, 230);
   border-radius: 0.375rem;
   z-index: 1;

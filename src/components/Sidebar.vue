@@ -62,6 +62,11 @@ export default {
         icon: 'space_dashboard'
       },
       {
+        title: this.$t('routes.map.title'),
+        path: '/map',
+        icon: 'map'
+      },
+      {
         title: this.$t('routes.data.title'),
         path: '/export-data',
         icon: 'cloud_download'

@@ -5,47 +5,19 @@
         <h1
           class="page-title space__medium--bottom"
         >
-          {{ $t('routes.dashboard.title') }}
+          {{ $t('routes.map.title') }}
         </h1>
-
-        <div class="actions-btn">
-          <div
-            class="time-range--btn"
-          >
-            <div class="select">
-              <span class="material-symbols-outlined" style="font-size: 1.15rem;"> history </span>
-              <select
-                v-model="timeRange"
-              >
-                <option
-                  v-for="(option, index) in timeRangeOptions"
-                  :key="index"
-                  :value="option.value"
-                >
-                  {{ option.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div
-            class="refreshg--btn"
-            :class="{ 'refreshing': fetchingDocuments }"
-            @click="refreshPage"
-          >
-            <span class="material-symbols-outlined" style="font-size: 1.15rem;"> sync </span>
-          </div>
-        </div>
-
-        <p
-          style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
-          >{{ $t('showing_data')}} {{period}}</p>
 
         <div>
           <div v-if="markersLoaded" class="feed__map">
-            <BubbleMap
-              v-if="markers.length > 0"
+            <l-map
               :markers="markers"
-              @markerClicked="setMarkerClicked"
+              :marker-clicked="markerClicked"
+            />
+            <marker-feed
+              v-if="documents.length > 0"
+              :marker="markerClicked"
+              :last-document="lastMarkerDocument"
             />
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -53,120 +25,14 @@
           </div>
         </div>
 
-        <p style="font-weight: 700;"> {{ $t('resume')}} </p>
-
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          
-          <!-- <bar-chart
-            :data="bargraph"
-            xAxisLabel="MoqaID"
-            :yAxisLabel="`${$t('quantity_of_data')}`"
-            :title="`${$t('quantity_of_data_by_monitor')}`"
-            :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
-          /> -->
-          <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
-          <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
-          <div
-            style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem;"
-          >
-          </div>
-        </section>
-
         <TablePaginated
-          v-if="hasFetchedDocuments"
-          :selected-start-date="selectedStartDate"
-          :selected-end-date="selectedEndDate"
-          :header-columns="summaryMonitorsHeader"
-          :rows="bargraph"
-          :rows-props="summaryMonitorsProps"
-          :table-title="`${$t('quantity_of_data_by_monitor')}`"
+          v-if="markers.length > 0"
+          :header-columns="markersHeader"
+          :rows="markers"
+          :rows-props="getMarkersProps()"
+          :table-title="`${$t('monitors_relation')}`"
+          @clickedRow="setMarkerClicked"
         />
-
-        <transition name="fade">
-          <div>
-            <TablePaginated
-              v-if="hasFetchedDocuments"
-              :isTimeExport="true"
-              :selected-start-date="selectedStartDate"
-              :selected-end-date="selectedEndDate"
-              :header-columns="getDocumentFields()"
-              :rows="documents"
-              :rows-props="getDocumentFields()"
-              :table-title="`${$t('data_found')}`"
-            />
-            <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <TreeDotsLoading />
-            </div>
-
-            <TablePaginated
-              v-if="hasFetchedDocuments"
-              :isTimeExport="true"
-              :selected-start-date="selectedStartDate"
-              :selected-end-date="selectedEndDate"
-              :header-columns="getMonitorsProps()"
-              :rows="monitorsFound"
-              :rows-props="getMonitorsProps()"
-              :table-title="`${$t('last_monitors_data')}`"
-            />
-            <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <TreeDotsLoading />
-            </div>
-          </div>
-        </transition>
-
-        <p style="font-weight: 700;"> {{ $t('errors')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in errorsChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-        </section>
-
-        <p style="font-weight: 700;"> {{ $t('metereological_parameters')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in scatterWeatherChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-        </section>
-
-        <p style="font-weight: 700;"> {{ $t('pollutants_parameters')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in scatterPollutionChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-      </section>
       </div>
     </transition>
   </div>
@@ -188,7 +54,6 @@ import fieldsUnits from '../utils/fieldsUnits.js'
 import logFields from '../utils/logFields.js'
 import documentFields from '../utils/documentFields.js'
 import markersProps from '../utils/markersProps.js'
-import BubbleMap from '../components/BubbleMap.vue'
 import {
   getFirestore,
   collection,
@@ -210,8 +75,7 @@ export default {
     Card,
     ScatterChart,
     BarChart,
-    MarkerFeed,
-    BubbleMap
+    MarkerFeed
   },
   data() {
     return {
@@ -228,28 +92,22 @@ export default {
       markerClicked: null,
       user: null,
       lastMarkerDocument: null,
-      timestampRanges: {
-        start: null,
-        end: null
-      },
-      monitorsInList: [],
     }
   },
   mounted() {
-    this.calculateTimestampRanges()
-    this.fetchDocuments()
+    this.fetchMonitors()
     this.pageLoaded = true
   },
   computed: {
     ...mapState(['locale']),
-    summaryMonitorsProps() {
-      return ['moqaID', 'quantity'].concat(logFields)
-    },
-    summaryMonitorsHeader() {
-      return [
-        'moqaID',
-        this.$t('quantity')
-      ].concat(logFields)
+    timestampRanges() {
+      const browserTimezoneOffset = new Date().getTimezoneOffset()
+      const nowInTimestamp = Math.floor(Date.now()/ 1000) - (browserTimezoneOffset * 60)
+      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60)
+      return {
+        start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
+        end: this.calculateFirebaseTimestamp(nowInTimestamp),
+      }
     },
     markersHeader() {
       return [
@@ -265,9 +123,6 @@ export default {
     },
     selectedEndDate () {
       return new Date(this.timestampRanges.end.seconds*1000).toISOString().slice(0, 10)
-    },
-    period() {
-      return `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
     },
     timeRangeOptions() {
       return [
@@ -300,12 +155,10 @@ export default {
   },
   watch: {
     timeRange(newTimeRange) {
-      this.calculateTimestampRanges()
-      this.markers = []
       this.fetchDocuments()
     },
     documents(newDocuments) {
-      this.bargraph = this.groupDataByMoqaIDAndLogs(this.documents)
+      this.bargraph = this.groupDataByMoqaID()
       //na rota de dashboard irao os dados brutos e em analise faz-se a conversão
 
       this.scatterWeatherChartData = weatherFields.map(fieldName => ({
@@ -334,15 +187,6 @@ export default {
     }
   },
   methods: {
-    calculateTimestampRanges() {
-      const browserTimezoneOffset = new Date().getTimezoneOffset()
-      const nowInTimestamp = Math.floor(Date.now()/ 1000) - (browserTimezoneOffset * 60)
-      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60)
-      this.timestampRanges = {
-        start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
-        end: this.calculateFirebaseTimestamp(nowInTimestamp),
-      }
-    },
     getMarkersProps() {
       return markersProps
     },
@@ -354,10 +198,8 @@ export default {
     },
     setMarkerClicked(marker) {
       this.markerClicked = marker
-      this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked.idDb)
     },
     async fetchMonitors() {
-
       try {
         const firestore = getFirestore()
         const markersCollection = collection(firestore, 'monitoring-control')
@@ -374,7 +216,6 @@ export default {
             docs.push(doc.data())
           })
           this.markers = docs
-          this.updateMarkers()
           this.markersLoaded = true
         })
       } catch (error) {
@@ -382,8 +223,6 @@ export default {
       }
     },
     refreshPage() {
-      this.calculateTimestampRanges()
-      this.markers = []
       this.fetchDocuments()
       this.monitorsFound = []
       this.markerClicked = null
@@ -426,8 +265,7 @@ export default {
         this.markerClicked =
           this.markers.find(marker => marker?.idDb === this.monitorsFound[0].moqaID)
         this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.idDb)
-        this.monitorsInList = this.transformeInList(this.groupDataByMoqaID(this.documents))
-        this.documents.length > 0 ? this.fetchMonitors() : null
+
       } catch (error) {
         console.log('Erro ao buscar documentos:', error)
         return []
@@ -443,83 +281,20 @@ export default {
     getMonitorsProps() {
       return monitorsProps
     },
-    createQuantityMap(data) {
-      const quantityMap = {}
+    groupDataByMoqaID() {
+      const dataCounts = {};
 
-      data.forEach((item) => {
-        const { moqaID, quantity } = item
-        quantityMap[moqaID] = quantity
-      })
-
-      return quantityMap
-    },
-    updateMarkers() {
-
-      const newMarkers = this.markers.map((marker) => {
-        const markerDocument = this.monitorsInList.find((document) => document.moqaID === marker.idDb);
-
-        if (markerDocument) {
-          return {
-            moqaID: markerDocument.moqaID,
-            quantity: markerDocument.quantity,
-            name: marker.name,
-            lat: marker.lat,
-            long: marker.long,
-          };
-        }
-
-        return null
-      })
-    
-      this.markers = newMarkers.filter((marker) => marker !== null)
-    },
-    transformeInList(obj) {
-      return Object.keys(obj).map(key => {
-        return {
-          moqaID: key,
-          quantity: obj[key]
-        }
-      })
-    },
-    groupDataByMoqaID(docs) {
-      const dataCounts = {}
-
-      docs.forEach(item => {
+      this.documents.forEach(item => {
         const moqaID = item.moqaID;
 
         if (!dataCounts[moqaID]) {
           dataCounts[moqaID] = 0
         }
 
-        dataCounts[moqaID]++
+        dataCounts[moqaID]++;
       })
 
-      return dataCounts
-    },
-    groupDataByMoqaIDAndLogs(docs) {
-      const groupedData = {}
-      docs.forEach(doc => {
-        const moqaID = doc.moqaID
-
-        if (!groupedData[moqaID]) {
-          groupedData[moqaID] = {
-            moqaID,
-            quantity: 0
-          }
-
-          logFields.forEach(field => {
-            groupedData[moqaID][`${field}`] = 0
-          })
-        }
-
-        groupedData[moqaID].quantity++
-
-        logFields.forEach(field => {
-          groupedData[moqaID][`${field}`] += doc[field]
-        })
-      })
-
-      return Object.values(groupedData)
+      return dataCounts;
     },
     prepareGraphData (xField, yField) {
       const groupedData = {}
@@ -571,14 +346,14 @@ select {
   background-color: transparent;
 }
 
-.feed__map {
-  margin-bottom: 1.25rem;
-}
-
 .dashboard__summary {
   margin: 1.25rem 0px;
   display: grid;
   gap: 1.25rem;
+}
+
+.feed__map {
+  margin: 1.25rem 0px;
 }
 
 .select {
@@ -604,7 +379,5 @@ select {
     gap: 1.25rem;
     grid-template-columns: repeat(2,minmax(0,1fr));
   }
-
-
 }
 </style>

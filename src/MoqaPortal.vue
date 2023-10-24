@@ -102,6 +102,10 @@ export default {
           path: '/dashboard',
         },
         {
+          title: this.$t('routes.map.title'),
+          path: '/map',
+        },
+        {
           title: this.$t('routes.data.title'),
           path: '/export-data',
         },

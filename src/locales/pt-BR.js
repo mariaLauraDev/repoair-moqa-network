@@ -2,7 +2,9 @@ export default {
   soon: 'Em breve!',
   humidity: 'Umidade',
   temperature: 'Temperatura',
+  quantity: 'Quantidade',
   data_found: 'Dados encontrados',
+  showing_data: 'Mostrando dados de todos os monitores do período:',
   data: 'Dados',
   resume: 'Resumo',
   total_of_data: 'Total de dados',
@@ -20,7 +22,7 @@ export default {
   },
   monitors_relation: 'Relação de monitores',
   quantity_of_data: 'Quantidade de dados',
-  quantity_of_data_by_monitor: 'Quantidade de dados por monitor',
+  quantity_of_data_by_monitor: 'Total de dados ou erros por monitor',
   metereological_parameters: 'Parâmetros metereológicos',
   pollutants_parameters: 'Parâmetros poluentes',
   over_time: 'ao longo do tempo',
@@ -54,6 +56,9 @@ export default {
     }
   },
   routes: {
+    map: {
+      title: 'Mapa',
+    },
     home: {
       title: 'Repositório de Dados',
       subtitle: 'Monitoramento da Qualidade do Ar - Rede MoQA',

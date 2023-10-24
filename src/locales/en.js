@@ -2,7 +2,9 @@ export default {
   soon: 'Coming soon!',
   humidity: 'Humidity',
   temperature: 'Temperature',
+  quantity: 'Quantity',
   data_found: 'Data found',
+  showing_data: 'Showing data from all monitors of the period:',
   data: 'Data',
   resume: 'Summary',
   total_of_data: 'Total data',
@@ -20,7 +22,7 @@ export default {
   },
   monitors_relation: 'Monitors relationship',
   quantity_of_data: 'Data quantity',
-  quantity_of_data_by_monitor: 'Data quantity by monitor',
+  quantity_of_data_by_monitor: 'Total data or errors by monitor',
   metereological_parameters: 'Meteorological parameters',
   pollutants_parameters: 'Pollutants parameters',
   over_time: 'over time',
@@ -54,6 +56,9 @@ export default {
     }
   },
   routes: {
+    map: {
+      title: 'Map',
+    },
     home: {
       title: 'Data Repository',
       subtitle: 'Air Quality Monitoring - MoQA Network',

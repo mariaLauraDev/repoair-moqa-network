@@ -9,6 +9,7 @@
           v-if="rows.length > 0"
         >
           <button
+          v-if="enableExportButton" 
           @click.prevent="downloadCsv"
           class="btn-action--download"
           :class="{ 'downloading': !canDownloadData }"
@@ -39,6 +40,7 @@
             </thead>
             <tbody>
               <tr
+                @click.prevent="handleClickRow(row)"
                 v-for="(row, index) in displayedRows"
                 :key="index"
                 class="row"
@@ -102,6 +104,10 @@ export default {
       type: Boolean,
       default: false
     },
+    enableExportButton: {
+      type: Boolean,
+      default: true
+    },
   },
   data() {
     return {
@@ -130,6 +136,9 @@ export default {
     }
   },
   methods: {
+    handleClickRow(row) {
+      this.$emit('clickedRow', row)
+    },
     firstPage () {
       this.currentPage = 1
     },
@@ -230,6 +239,11 @@ export default {
   line-height: 1.25rem;
   text-align: left;
   border-bottom-width: 1px;
+}
+
+.row:hover {
+  background-color: rgba(178, 199, 78, 0.3);
+  cursor: pointer;
 }
 
 .cell {
