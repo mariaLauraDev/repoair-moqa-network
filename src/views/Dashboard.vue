@@ -366,8 +366,7 @@ export default {
 
         const markersQuery = query(
           markersCollection,
-          orderBy('id', 'asc'),
-          limit(25)
+          orderBy('id', 'asc')
         )
 
         onSnapshot(markersQuery, (querySnapshot) => {
