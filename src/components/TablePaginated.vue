@@ -181,7 +181,6 @@ export default {
   },
   methods: {
     filterRows() {
-      console.log(this.searchText)
       if (this.searchText === "") {
         this.currentPage = 1;
         this.filteredRows = [...this.rows]

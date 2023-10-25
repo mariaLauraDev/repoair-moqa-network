@@ -19,7 +19,7 @@ export default {
     initialView: {
       type: Object,
       required: false,
-      default: () => ({ lat: -3.783112, long: -38.513393, zoom: 11 })
+      default: () => ({ lat: -3.783112, long: -38.513393, zoom: 12 })
     },
     markerClicked: {
       type: Object,
@@ -64,10 +64,16 @@ export default {
     },
     setMarkers() {
       this.markers.forEach((marker) => {
-        const customIcon = L.divIcon({
-          html: `<span class="material-symbols-outlined"> memory </span>`,
-          iconSize: [40, 40],
-        });
+        console.log(marker?.isStation, marker.idDb);
+        const customIcon = marker?.isStation ?
+          L.divIcon({
+            html: `<span class="material-symbols-outlined"> aq_indoor </span>`,
+            iconSize: [40, 40],
+          }) :
+          L.divIcon({
+            html: `<span class="material-symbols-outlined yellow"> memory </span>`,
+            iconSize: [40, 40],
+          });
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)

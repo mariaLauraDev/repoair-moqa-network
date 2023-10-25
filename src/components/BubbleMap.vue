@@ -48,9 +48,7 @@ export default {
     }
   },
   mounted() {
-    this.createMapLayer();
-    console.log('[this.initialView.lat, this.initialView.lng]', [this.initialView.lat, this.initialView.lng]);
-
+    this.createMapLayer()
   },
   beforeDestroy() {
     if (this.map) {
@@ -77,26 +75,21 @@ export default {
     },
     getBubbleSize(quantity) {      
       const ratio = quantity / 10;
-      console.log('ratio', ratio);
-      console.log('quantity', quantity)
       const baseSize = 10
       const scaleFactor = 10
       
       const size = baseSize + Math.log2(ratio + 1) * scaleFactor
-      console.log('Math.log2(ratio + 1)', Math.log2(ratio + 1))
-      console.log('size', size);
       
       return Math.min(Math.max(size, 10), 150);
     },
     setMarkers() {
       this.markers.forEach((marker) => {
         const markerSize = this.getBubbleSize(marker.quantity)
-        console.log(marker.name, markerSize)
-        
+
         const customIcon = L.divIcon({
           html: `<div class="bubble" style="width:${markerSize}px; height:${markerSize}px;background-color: rgba(52, 152, 219, .8);border-radius: 50%;"></div>`,
           iconSize: [markerSize, markerSize],
-        });
+        })
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)

@@ -46,7 +46,7 @@
               v-if="markers.length > 0"
               :markers="markers"
               :time-filter="timeRange"
-              @markerClicked="markerClicked"
+              :marker-clicked="markerClicked"
             />
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -84,6 +84,7 @@
           :rows="bargraph"
           :rows-props="summaryMonitorsProps"
           :table-title="`${$t('quantity_of_data_by_monitor')}`"
+          @clickedRow="setMarkerClicked"
         />
 
         <transition name="fade">
@@ -234,7 +235,6 @@ export default {
         end: null
       },
       monitorsInList: [],
-      markerClicked: null,
     }
   },
   mounted() {
@@ -354,9 +354,9 @@ export default {
     formatTimestamp(timestamp) {
       return new Date(timestamp * 1000).toLocaleString( this.locale, { timeZone: 'UTC' });
     },
-    setMarkerClicked(marker) {
-      this.markerClicked = marker
-      this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked.idDb)
+    setMarkerClicked(row) {
+      console.log('marker', row)
+      this.markerClicked = this.markers.find(marker => marker.idDb === row.moqaID)
     },
     async fetchMonitors() {
 
