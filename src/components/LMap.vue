@@ -77,6 +77,7 @@ export default {
             direction: 'bottom'
           })
           .on('click', () => {
+            this.zoomMoqaClicked(marker.lat, marker.long)
             this.$emit('markerClicked', marker);
           });
       });

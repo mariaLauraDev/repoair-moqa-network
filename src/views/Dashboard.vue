@@ -45,7 +45,8 @@
             <BubbleMap
               v-if="markers.length > 0"
               :markers="markers"
-              @markerClicked="setMarkerClicked"
+              :time-filter="timeRange"
+              @markerClicked="markerClicked"
             />
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -233,6 +234,7 @@ export default {
         end: null
       },
       monitorsInList: [],
+      markerClicked: null,
     }
   },
   mounted() {

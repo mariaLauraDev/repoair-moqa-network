@@ -3,6 +3,7 @@ export default {
   humidity: 'Umidade',
   temperature: 'Temperatura',
   quantity: 'Quantidade',
+  reset_zoom: 'Resetar zoom',
   data_found: 'Dados encontrados',
   showing_data: 'Mostrando dados de todos os monitores do período:',
   data: 'Dados',
@@ -53,6 +54,7 @@ export default {
       page: 'Página',
       of: 'de',
       without_data_to_show: 'Não há dados para exibir',
+      type_to_search: 'Digite para pesquisar',
     }
   },
   routes: {

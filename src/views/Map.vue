@@ -14,11 +14,11 @@
               :markers="markers"
               :marker-clicked="markerClicked"
             />
-            <marker-feed
+            <!-- <marker-feed
               v-if="documents.length > 0"
               :marker="markerClicked"
               :last-document="lastMarkerDocument"
-            />
+            /> -->
           </div>
           <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <TreeDotsLoading />
@@ -30,6 +30,7 @@
           :header-columns="markersHeader"
           :rows="markers"
           :rows-props="getMarkersProps()"
+          :enable-search="true"
           :table-title="`${$t('monitors_relation')}`"
           @clickedRow="setMarkerClicked"
         />

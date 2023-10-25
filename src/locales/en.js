@@ -3,6 +3,7 @@ export default {
   humidity: 'Humidity',
   temperature: 'Temperature',
   quantity: 'Quantity',
+  reset_zoom: 'Reset zoom',
   data_found: 'Data found',
   showing_data: 'Showing data from all monitors of the period:',
   data: 'Data',
@@ -20,7 +21,7 @@ export default {
   alerts: {
     you_must_sign_in: 'You must be logged in to view this page!',
   },
-  monitors_relation: 'Monitors relationship',
+  monitors_relation: 'Monitors summary',
   quantity_of_data: 'Data quantity',
   quantity_of_data_by_monitor: 'Total data or errors by monitor',
   metereological_parameters: 'Meteorological parameters',
@@ -53,6 +54,7 @@ export default {
       page: 'Page',
       of: 'of',
       without_data_to_show: 'No data to display',
+      type_to_search: 'Type to search',
     }
   },
   routes: {

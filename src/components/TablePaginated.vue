@@ -20,7 +20,16 @@
         </button>
         </div>
       </div>
-      
+
+      <div v-if="enableSearch">
+        <input
+          class="search-input"
+          v-model="searchText"
+          @input="filterRows"
+          :placeholder="$t('components.table_paginated.type_to_search')"
+        />
+      </div>
+
       <div
         v-if="rows.length > 0"
       >
@@ -38,7 +47,27 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              v-if="enableSearch"
+            >
+              <tr
+                @click.prevent="handleClickRow(row)"
+                v-for="(row, index) in filteredRowsBySearch"
+                :key="index"
+                class="row"
+              >
+                <td
+                  v-for="(rowProp, index) in rowsProps"
+                  :key="index"
+                  class="cell"
+                >
+                {{ rowProp ==='Timestamp' ? row[rowProp]?.seconds : row[rowProp] }}
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              v-else
+            >
               <tr
                 @click.prevent="handleClickRow(row)"
                 v-for="(row, index) in displayedRows"
@@ -108,13 +137,22 @@ export default {
       type: Boolean,
       default: true
     },
+    enableSearch: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
       currentPage: 1,
       rowsPerPage: 5,
       downloading: false,
+      searchText: '',
+      filteredRows: []
     }
+  },
+  mounted() {
+    this.filterRows()
   },
   computed: {
     isFirstPage() {
@@ -131,11 +169,37 @@ export default {
       const end = start + this.rowsPerPage;
       return this.rows.slice(start, end);
     },
+    filteredRowsBySearch() {
+      const start = (this.currentPage - 1) * this.rowsPerPage
+      const end = start + this.rowsPerPage;
+
+      return this.filteredRows.slice(start, end)
+    },
     canDownloadData () {
       return this.rows.length > 0 && !this.downloading
     }
   },
   methods: {
+    filterRows() {
+      console.log(this.searchText)
+      if (this.searchText === "") {
+        this.currentPage = 1;
+        this.filteredRows = [...this.rows]
+        return
+      }
+
+      const search = this.searchText.toLowerCase()
+
+      this.currentPage = 1
+      this.filteredRows = this.rows.filter((row) => {
+        const rowText = this.rowsProps.map((rowProp) => {
+          const cellValue = row[rowProp]
+          return cellValue ? cellValue.toString().toLowerCase() : ""
+        }).join(" ")
+
+        return rowText.includes(search)
+      })
+    },
     handleClickRow(row) {
       this.$emit('clickedRow', row)
     },
@@ -255,6 +319,17 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  margin-top: .8rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  text-align: left;
 }
 
 .pagination button {

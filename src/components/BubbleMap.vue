@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div id="mapContainer" />
+    <div id="mapContainer">
+      <!-- <button @click="resetZoom" id="resetZoomButton">Reset Zoom</button> -->
+    </div>
   </div>
 </template>
 
@@ -18,11 +20,37 @@ export default {
     initialView: {
       type: Object,
       required: false,
+      default: () => ({ lat: -3.783112, lng: -38.513393, zoom: 12 })
+    },
+    timeFilter: {
+      type: Number,
+      required: true,
+      default: 5 // Default para 5 minutos
+    },
+    markerClicked: {
+      type: Object,
+      required: false,
       default: () => ({})
+    }
+  },
+  data() {
+    return {
+      map: null
+    };
+  },
+  watch: {
+    markerClicked() {
+      if (this.markerClicked.lat && this.markerClicked.long) {
+        this.zoomMoqaClicked(this.markerClicked.lat, this.markerClicked.long);
+      } else {
+        this.resetMapView();
+      }
     }
   },
   mounted() {
     this.createMapLayer();
+    console.log('[this.initialView.lat, this.initialView.lng]', [this.initialView.lat, this.initialView.lng]);
+
   },
   beforeDestroy() {
     if (this.map) {
@@ -30,32 +58,41 @@ export default {
     }
   },
   methods: {
+    resetZoom() {
+      this.map = L.map('mapContainer').setView([this.initialView.lat, this.initialView.lng], this.initialView.zoom);
+    },
     createMapLayer() {
-      this.map = L.map('mapContainer').setView([-3.783112, -38.513393], 12);
+      this.map = L.map('mapContainer').setView([this.initialView.lat, this.initialView.lng], this.initialView.zoom);
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
 
       if (this.markers.length) {
-        this.setMarkers()
+        this.setMarkers();
       }
     },
-    normalize(value, minVal, maxVal, minRange, maxRange) {
-      return ((value - minVal) / (maxVal - minVal)) * (maxRange - minRange) + minRange;
+    resetMapView() {
+      const { lat, long, zoom } = this.initialView;
+      this.map.setView([lat, long], zoom);
+    },
+    getBubbleSize(quantity) {      
+      const ratio = quantity / 10;
+      console.log('ratio', ratio);
+      console.log('quantity', quantity)
+      const baseSize = 10
+      const scaleFactor = 10
+      
+      const size = baseSize + Math.log2(ratio + 1) * scaleFactor
+      console.log('Math.log2(ratio + 1)', Math.log2(ratio + 1))
+      console.log('size', size);
+      
+      return Math.min(Math.max(size, 10), 150);
     },
     setMarkers() {
-      const minSize = 10;
-      const maxSize = 100;
-      
-      // Encontre o valor mínimo e máximo da quantidade de dados
-      const minQuantity = Math.min(...this.markers.map((marker) => marker.quantity));
-      const maxQuantity = Math.max(...this.markers.map((marker) => marker.quantity));
-      
       this.markers.forEach((marker) => {
-        // Normalize a quantidade de dados para o intervalo de tamanho da bolha
-        const normalizedSize = this.normalize(marker.quantity, minQuantity, maxQuantity, minSize, maxSize)
-        let markerSize = Math.round(normalizedSize) // Arredonda para o tamanho inteiro
-
+        const markerSize = this.getBubbleSize(marker.quantity)
+        console.log(marker.name, markerSize)
+        
         const customIcon = L.divIcon({
           html: `<div class="bubble" style="width:${markerSize}px; height:${markerSize}px;background-color: rgba(52, 152, 219, .8);border-radius: 50%;"></div>`,
           iconSize: [markerSize, markerSize],
@@ -70,20 +107,11 @@ export default {
           })
           .on('click', () => {
             this.zoomMoqaClicked(marker.lat, marker.long);
-            this.$emit('markerClicked', marker);
-          })
-      })
+          });
+      });
     },
-    normalize(value, minVal, maxVal, minRange, maxRange) {
-      if (maxVal === minVal) {
-        // Lida com o caso de minVal e maxVal serem iguais
-        return minRange*value/10 < 100 ? minRange*value/10 : 100
-      }
-      return ((value - minVal) / (maxVal - minVal)) * (maxRange - minRange) + minRange;
-    }
-    ,
-    zoomMoqaClicked(latitude, longitude) {
-      this.map.setView([latitude, longitude], 13)
+    zoomMoqaClicked(latitude, longitude, zoom = 13) {
+      this.map.setView([latitude, longitude], zoom);
     }
   }
 };
@@ -98,8 +126,16 @@ export default {
   z-index: 1;
 }
 
-.bubble {
-  
+#resetZoomButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  padding: 5px 10px;
+  background-color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 @media (min-width: 768px) {
