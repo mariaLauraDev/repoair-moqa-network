@@ -1,27 +1,24 @@
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import App from './MoqaPortal.vue'
 import router from './router'
 import store from './store'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { config } from './config'
-import './assets/styles/main.scss';
-import 'particles.js';
-import { v4 as uuidv4 } from 'uuid';
 import i18n from './plugins/i18n'
+import { config } from './config'
+import './assets/styles/main.scss'
+import 'particles.js'
 
-// import dotenv from 'dotenv'
-const nonce = uuidv4(); // Gere um nonce único
+const firebaseApp = initializeApp(config.firebase)
+getFirestore(firebaseApp)
 
-// dotenv.config()
-const app = createApp(App)
-app.config.globalProperties.$nonce = nonce
+let app
+const auth = getAuth(firebaseApp)
 
-app.use(store)
-app.use(router)
-app.use(i18n)
-
-const firebaseApp = initializeApp(config.firebase);
-getFirestore(firebaseApp);
-
-app.mount('#moqa-portal')
+onAuthStateChanged(auth, (user) => {
+  if (!app) {
+    app = createApp(App);
+    app.use(store).use(router).use(i18n).mount('#moqa-portal')
+  }
+});
