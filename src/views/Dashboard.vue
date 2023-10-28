@@ -54,7 +54,7 @@
           <p
             style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
           >
-            {{ $t('no_data_found')}}
+            {{ $t('not_found_on_period')}}
           </p>
         </div>
         <div

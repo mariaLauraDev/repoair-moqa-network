@@ -53,7 +53,10 @@ import {
   collection,
   query,
   orderBy,
-  onSnapshot
+  onSnapshot,
+  where,
+  limit,
+  getDocs,
 } from 'firebase/firestore'
 import { mapState } from 'vuex'
 
@@ -84,7 +87,7 @@ export default {
       lastMarkerDocument: null,
     }
   },
-  mounted() {
+  async mounted() {
     this.fetchMonitors()
     this.pageLoaded = true
   },
@@ -127,6 +130,31 @@ export default {
         })
       } catch (error) {
         console.error('Erro ao buscar marcadores:', error)
+      }
+    },
+    async fetchLastConnection(moqaID) {
+      try {
+        const firestore = getFirestore()
+        const system1Collection = collection(firestore, 'system-1')
+        
+        const lastConnectionQuery = query(
+          system1Collection,
+          where('moqaID', '==', moqaID),
+          limit(1)
+        )
+
+        const querySnapshot = await getDocs(lastConnectionQuery)
+        console.log('querySnapshot', querySnapshot.empty)
+
+        if (!querySnapshot.empty) {
+          console.log('querySnapshot.docs[0].data()', querySnapshot.docs[0].data())
+          return querySnapshot.docs[0].data()
+        } else {
+          return null
+        }
+      } catch (error) {
+        console.error('Erro ao buscar a última conexão:', error)
+        return null
       }
     },
   }
