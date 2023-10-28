@@ -461,8 +461,8 @@ export default {
         //porque nao vai encontrar o moqaID
         //na coleção de monitoring
         this.markerClicked =
-          this.markers.find(marker => marker?.idDb === this.monitorsFound[0].moqaID)
-        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.idDb)
+          this.markers.find(marker => marker?.moqaID === this.monitorsFound[0].moqaID)
+        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.moqaID)
         this.monitorsInList = this.transformeInList(this.groupDataByMoqaID(this.documents))
         this.documents.length > 0 ? this.fetchMonitors() : null
       } catch (error) {
@@ -493,7 +493,7 @@ export default {
     updateMarkers() {
 
       const newMarkers = this.markers.map((marker) => {
-        const markerDocument = this.monitorsInList.find((document) => document.moqaID === marker.idDb);
+        const markerDocument = this.monitorsInList.find((document) => document.moqaID === marker.moqaID);
 
         if (markerDocument) {
           return {

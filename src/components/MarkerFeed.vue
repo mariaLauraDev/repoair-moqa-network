@@ -3,7 +3,7 @@
     <div class="marker-feed-card__title-container">
       <p class="marker-feed-card__title ">{{ marker?.name }}</p>
     </div>
-    <p class="marker-feed-card__description">MoQA ID: {{ marker?.idDb }}</p>
+    <p class="marker-feed-card__description">MoQA ID: {{ marker?.moqaID }}</p>
     <p class="marker-feed-card__description"> {{ $t('latitude')}} : {{ marker?.lat }}</p>
     <p class="marker-feed-card__description" style="margin-bottom: 1.5rem">{{ $t('longitude')}}: {{ marker?.long }}</p>
     

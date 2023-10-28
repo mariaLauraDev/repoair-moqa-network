@@ -89,7 +89,7 @@ export default {
 
         L.marker([marker.lat, marker.long], { icon: customIcon })
           .addTo(this.map)
-          .bindPopup('MoqaID: ' + marker.idDb)
+          .bindPopup('MoqaID: ' + marker.moqaID)
           .bindTooltip(`${marker.name}`, {
             permanent: true,
             direction: 'bottom'

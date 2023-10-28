@@ -1,7 +1,7 @@
 const markersProps = [
   'id',
   'name',
-  'idDb',
+  'moqaID',
   'lat',
   'long'
 ]
