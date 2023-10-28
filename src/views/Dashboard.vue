@@ -38,7 +38,7 @@
 
         <p
           style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
-          >{{ $t('showing_data')}} {{period}}</p>
+          >{{ $t('showing_data')}} {{period}} (GTM{{ this.calculateBrowserTimezoneOffset() }})</p>
 
         <div>
           <div v-if="markersLoaded" class="feed__map">
@@ -252,6 +252,9 @@ export default {
     summaryMonitorsProps() {
       return ['moqaID', 'quantity'].concat(logFields)
     },
+    browserTimezoneOffset() {
+      return new Date().getTimezoneOffset()
+    },
     summaryMonitorsHeader() {
       return [
         'moqaID',
@@ -349,6 +352,9 @@ export default {
         start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
         end: this.calculateFirebaseTimestamp(nowInTimestamp),
       }
+    },
+    calculateBrowserTimezoneOffset() {
+      return -new Date().getTimezoneOffset() / 60
     },
     getMarkersProps() {
       return markersProps
@@ -609,7 +615,5 @@ select {
     gap: 1.25rem;
     grid-template-columns: repeat(2,minmax(0,1fr));
   }
-
-
 }
 </style>

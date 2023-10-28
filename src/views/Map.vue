@@ -44,26 +44,15 @@ import LMap from '../components/LMap.vue';
 import TablePaginated from '../components/TablePaginated.vue';
 import TreeDotsLoading from '../components/TreeDotsLoading.vue';
 import Card from '../components/Card.vue'
-import monitorsProps from '../utils/monitorsProps.js'
-import extractMonitorsFound from '../utils/extractMonitorsFound.js'
 import ScatterChart from '../components/ScatterChart.vue';
 import BarChart from '../components/BarChart.vue';
 import MarkerFeed from '../components/MarkerFeed.vue';
-import weatherFields from '../utils/weatherFields.js'
-import pollutionFields from '../utils/pollutionFields.js'
-import fieldsUnits from '../utils/fieldsUnits.js'
-import logFields from '../utils/logFields.js'
-import documentFields from '../utils/documentFields.js'
 import markersProps from '../utils/markersProps.js'
 import {
   getFirestore,
   collection,
-  getDocs,
   query,
-  limit,
-  where,
   orderBy,
-  Timestamp,
   onSnapshot
 } from 'firebase/firestore'
 import { mapState } from 'vuex'
@@ -101,15 +90,6 @@ export default {
   },
   computed: {
     ...mapState(['locale']),
-    timestampRanges() {
-      const browserTimezoneOffset = new Date().getTimezoneOffset()
-      const nowInTimestamp = Math.floor(Date.now()/ 1000) - (browserTimezoneOffset * 60)
-      const rangeStartTimestamp = nowInTimestamp - (this.timeRange * 60)
-      return {
-        start: this.calculateFirebaseTimestamp(rangeStartTimestamp),
-        end: this.calculateFirebaseTimestamp(nowInTimestamp),
-      }
-    },
     markersHeader() {
       return [
         'id',
@@ -119,83 +99,10 @@ export default {
         this.$t('longitude'),
       ]
     },
-    selectedStartDate () {
-      return new Date(this.timestampRanges.start.seconds*1000).toISOString().slice(0, 10)
-    },
-    selectedEndDate () {
-      return new Date(this.timestampRanges.end.seconds*1000).toISOString().slice(0, 10)
-    },
-    timeRangeOptions() {
-      return [
-        {
-          name: `5 ${this.$t('time.min')}`,
-          value: 5
-        },
-        {
-          name: `15 ${this.$t('time.min')}`,
-          value: 15
-        },
-        {
-          name: `30 ${this.$t('time.min')}`,
-          value: 30
-        },
-        {
-          name: `1 ${this.$t('time.hour')}`,
-          value: 60
-        },
-        {
-          name: `6 ${this.$t('time.hours')}`,
-          value: 360
-        },
-        {
-          name: `24 ${this.$t('time.hours')}`,
-          value: 1440
-        }
-      ]
-    }
-  },
-  watch: {
-    timeRange(newTimeRange) {
-      this.fetchDocuments()
-    },
-    documents(newDocuments) {
-      this.bargraph = this.groupDataByMoqaID()
-      //na rota de dashboard irao os dados brutos e em analise faz-se a conversão
-
-      this.scatterWeatherChartData = weatherFields.map(fieldName => ({
-        data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: this.$t('time.hour'),
-        yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
-        title: `${fieldName} ${this.$t('over_time')}`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
-      }));
-
-      this.scatterPollutionChartData = pollutionFields.map(fieldName => ({
-        data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: this.$t('time.hour'),
-        yAxisLabel: `${fieldName} (${fieldsUnits[fieldName].unit})`,
-        title: `${fieldName} ${this.$t('over_time')}`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
-      }));
-
-      this.errorsChartData = logFields.map(fieldName => ({
-        data: this.prepareGraphData('Timestamp', fieldName),
-        xAxisLabel: this.$t('time.hour'),
-        yAxisLabel: `${fieldName}`,
-        title: `${fieldName} ${this.$t('over_time')}`,
-        subtitle: `${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`
-      }));
-    }
   },
   methods: {
     getMarkersProps() {
       return markersProps
-    },
-    getDocumentFields() {
-      return documentFields
-    },
-    formatTimestamp(timestamp) {
-      return new Date(timestamp * 1000).toLocaleString( this.locale, { timeZone: 'UTC' });
     },
     setMarkerClicked(marker) {
       this.markerClicked = marker
@@ -222,98 +129,8 @@ export default {
         console.error('Erro ao buscar marcadores:', error)
       }
     },
-    refreshPage() {
-      this.fetchDocuments()
-      this.monitorsFound = []
-      this.markerClicked = null
-      this.lastMarkerDocument = null
-      this.numberOfDocuments = 0
-      this.numberOfMonitors = 0
-    },
-    async fetchDocuments() {
-      try {
-        this.fetchingDocuments = true
-        this.markersLoaded = false
-        this.hasFetchedDocuments = false
-        const { start, end } = this.timestampRanges
-        const firestore = getFirestore()
-        const documentsCollection = collection(firestore, 'system-1')
-
-        let documentsQuery = null
-        documentsQuery = query(
-          documentsCollection,
-          where('Timestamp', '>=', start),
-          where('Timestamp', '<=', end),
-          orderBy('Timestamp', 'desc')
-        )
-
-        const querySnapshot = await getDocs(documentsQuery)
-
-        const docs = []
-        querySnapshot.forEach((doc) => {
-          docs.push(doc.data())
-        })
-        
-        this.documents = docs
-        this.numberOfDocuments = docs.length
-        this.monitorsFound = extractMonitorsFound(docs)
-        this.numberOfMonitors = this.monitorsFound.length
-        //aqui as vezes da errado se nao tiver atualizado
-        //a coleção de moqas com a transmissao
-        //porque nao vai encontrar o moqaID
-        //na coleção de monitoring
-        this.markerClicked =
-          this.markers.find(marker => marker?.idDb === this.monitorsFound[0].moqaID)
-        this.lastMarkerDocument = this.documents.find(document => document.moqaID === this.markerClicked?.idDb)
-
-      } catch (error) {
-        console.log('Erro ao buscar documentos:', error)
-        return []
-      } finally {
-        this.fetchingDocuments = false
-        this.hasFetchedDocuments = true
-        this.markersLoaded = true
-      }
-    },
-    calculateFirebaseTimestamp(date) {
-      return new Timestamp(date, 0)
-    },
-    getMonitorsProps() {
-      return monitorsProps
-    },
-    groupDataByMoqaID() {
-      const dataCounts = {};
-
-      this.documents.forEach(item => {
-        const moqaID = item.moqaID;
-
-        if (!dataCounts[moqaID]) {
-          dataCounts[moqaID] = 0
-        }
-
-        dataCounts[moqaID]++;
-      })
-
-      return dataCounts;
-    },
-    prepareGraphData (xField, yField) {
-      const groupedData = {}
-
-      this.documents.forEach((item) => {
-        if (!groupedData[item.moqaID]) {
-          groupedData[item.moqaID] = []
-        }
-
-        const x = item[xField]
-        const y = item[yField]
-
-        groupedData[item.moqaID].push({x, y})
-      })
-
-      return groupedData
-    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
