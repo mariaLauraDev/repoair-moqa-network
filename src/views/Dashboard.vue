@@ -52,7 +52,7 @@
           v-else-if="hasFetchedDocuments && documents.length === 0"
         >
           <p
-            style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
+            style="font-weight: normal; margin: 15px 0px; text-align: center;"
           >
             {{ $t('not_found_on_period')}}
           </p>
