@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div id="mapContainer" />
+    <div id="mapContainer">
+      <button @click="resetZoom" id="resetZoomButton"> {{ $t('reset_zoom') }} </button>
+    </div>
   </div>
 </template>
 
@@ -35,36 +37,46 @@ export default {
   watch: {
     markerClicked() {
       if (this.markerClicked.lat && this.markerClicked.long) {
-        this.zoomMoqaClicked(this.markerClicked.lat, this.markerClicked.long);
+        this.zoomMoqaClicked(this.markerClicked)
       } else {
-        this.resetMapView();
+        this.resetMapView()
       }
     }
   },
   mounted() {
-    this.createMapLayer();
+    this.createMapLayer()
   },
   beforeDestroy() {
     if (this.map) {
-      this.map.remove();
+      this.map.remove()
     }
   },
   methods: {
+    resetZoom() {
+      const { lat, long, zoom } = this.initialView
+      this.map.setView([lat, long], zoom)
+    },
     createMapLayer() {
-      const { lat, long, zoom } = this.initialView;
+      const { lat, long, zoom } = this.initialView
 
-      this.map = L.map('mapContainer').setView([lat, long], zoom);
+      this.map = L.map('mapContainer', {
+        zoomControl: true,
+        zoom: 1,
+        zoomAnimation: false,
+        fadeAnimation: true,
+        markerZoomAnimation: true
+      }).setView([lat, long], zoom)
+
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(this.map);
+      }).addTo(this.map)
 
       if (this.markers.length) {
-        this.setMarkers();
+        this.setMarkers()
       }
     },
     setMarkers() {
       this.markers.forEach((marker) => {
-        console.log(marker?.isStation, marker.idDb);
         const customIcon = marker?.isStation ?
           L.divIcon({
             html: `<span class="material-symbols-outlined"> aq_indoor </span>`,
@@ -83,17 +95,17 @@ export default {
             direction: 'bottom'
           })
           .on('click', () => {
-            this.zoomMoqaClicked(marker.lat, marker.long)
-            this.$emit('markerClicked', marker);
+            this.zoomMoqaClicked(marker)
+            this.$emit('markerClicked', marker)
           });
       });
     },
     resetMapView() {
-      const { lat, long, zoom } = this.initialView;
-      this.map.setView([lat, long], zoom);
+      const { lat, long, zoom } = this.initialView
+      this.map.setView([lat, long], zoom)
     },
-    zoomMoqaClicked(latitude, longitude) {
-      this.map.setView([latitude, longitude], 13);
+    zoomMoqaClicked(marker) {
+      this.map.setView([marker.lat, marker.long], 13)
     }
   }
 }

@@ -77,7 +77,6 @@ export default {
       }, 3000)
     },
     getErrorMessage(errorCode) {
-      console.log(this.$i18n.messages[this.$i18n.locale].routes.login.errors[errorCode])
       return this.$i18n.messages[this.$i18n.locale].routes.login.errors[errorCode] || "An unexpected error has occurred.";
     },
     signIn() {
@@ -90,7 +89,6 @@ export default {
         })
         .catch((error) => {
           this.logInLoading = false
-          console.log(error.code)
           this.showErrorMessage(error.code)
         })
     },

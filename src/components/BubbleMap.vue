@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="mapContainer">
-      <!-- <button @click="resetZoom" id="resetZoomButton">Reset Zoom</button> -->
+      <button @click="resetZoom" id="resetZoomButton"> {{ $t('reset_zoom') }} </button>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     initialView: {
       type: Object,
       required: false,
-      default: () => ({ lat: -3.783112, lng: -38.513393, zoom: 12 })
+      default: () => ({ lat: -3.783112, long: -38.513393, zoom: 12 })
     },
     timeFilter: {
       type: Number,
@@ -41,9 +41,9 @@ export default {
   watch: {
     markerClicked() {
       if (this.markerClicked.lat && this.markerClicked.long) {
-        this.zoomMoqaClicked(this.markerClicked.lat, this.markerClicked.long);
+        this.zoomMoqaClicked(this.markerClicked)
       } else {
-        this.resetMapView();
+        this.resetMapView()
       }
     }
   },
@@ -57,10 +57,20 @@ export default {
   },
   methods: {
     resetZoom() {
-      this.map = L.map('mapContainer').setView([this.initialView.lat, this.initialView.lng], this.initialView.zoom);
+      const { lat, long, zoom } = this.initialView
+      this.map.setView([lat, long], zoom)
     },
     createMapLayer() {
-      this.map = L.map('mapContainer').setView([this.initialView.lat, this.initialView.lng], this.initialView.zoom);
+      const { lat, long, zoom } = this.initialView
+
+      this.map = L.map('mapContainer', {
+        zoomControl: true,
+        zoom: 1,
+        zoomAnimation: false,
+        fadeAnimation: true,
+        markerZoomAnimation: true
+      }).setView([lat, long], zoom)
+
       L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
@@ -99,12 +109,12 @@ export default {
             direction: 'bottom',
           })
           .on('click', () => {
-            this.zoomMoqaClicked(marker.lat, marker.long);
-          });
-      });
+            this.zoomMoqaClicked(marker)
+          })
+      })
     },
-    zoomMoqaClicked(latitude, longitude, zoom = 13) {
-      this.map.setView([latitude, longitude], zoom);
+    zoomMoqaClicked(marker) {
+      this.map.setView([marker.lat, marker.long], 13)
     }
   }
 };
@@ -117,18 +127,6 @@ export default {
   border: 3px solid rgb(222, 226, 230);
   border-radius: 0.375rem;
   z-index: 1;
-}
-
-#resetZoomButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
-  padding: 5px 10px;
-  background-color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
 }
 
 @media (min-width: 768px) {

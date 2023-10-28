@@ -84,6 +84,7 @@
           :rows="bargraph"
           :rows-props="summaryMonitorsProps"
           :table-title="`${$t('quantity_of_data_by_monitor')}`"
+          :enableSearch="false"
           @clickedRow="setMarkerClicked"
         />
 
@@ -98,6 +99,8 @@
               :rows="documents"
               :rows-props="getDocumentFields()"
               :table-title="`${$t('data_found')}`"
+              :enableSearch="true"
+              @clickedRow="setMarkerClicked"
             />
             <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
               <TreeDotsLoading />
@@ -112,6 +115,8 @@
               :rows="monitorsFound"
               :rows-props="getMonitorsProps()"
               :table-title="`${$t('last_monitors_data')}`"
+              :enableSearch="false"
+              @clickedRow="setMarkerClicked"
             />
             <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
               <TreeDotsLoading />
@@ -355,8 +360,7 @@ export default {
       return new Date(timestamp * 1000).toLocaleString( this.locale, { timeZone: 'UTC' });
     },
     setMarkerClicked(row) {
-      console.log('marker', row)
-      this.markerClicked = this.markers.find(marker => marker.idDb === row.moqaID)
+      this.markerClicked = this.markers.find(marker => marker.moqaID === row.moqaID)
     },
     async fetchMonitors() {
 
