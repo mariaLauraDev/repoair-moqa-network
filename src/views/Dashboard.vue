@@ -38,142 +38,168 @@
 
         <p
           style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
-          >{{ $t('showing_data')}} {{period}} (GTM{{ this.calculateBrowserTimezoneOffset() }})</p>
+        >
+          {{ $t('showing_data')}} {{period}} (GTM{{ this.calculateBrowserTimezoneOffset() }})
+        </p>
 
-        <div>
-          <div v-if="markersLoaded" class="feed__map">
-            <BubbleMap
-              v-if="markers.length > 0"
-              :markers="markers"
-              :time-filter="timeRange"
-              :marker-clicked="markerClicked"
-            />
-          </div>
-          <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <TreeDotsLoading />
-          </div>
+        <div
+          style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;"
+          v-if="fetchingDocuments"
+        >
+          <TreeDotsLoading />
         </div>
-
-        <p style="font-weight: 700;"> {{ $t('resume')}} </p>
-
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
+        <div
+          v-else-if="hasFetchedDocuments && documents.length === 0"
         >
-          
-          <!-- <bar-chart
-            :data="bargraph"
-            xAxisLabel="MoqaID"
-            :yAxisLabel="`${$t('quantity_of_data')}`"
-            :title="`${$t('quantity_of_data_by_monitor')}`"
-            :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
-          /> -->
-          <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
-          <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
-          <div
-            style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem;"
+          <p
+            style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;"
           >
-          </div>
-        </section>
-
-        <TablePaginated
-          v-if="hasFetchedDocuments"
-          :selected-start-date="selectedStartDate"
-          :selected-end-date="selectedEndDate"
-          :header-columns="summaryMonitorsHeader"
-          :rows="bargraph"
-          :rows-props="summaryMonitorsProps"
-          :table-title="`${$t('quantity_of_data_by_monitor')}`"
-          :enableSearch="false"
-          @clickedRow="setMarkerClicked"
-        />
-
-        <transition name="fade">
+            {{ $t('no_data_found')}}
+          </p>
+        </div>
+        <div
+          v-else-if="hasFetchedDocuments && documents.length > 0"
+        >
           <div>
-            <TablePaginated
-              v-if="hasFetchedDocuments"
-              :isTimeExport="true"
-              :selected-start-date="selectedStartDate"
-              :selected-end-date="selectedEndDate"
-              :header-columns="getDocumentFields()"
-              :rows="documents"
-              :rows-props="getDocumentFields()"
-              :table-title="`${$t('data_found')}`"
-              :enableSearch="true"
-              @clickedRow="setMarkerClicked"
-            />
-            <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <TreeDotsLoading />
+            <div v-if="markersLoaded" class="feed__map">
+              <BubbleMap
+                v-if="markers.length > 0"
+                :markers="markers"
+                :time-filter="timeRange"
+                :marker-clicked="markerClicked"
+              />
             </div>
-
-            <TablePaginated
-              v-if="hasFetchedDocuments"
-              :isTimeExport="true"
-              :selected-start-date="selectedStartDate"
-              :selected-end-date="selectedEndDate"
-              :header-columns="getMonitorsProps()"
-              :rows="monitorsFound"
-              :rows-props="getMonitorsProps()"
-              :table-title="`${$t('last_monitors_data')}`"
-              :enableSearch="false"
-              @clickedRow="setMarkerClicked"
-            />
             <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
               <TreeDotsLoading />
             </div>
           </div>
-        </transition>
 
-        <p style="font-weight: 700;"> {{ $t('errors')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in errorsChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-        </section>
+          <p style="font-weight: 700;"> {{ $t('resume')}} </p>
 
-        <p style="font-weight: 700;"> {{ $t('metereological_parameters')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in scatterWeatherChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-        </section>
+          <section
+            v-if="hasFetchedDocuments"
+            class="dashboard__summary"
+          >
+            
+            <!-- <bar-chart
+              :data="bargraph"
+              xAxisLabel="MoqaID"
+              :yAxisLabel="`${$t('quantity_of_data')}`"
+              :title="`${$t('quantity_of_data_by_monitor')}`"
+              :subtitle="`${this.formatTimestamp(this.timestampRanges.start.seconds)} ${this.$t('components.table_paginated.until')} ${this.formatTimestamp(this.timestampRanges.end.seconds)}`"
+            /> -->
+            <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
+            <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
+            <div
+              style="display: flex; flex-direction: column; align-items: center; gap: 1.25rem;"
+            >
+            </div>
+          </section>
 
-        <p style="font-weight: 700;"> {{ $t('pollutants_parameters')}} </p>
-        <section
-          v-if="hasFetchedDocuments"
-          class="dashboard__summary"
-        >
-          <scatter-chart
-            v-for="(data, index) in scatterPollutionChartData" 
-            :key="index"
-            :data="data.data"
-            :isHourSeries="true"
-            :xAxisLabel="data.xAxisLabel"
-            :yAxisLabel="data.yAxisLabel"
-            :title="data.title"
-            :subtitle="data.subtitle"
-          ></scatter-chart>
-      </section>
+          <TablePaginated
+            v-if="hasFetchedDocuments"
+            :selected-start-date="selectedStartDate"
+            :selected-end-date="selectedEndDate"
+            :header-columns="summaryMonitorsHeader"
+            :rows="bargraph"
+            :rows-props="summaryMonitorsProps"
+            :table-title="`${$t('quantity_of_data_by_monitor')}`"
+            :enableSearch="false"
+            @clickedRow="setMarkerClicked"
+          />
+
+          <transition name="fade">
+            <div>
+              <TablePaginated
+                v-if="hasFetchedDocuments"
+                :isTimeExport="true"
+                :selected-start-date="selectedStartDate"
+                :selected-end-date="selectedEndDate"
+                :header-columns="getDocumentFields()"
+                :rows="documents"
+                :rows-props="getDocumentFields()"
+                :table-title="`${$t('data_found')}`"
+                :enableSearch="true"
+                @clickedRow="setMarkerClicked"
+              />
+              <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <TreeDotsLoading />
+              </div>
+
+              <TablePaginated
+                v-if="hasFetchedDocuments"
+                :isTimeExport="true"
+                :selected-start-date="selectedStartDate"
+                :selected-end-date="selectedEndDate"
+                :header-columns="getMonitorsProps()"
+                :rows="monitorsFound"
+                :rows-props="getMonitorsProps()"
+                :table-title="`${$t('last_monitors_data')}`"
+                :enableSearch="false"
+                @clickedRow="setMarkerClicked"
+              />
+              <div v-else style="height: calc(50vh); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <TreeDotsLoading />
+              </div>
+            </div>
+          </transition>
+
+          <p style="font-weight: 700;"> {{ $t('errors')}} </p>
+          <section
+            v-if="hasFetchedDocuments"
+            class="dashboard__summary"
+          >
+            <scatter-chart
+              v-for="(data, index) in errorsChartData" 
+              :key="index"
+              :data="data.data"
+              :isHourSeries="true"
+              :xAxisLabel="data.xAxisLabel"
+              :yAxisLabel="data.yAxisLabel"
+              :title="data.title"
+              :subtitle="data.subtitle"
+            ></scatter-chart>
+          </section>
+
+          <p style="font-weight: 700;"> {{ $t('metereological_parameters')}} </p>
+          <section
+            v-if="hasFetchedDocuments"
+            class="dashboard__summary"
+          >
+            <scatter-chart
+              v-for="(data, index) in scatterWeatherChartData" 
+              :key="index"
+              :data="data.data"
+              :isHourSeries="true"
+              :xAxisLabel="data.xAxisLabel"
+              :yAxisLabel="data.yAxisLabel"
+              :title="data.title"
+              :subtitle="data.subtitle"
+            ></scatter-chart>
+          </section>
+
+          <p style="font-weight: 700;"> {{ $t('pollutants_parameters')}} </p>
+          <section
+            v-if="hasFetchedDocuments"
+            class="dashboard__summary"
+          >
+            <scatter-chart
+              v-for="(data, index) in scatterPollutionChartData" 
+              :key="index"
+              :data="data.data"
+              :isHourSeries="true"
+              :xAxisLabel="data.xAxisLabel"
+              :yAxisLabel="data.yAxisLabel"
+              :title="data.title"
+              :subtitle="data.subtitle"
+            ></scatter-chart>
+          </section>
+        </div>
+        <div v-else>
+          <p style="font-weight: 400; margin: 15px 0px; font-style: italic; font-size: 0.8rem; text-align: center;">
+            {{ $t('unexpected_error')}}
+          </p>
+        </div>
       </div>
     </transition>
   </div>

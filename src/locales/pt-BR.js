@@ -2,6 +2,7 @@ export default {
   soon: 'Em breve!',
   humidity: 'Umidade',
   temperature: 'Temperatura',
+  unexpected_error: 'Ocorreu um erro inesperado. Verifique sua conexão e tente novamente. Se o problema persistir, entre em contato com o suporte.',
   quantity: 'Quantidade',
   reset_zoom: 'Resetar zoom',
   data_found: 'Dados encontrados',

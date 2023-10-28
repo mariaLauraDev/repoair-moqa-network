@@ -2,6 +2,7 @@ export default {
   soon: 'Coming soon!',
   humidity: 'Humidity',
   temperature: 'Temperature',
+  unexpected_error: 'An unexpected error has occurred. Check your connection and try again. If the problem persists, contact support.',
   quantity: 'Quantity',
   reset_zoom: 'Reset zoom',
   data_found: 'Data found',

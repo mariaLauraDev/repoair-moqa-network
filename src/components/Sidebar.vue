@@ -71,11 +71,11 @@ export default {
         path: '/export-data',
         icon: 'cloud_download'
       },
-      {
-        title: this.$t('routes.analyze.title'),
-        path: '/analyze',
-        icon: 'insert_chart'
-      },
+      // {
+      //   title: this.$t('routes.analyze.title'),
+      //   path: '/analyze',
+      //   icon: 'insert_chart'
+      // },
       ]
     }
   },
