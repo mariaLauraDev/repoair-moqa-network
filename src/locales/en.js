@@ -21,6 +21,7 @@ export default {
   not_possible_export_empty: 'Cannot export empty data.',
   alerts: {
     you_must_sign_in: 'You must be logged in to view this page!',
+    no_permission: 'You do not have permission to access this page!',
   },
   monitors_relation: 'Monitors summary',
   quantity_of_data: 'Data quantity',
@@ -59,6 +60,9 @@ export default {
     }
   },
   routes: {
+    admin : {
+      title: 'Admin',
+    },
     map: {
       title: 'Map',
     },

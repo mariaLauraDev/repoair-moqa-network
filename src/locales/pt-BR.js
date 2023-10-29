@@ -21,6 +21,7 @@ export default {
   not_possible_export_empty: 'Não é possível exportar dados vazios.',
   alerts: {
     you_must_sign_in: 'Você deve estar logado para ver esta página!',
+    no_permission: 'Você não tem permissão para acessar esta página!',
   },
   monitors_relation: 'Relação de monitores',
   quantity_of_data: 'Quantidade de dados',
@@ -59,6 +60,9 @@ export default {
     }
   },
   routes: {
+    admin : {
+      title: 'Adminstrador',
+    },
     map: {
       title: 'Mapa',
     },

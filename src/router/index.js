@@ -11,6 +11,8 @@ import NotFound from '../views/NotFound.vue'
 import Map from '../views/Map.vue'
 import i18n from '../plugins/i18n'
 import store from '../store'
+import Admin from '../views/Admin.vue'
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,6 +27,16 @@ const router = createRouter({
       beforeEnter(to, from, next) {
         store.commit('SET_NOT_FOUND', true)
         next()
+      }
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+        title: 'routes.admin.title'
       }
     },
     {
@@ -112,30 +124,42 @@ const getCurrentUser = () => {
   })
 }
 
-router.beforeEach( async (to, from, next) => {
-  //colocar ou aqui na rota de register gera um bug
-  if ( to.fullPath === '/log-in' && await getCurrentUser() ) {
-    next('/dashboard')
+router.beforeEach(async (to, from, next) => {
+  const user = await getCurrentUser()
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+  
+  if (to.fullPath === '/log-in' && user) {
+    return next('/dashboard');
   }
   
   if (to.meta.title) {
     document.title = 'MoQA | ' + i18n.global.t(to.meta.title);
   }
-
+  
   if (from.name === 'not-found') {
-    store.commit('SET_NOT_FOUND', false);
+    store.commit('SET_NOT_FOUND', false)
+  }
+  
+  if (requiresAuth && !user) {
+    alert(i18n.global.t('alerts.you_must_sign_in'));
+    return next('/log-in');
+  }
+  
+  if (requiresAdmin && user) {
+    const db = getFirestore()
+    const docRef = doc(db, 'users', user.uid)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      return next()
+    } else {
+      alert(i18n.global.t('alerts.no_permission'))
+      return next('/')
+    }
   }
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if(await getCurrentUser()) {
-      next()
-    } else {
-      alert(i18n.global.t('alerts.you_must_sign_in'))
-      next('/log-in')
-    }
-  } else {
-    next()
-  }
+  next()
 })
 
 export default router
