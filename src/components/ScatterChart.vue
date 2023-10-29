@@ -7,7 +7,6 @@
 
 <script>
 import Highcharts from 'highcharts';
-import moment from 'moment';
 
 import accessibility from 'highcharts/modules/accessibility';
 accessibility(Highcharts);
@@ -101,11 +100,6 @@ export default {
         title: {
           text: this.xAxisLabel
         },
-        labels: {
-          // formatter: function() {
-          //   return moment(this.value).format('DD/MM HH:mm:ss');
-          // }
-        }
       },
       yAxis: {
         title: {
