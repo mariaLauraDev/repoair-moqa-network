@@ -69,7 +69,7 @@ const router = createRouter({
       component: Profile,
       meta: {
         requiresAuth: true,
-        title: 'MoQa | Profile'
+        title: 'routes.profile.title'
       }
     },
     {

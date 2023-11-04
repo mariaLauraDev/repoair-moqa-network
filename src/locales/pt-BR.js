@@ -60,6 +60,19 @@ export default {
     }
   },
   routes: {
+    profile: {
+      title: 'Perfil',
+      name: 'Nome',
+      change_password: 'Você pode alterá-la a qualquer momento',
+      placeholder_name: 'Digite seu nome',
+      update_your_password: 'Atualize sua senha',
+      update_your_name: 'Atualize seu nome',
+      new_name: 'Digite o novo nome',
+      your_email: 'Digite seu e-mail',
+      last_password: 'Digite a senha atual',
+      new_password: 'Digite a nova senha',
+      save_changes: 'Salvar alterações',
+    },
     admin : {
       title: 'Adminstrador',
     },

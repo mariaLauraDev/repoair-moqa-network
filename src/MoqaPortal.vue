@@ -93,10 +93,6 @@ export default {
     },
     loggedProfileMenuOptions() {
       return [
-        // {
-        //   title: 'Perfil',
-        //   path: '/profile',
-        // },
         {
           title: this.$t('routes.dashboard.title'),
           path: '/dashboard',
@@ -108,6 +104,10 @@ export default {
         {
           title: this.$t('routes.data.title'),
           path: '/export-data',
+        },
+        {
+          title: this.$t('routes.profile.title'),
+          path: '/profile',
         },
         // {
         //   title: this.$t('routes.analyze.title'),

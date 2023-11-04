@@ -60,6 +60,19 @@ export default {
     }
   },
   routes: {
+    profile: {
+      title: 'Profile',
+      name: 'Name',
+      change_password: 'You can change your password',
+      placeholder_name: 'Enter your name',
+      update_your_password: 'Update your password',
+      update_your_name: 'Update your name',
+      new_name: 'Enter the new name',
+      new_password: 'Enter the new password',
+      your_email: 'Enter your email',
+      last_password: 'Enter the current password',
+      save_changes: 'Save changes',
+    },
     admin : {
       title: 'Admin',
     },

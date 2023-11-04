@@ -9,6 +9,18 @@
         <div
           style="display: flex; flex-direction: column;"
         >
+        <router-link
+          class="sidebar__item"
+          to="/profile"
+        >
+          <i
+            class="material-symbols-outlined"
+            style="vertical-align: middle; display: inline-block;font-size: 1.30rem"
+          >
+            person
+          </i>
+          <p class="truncate"> {{ $t('routes.profile.title')}} </p>
+        </router-link>
         <button
           class="sidebar__item"
           @click.prevent="handleSignOut"

@@ -95,9 +95,10 @@
                 <p style="font-weight: 600;font-size: .875rem;line-height: 1.25rem;">{{ $t('components.header.hi')}} {{currentUser?.displayName}}</p>
                 <a
                   class="leading-none text-muted-foreground"
-                  style="color: #64748b; line-height: 1; text-decoration: none; font-size: .7rem;"
-                  >{{ currentUser.email }}</a
+                  style="color: #64748b; line-height: 1; text-decoration: none; font-size: .7rem;   overflow-x: auto;"
                 >
+                  {{ currentUser.email }}
+                </a>
               </div>
               <div
                 v-if="isLoggedIn"
@@ -164,10 +165,11 @@
               >
                 <p style="font-weight: 600;font-size: .875rem;line-height: 1.25rem;">{{ $t('components.header.hi')}} {{currentUser?.displayName}}</p>
                 <a
-                  :href="mailto" class="leading-none text-muted-foreground"
-                  style="color: #64748b; line-height: 1; cursor: pointer; text-decoration: none; font-size: .7rem;   overflow-x: auto;"
-                  >{{ currentUser.email }}</a
+                  class="leading-none text-muted-foreground"
+                  style="color: #64748b; line-height: 1; text-decoration: none; font-size: .7rem;   overflow-x: auto;"
                 >
+                  {{ currentUser.email }}
+                </a>
               </div>
               <div
                 v-if="isLoggedIn"
