@@ -126,7 +126,8 @@ export default {
     const auth = getAuth()
     const user = auth.currentUser;
     if (user) {
-      this.userName = user.displayName;
+      console.log(user.displayName)
+      this.userName = !user.displayName ? this.$t('routes.profile.inform_your_name') : user.displayName
       this.userEmail = user.email;
     }
   },

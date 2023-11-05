@@ -66,6 +66,7 @@ export default {
       change_password: 'Você pode alterá-la a qualquer momento',
       placeholder_name: 'Digite seu nome',
       update_your_password: 'Atualize sua senha',
+      inform_your_name: 'Informe seu nome!',
       update_your_name: 'Atualize seu nome',
       new_name: 'Digite o novo nome',
       your_email: 'Digite seu e-mail',

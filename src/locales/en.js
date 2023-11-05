@@ -66,6 +66,7 @@ export default {
       change_password: 'You can change your password',
       placeholder_name: 'Enter your name',
       update_your_password: 'Update your password',
+      inform_your_name: 'Inform your name!',
       update_your_name: 'Update your name',
       new_name: 'Enter the new name',
       new_password: 'Enter the new password',

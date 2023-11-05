@@ -10,11 +10,11 @@
           :to="homeLink"
         >
           <img
-            width="auto"
-            height="100px"
+            height="600px"
+            style="positon: relative; width: 200px;"
             loading="lazy"
             class="logo__img"
-            src="../assets/svg/logo.svg"
+            src="../assets/svg/logo-trama.svg"
             alt="Logo Moqa Portal"
             title="Logo Moqa Portal">
         </router-link>
