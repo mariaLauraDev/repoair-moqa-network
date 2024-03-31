@@ -42,3 +42,23 @@ The Air Quality Repository - MoQA Network is a pioneering project that leverages
 ## License
 
 This project is released under the GNU General Public License v3.0, promoting transparency, collaboration, and freedom in software use, thereby contributing to the knowledge-sharing culture and continuous development of the project.
+
+## Setup Instructions
+
+To run this project, you will need to perform the following steps:
+
+1. **Firebase Project**: You must have a Firebase project set up. Once you have created your project, copy the environment variable values according to the `.env.sample` file provided in this repository.
+
+2. **Database Collections**: This project utilizes two main collections in Firebase:
+
+   - **Markers Collection**: Stores geolocation information of air quality monitors. Each document in this collection must include the following fields:
+     - `id`: A unique identifier for the monitor.
+     - `name`: The name of the monitor.
+     - `moqaID`: A specific identifier linking to the MoQA device.
+     - `lat`: Latitude coordinate.
+     - `long`: Longitude coordinate.
+   These fields must match those specified in `src/utils/markersProps.js`.
+
+   - **Air Quality Monitoring Data**: This collection stores the air quality data collected by the monitors. The structure of the documents in this collection should adhere to the fields defined in `/Users/marialaura/repoair-moqa-network/src/utils/monitorsProps.js`.
+
+3. **Environment Variables and Server Setup**: After setting up your Firebase project and ensuring the correct database structure, you need to configure the environment variables as per the `.env.sample`. Then, execute `yarn serve` to launch the server on port 8080.
