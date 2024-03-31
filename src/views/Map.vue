@@ -113,7 +113,7 @@ export default {
     async fetchMonitors() {
       try {
         const firestore = getFirestore()
-        const markersCollection = collection(firestore, 'monitoring-control')
+        const markersCollection = collection(firestore, process.env.VUE_APP_MARKERS_COLLECTION_NAME)
 
         const markersQuery = query(
           markersCollection,
@@ -135,7 +135,7 @@ export default {
     async fetchLastConnection(moqaID) {
       try {
         const firestore = getFirestore()
-        const system1Collection = collection(firestore, 'system-1')
+        const system1Collection = collection(firestore, process.env.VUE_APP_DATA_COLLECTION_NAME)
         
         const lastConnectionQuery = query(
           system1Collection,
@@ -144,7 +144,6 @@ export default {
         )
 
         const querySnapshot = await getDocs(lastConnectionQuery)
-        console.log('querySnapshot', querySnapshot.empty)
 
         if (!querySnapshot.empty) {
           console.log('querySnapshot.docs[0].data()', querySnapshot.docs[0].data())

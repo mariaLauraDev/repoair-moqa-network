@@ -16,7 +16,7 @@ export default {
   select_a_period: 'Selecione um período para exportar os dados',
   loading_data: 'Carregando dados...',
   not_found_on_period: 'Nenhum dado encontrado para o período selecionado',
-  documents: 'documentos',
+  documents: 'registros',
   invalid_date_range: 'Período de datas inválido. A data de início deve ser anterior à data de término.',
   not_possible_export_empty: 'Não é possível exportar dados vazios.',
   alerts: {

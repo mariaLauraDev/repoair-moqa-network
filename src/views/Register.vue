@@ -32,9 +32,7 @@ export default {
     register() {
       createUserWithEmailAndPassword(getAuth(), this.email, this.password)
         .then((data) => {
-          // console.log(data)
-          // console.log(data.user)
-          // console.log("Successfully registered!")
+
           this.$router.push('/data')
         })
         .catch((error) => {

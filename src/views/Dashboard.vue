@@ -398,7 +398,7 @@ export default {
 
       try {
         const firestore = getFirestore()
-        const markersCollection = collection(firestore, 'monitoring-control')
+        const markersCollection = collection(firestore, process.env.VUE_APP_MARKERS_COLLECTION_NAME)
 
         const markersQuery = query(
           markersCollection,
@@ -435,7 +435,7 @@ export default {
         this.hasFetchedDocuments = false
         const { start, end } = this.timestampRanges
         const firestore = getFirestore()
-        const documentsCollection = collection(firestore, 'system-1')
+        const documentsCollection = collection(firestore, process.env.VUE_APP_DATA_COLLECTION_NAME)
 
         let documentsQuery = null
         documentsQuery = query(

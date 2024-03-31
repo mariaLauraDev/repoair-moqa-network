@@ -1,25 +1,18 @@
 <template>
   <footer class="footer">
-    <!-- <section class="footer__header container">
-      <article>
-        <h3>Sobre o site</h3>
-        <ul class="footer__policies">
-          <li>Termos de uso</li>
-          <li>Contato</li>
-          <li>Política de privacidade</li>
-          <li>Sobre nós</li>
-        </ul>
-      </article>
-    </section> -->
     <div class="footer__finalize container">
-      <p data-v-79f4cbe3="">Copyright © 2023 TRAMA Labs. All rights reserved.</p>
+      <p data-v-79f4cbe3="">Copyright © {{ year }} TRAMA Labs. All rights reserved.</p>
     </div>
   </footer>
 </template>
 
 <script>
 export default {
-  
+  computed: {
+    year() {
+      return new Date().getFullYear();
+    },
+  },
 }
 </script>
 

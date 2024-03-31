@@ -1,11 +1,11 @@
 export const config = {
   firebase: {
-    apiKey: "AIzaSyAl3Z8cGE62ZNFc__yLCktbvqyhXTVsGi8",
-    authDomain: "moqatrama-prod.firebaseapp.com",
-    projectId: "moqatrama-prod",
-    storageBucket: "moqatrama-prod.appspot.com",
-    messagingSenderId: "1058408189763",
-    appId: "1:1058408189763:web:fdac184953248dde9d69f6",
-    measurementId: "G-CWNNPY01JF"
+    apiKey:  process.env.VUE_APP_FIREBASE_API_KEY,
+    authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.VUE_APP_FIREBASE_APP_ID,
+    measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID
   },
 };

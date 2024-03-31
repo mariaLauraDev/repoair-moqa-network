@@ -113,16 +113,6 @@
               <Card :title="`${$t('total_of_data')}`" :value="numberOfDocuments + ` ${$t('documents')}`" :description="$t('on_selected_period')"/>
               <Card :title="`${$t('total_of_monitors')}`" :value="numberOfMonitors" :description="$t('on_selected_period')"/>
             </section>
-      
-            <TablePaginated
-              :isTimeExport="true"
-              :header-columns="getMonitorsProps()"
-              :rows="monitorsFound"
-              :rows-props="getMonitorsProps()"
-              :table-title="`${$t('last_monitors_data')}`"
-              :selected-start-date="selectedStartDate"
-              :selected-end-date="selectedEndDate"
-            />
 
             <TablePaginated
               :isTimeExport="true"
@@ -130,6 +120,16 @@
               :rows="documents"
               :rows-props="getDocumentFields()"
               :table-title="`${$t('data_found')}`"
+              :selected-start-date="selectedStartDate"
+              :selected-end-date="selectedEndDate"
+            />
+
+            <TablePaginated
+              :isTimeExport="true"
+              :header-columns="getMonitorsProps()"
+              :rows="monitorsFound"
+              :rows-props="getMonitorsProps()"
+              :table-title="`${$t('last_monitors_data')}`"
               :selected-start-date="selectedStartDate"
               :selected-end-date="selectedEndDate"
             />
@@ -258,7 +258,7 @@ export default {
         this.message = ''
         this.fetching = true
         const firestore = getFirestore()
-        const pollutantsCollection = collection(firestore, 'system-1')
+        const pollutantsCollection = collection(firestore, process.env.VUE_APP_DATA_COLLECTION_NAME)
 
         let documentsQuery = null
         const firebaseTimeStamps = this.getFirebaseTimeStamps()
@@ -309,7 +309,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   align-items: center;
-  width: 250px;
+  width: 100%;
 }
 
 .download-header__options-group{
