@@ -51,7 +51,7 @@ To run this project, you will need to perform the following steps:
 
 2. **Database Collections**: This project utilizes two main collections in Firebase:
 
-   - **Markers Collection**: set as VUE_APP_DATA_COLLECTION_NAME, stores geolocation information of air quality monitors. Each document in this collection must include the following fields:
+   - **Markers Collection**: set as `VUE_APP_DATA_COLLECTION_NAME`, stores geolocation information of air quality monitors. Each document in this collection must include the following fields:
      - `id`: A unique identifier for the monitor.
      - `name`: The name of the monitor.
      - `moqaID`: A specific identifier linking to the MoQA device.
@@ -59,6 +59,6 @@ To run this project, you will need to perform the following steps:
      - `long`: Longitude coordinate.
    These fields must match those specified in `src/utils/markersProps.js`.
 
-   - **Air Quality Monitoring Data**: This collection stores the air quality data collected by the monitors. The structure of the documents in this collection should adhere to the fields defined in `/Users/marialaura/repoair-moqa-network/src/utils/monitorsProps.js`.
+   - **Air Quality Monitoring Data**: se as `VUE_APP_MARKERS_COLLECTION_NAME`, this collection stores the air quality data collected by the monitors. The structure of the documents in this collection should adhere to the fields defined in `/Users/marialaura/repoair-moqa-network/src/utils/monitorsProps.js`.
 
 3. **Environment Variables and Server Setup**: After setting up your Firebase project and ensuring the correct database structure, you need to configure the environment variables as per the `.env.sample`. Then, execute `yarn serve` to launch the server on port 8080.
