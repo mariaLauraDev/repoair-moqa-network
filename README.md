@@ -51,7 +51,7 @@ To run this project, you will need to perform the following steps:
 
 2. **Database Collections**: This project utilizes two main collections in Firebase:
 
-   - **Markers Collection**: Stores geolocation information of air quality monitors. Each document in this collection must include the following fields:
+   - **Markers Collection**: set as VUE_APP_DATA_COLLECTION_NAME, stores geolocation information of air quality monitors. Each document in this collection must include the following fields:
      - `id`: A unique identifier for the monitor.
      - `name`: The name of the monitor.
      - `moqaID`: A specific identifier linking to the MoQA device.
