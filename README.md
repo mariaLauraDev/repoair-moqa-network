@@ -35,13 +35,6 @@ The platform is primarily intended for technicians responsible for the deploymen
 - Provides a user-friendly interface for data visualization, including dashboards, data export functions, and a city map highlighting monitor locations.
 - Utilizes responsive design to ensure accessibility on both desktop and mobile devices, with language support for English and Brazilian Portuguese.
 
-## Conclusion
-
-The Air Quality Repository - MoQA Network is a pioneering project that leverages modern technology for environmental monitoring and management. By providing real-time data on air quality, it supports the efforts of technicians and researchers in making informed decisions towards improving environmental health.
-
-## License
-
-This project is released under the GNU General Public License v3.0, promoting transparency, collaboration, and freedom in software use, thereby contributing to the knowledge-sharing culture and continuous development of the project.
 
 ## Setup Instructions
 
@@ -62,3 +55,11 @@ To run this project, you will need to perform the following steps:
    - **Air Quality Monitoring Data**: se as `VUE_APP_MARKERS_COLLECTION_NAME`, this collection stores the air quality data collected by the monitors. The structure of the documents in this collection should adhere to the fields defined in `src/utils/monitorsProps.js`.
 
 3. **Environment Variables and Server Setup**: After setting up your Firebase project and ensuring the correct database structure, you need to configure the environment variables as per the `.env.sample`. Then, execute `yarn serve` to launch the server on port 8080.
+
+## Conclusion
+
+The Air Quality Repository - MoQA Network is a pioneering project that leverages modern technology for environmental monitoring and management. By providing real-time data on air quality, it supports the efforts of technicians and researchers in making informed decisions towards improving environmental health.
+
+## License
+
+This project is released under the GNU General Public License v3.0, promoting transparency, collaboration, and freedom in software use, thereby contributing to the knowledge-sharing culture and continuous development of the project.
