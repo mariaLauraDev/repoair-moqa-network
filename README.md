@@ -54,7 +54,7 @@ To run this project, you will need to perform the following steps:
 
    - **Air Quality Monitoring Data**: set as `VUE_APP_DATA_COLLECTION_NAME`, this collection stores the air quality data collected by the monitors. The structure of the documents in this collection should adhere to the fields defined in `src/utils/monitorsProps.js`.
 
-3. **Environment Variables and Server Setup**: After setting up your Firebase project and ensuring the correct database structure, you need to configure the environment variables as per the `.env.sample`. Then, execute `yarn serve` to launch the server on port 8080.
+3. **Environment Variables and Server Setup**: After setting up your Firebase project and ensuring the correct database structure, you need to configure the environment variables as per the `.env.sample`. Then, execute `yarn` to install libraries and `yarn serve` to launch the server on port 8080.
 
 ## Conclusion
 
